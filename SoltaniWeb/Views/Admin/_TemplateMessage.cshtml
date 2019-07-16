@@ -1,0 +1,89 @@
+﻿@using SoltaniWeb.Models
+@model List<SoltaniWeb.Models.structs.TemplateMessagesViewModel>
+@*<div>
+    <input type="text" class="form-control" id="searchMessage" placeholder="متن پیام را وارد کنید" name="searchMessage">
+</div>
+@foreach (var item in Model)
+{
+    var text = item.Context.Replace("\n", "\\n");
+
+    <div style="padding-bottom: 5px;">
+        <div class="note note-success " style="width: 100%; text-align: right; background-color: #ffffff; border-left: 5px solid #d1d1d1; padding-right: 7%; border-right: 5px solid #d1d1d1; border-bottom: 1px solid #fbf0f0; border-top: 1px solid #fbf0f0;">
+
+            <div class="row" id="divMessageTemps">
+                <div class="col-lg-12" style="text-align: left;opacity: .5;font-size: 16px;">
+                    <div class="icon" onclick="deletTempMessage('@item.Id')">
+                        <i class="far fa-trash-alt" style="cursor: pointer;"></i>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="col-sm-9">
+                        <i class="" style="padding-top: 5px"> </i> <span> عنوان: </span> <span style="font-size: 12px" id="messTitle" class="ng-binding">@item.Title</span>
+                        <p id="messContext" style="font-size: 12px" class="ng-binding">@item.Context</p>
+                        <div class="icon customicon">
+                            <i class="far fa-comments"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="quickTextSelected('@text')" class="btn btn-info btn-sm">انتخاب</button>
+        </div>
+
+
+    </div>
+}*@
+@(Html.Kendo().Grid(Model)
+        .Name("gridTempMessage")
+        .HtmlAttributes(new { style = "height:430px;" })
+        .Columns(columns =>
+        {
+            // columns.Template(" ").Width(140).Title("پیام");
+            // columns.Bound(e => e.Title).Width(400).Title("Details");
+            // columns.Bound(e => e.Id).Title("ID");
+            columns.Bound(x => x.Title).Width(120).Title("عنوان").Filterable(filter =>
+            {
+                //filter.Extra(false);
+                filter.Operators(op =>
+                {
+                    op.ForString(str =>
+                    {
+                        str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                    });
+
+
+                });
+            });
+            columns.Bound(x => x.Context).Title("متن پیام").Filterable(filter =>
+            {
+                //filter.Extra(false);
+                filter.Operators(op =>
+                {
+                    op.ForString(str =>
+                    {
+                        str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                    });
+
+
+                });
+            });
+            columns.Bound(c => c.TextForSelect).Filterable(false)
+                .Width(80).Title("انتخاب")
+                .ClientTemplate("<div class='icon' onclick='quickTextSelected(\"#= TextForSelect #\")'>" +
+            "<i class='far fa-comments' style='cursor: pointer;'></i></div>");
+            columns.Bound(c => c.Id).Filterable(false)
+                .Width(50).Title(" ")
+                .ClientTemplate("<div class='icon' onclick='deletTempMessage(\"#= Id #\")'>" +
+                  "<i class='far fa-trash-alt' style='cursor: pointer;'></i></div>");
+        })
+      .Pageable()
+      .Sortable()
+      .Scrollable(scr=>scr.Height(300))
+      .Filterable()
+      .DataSource(dataSource => dataSource
+          .Ajax()
+          .PageSize(20)
+          .ServerOperation(false)
+      )
+)

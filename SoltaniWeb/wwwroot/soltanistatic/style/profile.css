@@ -1,0 +1,10 @@
+﻿@media(max-width:991.98px){
+    #edituser{
+        font-size:30px;
+        padding:15px 25px;
+    }
+    input.btn {
+        font-size: 30px;
+        padding: 15px 25px;
+    }
+}

@@ -1,0 +1,478 @@
+﻿@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.Domain
+@model tbl_order
+@{
+    _4820_soltaniwebContext db4 = new _4820_soltaniwebContext();
+    var brancheslist = db4.tbl_branches.ToList();
+    var i = 1;
+}
+<style>
+    .validationrequired {
+        border: 3px solid red;
+    }
+
+    .headerorderrow {
+        border: 3px solid blue;
+        /*height: 70 px;*/
+        padding: 10px;
+    }
+
+    .fright {
+        /*float: right !important;*/
+        font-family: 'Iranian Sans';
+        color: #000000;
+        font-weight: 800;
+    }
+
+    .myblock {
+        width: 30%;
+        margin: 2px 2px 2px 20px;
+        display: inline-block;
+        border: 3px solid #1c9808;
+        padding: 5px;
+    }
+
+    .orderinfo1 {
+        border: 3px solid blue;
+        margin-top: 10px !important;
+        padding: 5px;
+        height: 125px;
+    }
+
+    .pricetable thead {
+        display: block;
+        overflow: auto;
+    }
+
+    .pricetable tfoot {
+        display: block;
+        overflow: auto;
+    }
+
+    .pricetable tbody {
+        display: block;
+        height: 300px;
+        overflow: auto;
+    }
+
+    .pricetable th, td {
+        padding: .5em 1em;
+        text-align: center;
+        vertical-align: top;
+    }
+
+    .pname {
+        width: 400px;
+    }
+
+    .pnumber {
+        width: 50px;
+    }
+
+    .pdesc {
+        width: 400px;
+    }
+
+    .prow {
+        width: 30px;
+    }
+
+    .totalpnumberlbl {
+        width: 430px;
+        font-weight: 900;
+        color: red;
+    }
+
+    .totalpnumber {
+        width: 50px;
+        font-weight: 900;
+        color: red;
+    }
+
+    .myimgefrm {
+        margin: 5px;
+    }
+
+    .img1 {
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+    }
+
+    .descriptionp {
+        border: 3px solid blue;
+        margin-top: 2px;
+        padding: 3px;
+    }
+
+    input[type="text"], .myselect, textarea {
+        font-weight: 800 !important;
+        color: red !important;
+        font-size: 16px !important;
+    }
+
+    tr {
+        font-weight: 800 !important;
+        color: darkblue !important;
+        font-size: 16px !important;
+    }
+
+    label {
+        font-weight: 900 !important;
+    }
+
+    .ui-menu-item, option {
+        font-weight: 700 !important;
+        color: blue !important;
+        font-size: 14px !important;
+        font-family: 'Iranian Sans';
+    }
+
+    .m {
+        font-weight: 700 !important;
+    }
+
+    .valid {
+        color: red;
+        display: none;
+    }
+    .controltools {
+        float: left;
+        cursor: pointer;
+    }
+
+    .contorltoolsimg {
+        width: 32px;
+        height: 32px;
+    }
+</style>
+
+
+<div class="panel myfont" style="border:5px solid blue;">
+    <div class="panel-heading" id="myheadingpanel" style="background-color:#0c9033; color:black; font-weight:900; font-size:16pt;">
+
+        <p>
+           ویرایش حواله
+            <span class="controltools">
+                <img class="contorltoolsimg" id="minimizeaddform" src="~/Content/img/icon/minimize-icon.png" />
+                <img class="contorltoolsimg" id="closeaddform" src="~/Content/img/icon/Button-Close-icon.png" />
+            </span>
+        </p>
+    </div>
+    <div class="panel-body" style="height:680px; overflow-y:scroll;">
+        <div class="headerorderrow">
+            <div class="myblock">
+                <div class="form-group ">
+                    <label class="col-sm-3 control-label fright">شماره :</label>
+                    <div class="col-sm-9">
+                        <input type="text" disabled class="form-control" id="ordernumber" value="@Model.id">
+                    </div>
+                </div>
+            </div>
+            <div class="myblock">
+                <div class="form-group ">
+                    <label class="col-sm-3 control-label fright">کاربر :</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control " userid="@(Context.Session.GetInt32("userid").Value)" style="color:red;" disabled id="orderuser" value="@(Model.user.name + " " + Model.user.Lname)" placeholder="...">
+                    </div>
+                </div>
+            </div>
+            <div class="myblock">
+                <div class="form-group ">
+                    <label class="col-sm-3 control-label fright">تاریخ :</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="orderdateid" value="@(Model.sodoor_date.ToPersianDate())" placeholder="...">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-4 orderinfo1" id="oinfo1">
+            <div class="form-group" style="margin-bottom:5px !important;">
+                <label class="col-sm-3 control-label">از : </label>
+                <div class=" col-sm-9">
+                    <select class="form-control myselect" id="frombranchid">
+                        @foreach (var item in brancheslist)
+                        {
+                            <option class="optionfont" value="@item.id" @(Model.from_branchid == item.id ? "selected" : "")>@item.branch_name</option>
+                        }
+                    </select>
+
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">به : </label>
+                <div class=" col-sm-9">
+                    <select class="form-control myselect" id="tobranchid">
+                        @foreach (var item in brancheslist)
+                        {
+                            <option class="optionfont" value="@item.id" @(Model.to_branchid == item.id ? "selected" : "")>@item.branch_name</option>
+                        }
+                    </select>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">جهت : </label>
+                <div class=" col-sm-9">
+                    <input type="text" class="form-control" id="forperson_id" value="@(Model.orderfor.Fname + " " +Model.orderfor.Lname)" />
+                    <input type="hidden" class="form-control" id="personid" value="@Model.orderforid" />
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 orderinfo1">
+            <div class="form-group" style="margin-bottom:5px !important;">
+                <label class="col-sm-6 control-label">وضعیت حواله : </label>
+                <div class=" col-sm-6">
+                    <input type="text" class="form-control" id="from" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label">تاریخ تحویل : </label>
+                <div class=" col-sm-6">
+                    <input type="text" class="form-control" id="to" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label">کاربر : </label>
+                <div class=" col-sm-6">
+                    <input type="text" class="form-control" id="deliveruser" />
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4 orderinfo1">
+            <div class="form-group" style="margin-bottom:5px !important;">
+                <label class="col-sm-12 control-label">توضیحات تحویل : </label>
+                <div class=" col-sm-12">
+                    <textarea class="form-control" rows="2"></textarea>
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-8" style="margin-top:10px;">
+            <div class="panel">
+                <div class="panel-heading" style="background-color:#aaa6a6; color:black;font-weight:900;"> لیست کالاهای درخواستی</div>
+                <div class="panel-body" style="height:370px;">
+                    <div class="col-sm-11">
+                        <table class="table table-responsive table-hover sortable pricetable">
+                            <thead>
+
+                                <tr>
+                                    <th class="prow">ردیف</th>
+                                    <th class="pname">نام کالا</th>
+                                    <th class="pnumber">تعداد</th>
+                                    <th class="pdesc">شرح</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="tabletbody">
+
+
+
+                                @foreach (var item in Model.tbl_orderdetails)
+                                {
+                                   
+                                    <tr class="ptrclass" pdesc="@item.description" pnumber="@item.number" productid="@item.product_id" row="@(i)">
+                                        <td class="prow">@(i)</td>
+                                        <td class="pname" productid="@item.product_id">@(item.product_.category.categoryname + " | " + item.product_.name + " | " + item.product_.codename +" | " + item.product_.dimension )</td>
+                                        <td class="pnumber">@item.number</td>
+                                        <td class="pdesc">@item.description</td>
+                                    </tr>
+                                    i++;
+
+                                }
+
+
+                            </tbody>
+                            <tfoot>
+
+                                <tr>
+
+                                    <td colspan="2"  class="totalpnumberlbl">جمع کل</td>
+                                    <td class="totalpnumber" id="totalpnumber">@Model.tbl_orderdetails.Sum(a=>a.number)</td>
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="col-sm-1">
+
+                        <div class=" myimgefrm">
+
+                            <img accesskey="a" id="additem" class="img1" src="~/Content/img/icon/Button-Add-icon.png" />
+                        </div>
+                        <div class=" myimgefrm">
+
+                            <img id="edititem" class="img1" src="~/Content/img/icon/edit.png" />
+                        </div>
+                        <div class=" myimgefrm">
+
+                            <img id="deleteitem" class="img1" src="~/Content/img/icon/delete.png" />
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer"></div>
+            </div>
+        </div>
+        <div class="col-sm-4 descriptionp">
+            <lable class="control-label m">شرح حواله :</lable>
+            <div class="col-sm-12">
+                <textarea rows="5" class="form-control" id="orderdesc">@Model.sharh</textarea>
+            </div>
+            <div class="col-sm-12" style="height:240px"></div>
+            <div class="col-sm-12">
+                <button id="btn_editorder" class="btn btn-success">ثبت </button>
+                <button class="btn btn-primary">پرینت </button>
+
+                <button class="btn btn-warning">خروجی pdf </button>
+                <button class="btn btn-danger">کنسل </button>
+
+
+
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+    <div class="panel-footer"></div>
+</div>
+
+<script>
+    // to show _partialadditemtoorder form
+    var totalnumber=0
+    var i = 0;
+    $(additem).click(function () {
+        $.post('/admin/toshowpartialadditemtoorder', {}, function (result) {
+
+            $(messageokbody).html(result)
+            $(messageokheader).html('افزون کالا به لیست حواله')
+            $(messageokfooter).html('')
+
+
+
+            $(messageok).modal()
+        })
+
+    })
+
+    $(messageokbody).off().on('click', '#btn_additemmodalid', function (e) {
+
+    i++
+        var newitemhtml = '';
+
+
+        newitemhtml += '<tr class="ptrclass" pdesc="' + $(itemdescriptioninmodal).val() + '" pnumber="' + $(itemnumberinmodalid).val() + '" productid="' + $(productnameinmodalid_id).val() +'" row="'+i +'" >'
+        newitemhtml += '<td class="prow">' + i +'</td>'
+        newitemhtml += '<td class="pname" pdesc="' + $(itemdescriptioninmodal).val()+ '" pnumber="' + $(itemnumberinmodalid).val() +'" productid="' + $(productnameinmodalid_id).val() +'">' + $(productnameinmodalid).val() +'</td>'
+        newitemhtml += '<td class="pnumber">' + $(itemnumberinmodalid).val() +'</td>'
+        newitemhtml += '<td class="pdesc">' + $(itemdescriptioninmodal).val() +'</td>'
+        newitemhtml += '</tr>'
+
+        $(tabletbody).append(newitemhtml)
+        $(tabletbody).append(newitemhtml)
+        totalnumber += parseInt($(itemnumberinmodalid).val())
+        $(totalpnumber).html(totalnumber)
+
+        newitemhtml=''
+        $(messageok).modal('hide');
+    })
+    $(this).keypress(function (event) {
+        switch (event.keyCode) {
+
+            case 45:
+                $(additem).click()
+                break;
+            case 39:
+                document.body.innerHTML = 'right arrow';
+                break;
+
+        }
+    });
+
+    // autocomplete forperson
+    $("#forperson_id").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    dataType: "json",
+                    type: 'Post',
+                    url: '@Url.Action("searchmadeby", "admin")',
+                    data: { text: request.term },
+                    success: function (data) {
+                        $("#forperson_id").removeClass('ui-autocomplete-loading');
+                        // hide loading image
+
+                        response($.map(data, function (item) {
+                            return {
+                                id: item.id,
+
+                                value: item.value,
+                                lable: item.lable
+
+                            }
+                        }));
+                    },
+
+
+                    error: function (data) {
+                        $("#forperson_id").removeClass('ui-autocomplete-loading');
+                    }
+                });
+            },
+
+            minLength: 1,
+            select: function (event, result) {
+                $(personid).val(result.item.id)
+
+
+            },
+            open: function () { },
+            close: function () { },
+            focus: function (event, ui) { },
+
+    });
+    //$('body').on('keydown', '#forperson_id', function (e) {
+        $(forperson_id).keypress(function (e) {
+
+            if (e.keyCode !=9) {
+
+        var forperson = $(personid).val();
+
+        if (forperson.length != 0) {
+
+
+            $(personid).val('')
+
+
+
+        }
+
+            }
+
+    })
+        $(forperson_id).blur(function (e) {
+        var forpersonid = $(personid).val();
+        var forpersonname = $(this).val()
+        if (forpersonid.length == 0 && forpersonname.length != 0) {
+            if (confirm('این مشتری جدید است.') == true) {
+                jQuery.post('/admin/addnewperson', { fullname: forpersonname }, function (result) {
+
+                    $(personid).val(result)
+
+
+                })
+            }
+
+
+        }
+        })
+</script>

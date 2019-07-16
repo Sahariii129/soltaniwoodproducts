@@ -1,0 +1,10 @@
+﻿@using SoltaniWeb.Models.Domain
+@model tbl_category
+
+@{ 
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    int userid = int.Parse(User.Claims.FirstOrDefault().Value);
+}
+<div class="col-lg-3 col-md-3 col-sm-6 col-12 catg" catgid="@Model.id" style="margin-bottom:5px;">
+    @Html.Partial("~/Views/shared/partialviewforproducts/_partialcatg1.cshtml", Model)
+</div>

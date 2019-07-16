@@ -1,0 +1,77 @@
+﻿@using SoltaniWeb.Models.repository
+@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.Extensions
+ 
+@model IEnumerable<appljobhistory>
+
+
+
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color:#0cd80a;">
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-title" id="titlemodal">سوابق شغلی :@ViewBag.fullname</div>
+        </div>
+        <div class="modal-body" style="height:250px;" id="bodymodal">
+
+            <table class="table table-responsive table-bordered" id="historyjob">
+                <thead>
+
+                <tr>
+
+                    <th>شرکت</th>
+                    <th>پست</th>
+                    <th>عنوان شغل</th>
+                    <th>شروع</th>
+                    <th>پایان</th>
+                    <th>مدت</th>
+                    <th>علت ترک کار</th>
+                </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tr id="@("history"+ item.id)">
+
+                        <td>@item.CompanyName</td>
+                        <td>@item.post</td>
+                        <td>@item.jobname</td>
+                        @if (item.startdate.HasValue)
+                        {
+                            var st = item.startdate.Value;
+                            <td>@shamsi.ToShamsi(st).ToString("yyyy/MM/dd")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        @if (item.enddate.HasValue)
+                        {
+                            var et = item.enddate.Value;
+                            <td>@shamsi.ToShamsi(et).ToString("yyyy/MM/dd")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
+                        <td>@item.Periodhistory</td>
+                        <td>@item.leavingreson</td>
+
+
+                    </tr>
+
+                }
+
+            </table>
+
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
+

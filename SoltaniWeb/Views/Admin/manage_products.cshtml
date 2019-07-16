@@ -1,0 +1,235 @@
+﻿@model IEnumerable<SoltaniWeb.Models.Domain.tbl_category>
+
+@{
+    ViewBag.Title = "manage_products";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    int i = 1;
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    int userid = int.Parse(User.Claims.FirstOrDefault().Value);
+    int sectionid = ViewBag.sectionid;
+}
+<style>
+    .loading-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 10;
+    }
+
+    .loader {
+        display: none;
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header" style="background-color:#332b3a;color:#fff">
+                    <center><h3>مدیریت بخش محصولات: @ViewBag.sectionname</h3></center>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-12">
+            <div id="imagegallerydetaile" class="row" sectionid="@ViewBag.sectionid">
+                @Html.Partial("~/Views/shared/partialviewforproducts/_partialcatglist.cshtml", Model)
+            </div>
+        </div>
+
+        @* دکمه افزودن *@
+
+        <div class="col-12">
+            <div class="btn-group" role="group" aria-label="...">
+                <a href="../admin/manage_sections" class="btn mx-1" style="background-color:#6a95cc;color:#fff">مدیریت بخش محصولات</a>
+                <a id="addcatg" class="btn" style="text-decoration:none;background-color:#6a95cc;color:#fff" href="#">افزودن برند</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(imagegallerydetaile).on('click', '.editproducts_catg', function (e) {
+        e.preventDefault()
+        var catgid = $(this).attr('catgid')
+        jQuery.post('/admin/editproducts_catgbyajax', { catgid: catgid }, function (result) {
+
+            $(messageokheader).html('ویرایش برند')
+            $(messageokbody).html(result)
+            $(messageok).modal()
+            
+        })
+    })
+
+    // ویرایش داده ها 
+    $('body').on('click', '#btn_savecatg', function () {
+    
+     
+        var mydata = new FormData()
+        mydata.append('id', $(catgid).val())
+
+        mydata.append('section_id', $(section_id).val())
+        mydata.append('categoryname', $(categoryname).val())
+        mydata.append('shortname', $(shortname).val())
+        mydata.append('actionname', $(actionname).val())
+        mydata.append('weight', $(weight_catg).val())
+        mydata.append('status', $(status_catg).val())
+        mydata.append('showprice', $(showprice).val())
+        mydata.append('purchaseonline', $(purchaseonline).val())
+        mydata.append('keywords', $('#catg_keywords').val())
+        mydata.append('description', $(description).val())
+        mydata.append('fulldescription', $(fulldescription).val())
+        mydata.append('image', document.getElementById("image").files[0])
+
+        
+        
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/Editcatgbyajax',
+            data: mydata,
+            datatype: 'json',
+            processData: false,
+            contentType: false,
+        }).done(function (msg) {
+           
+            var htmls = "<br/><br/>"
+
+
+            //values = JSON.parse(msg)
+            if (msg.status == 'error') {
+                htmls = htmls + '<li style="margin:3px; color:red;">' + msg.message + '</li>'
+                $(infobox).html(htmls)
+            } else if (msg.status == 'errorvalidation') {
+
+                $(msg.message).each(function (idx, item) {
+
+                    htmls = htmls + '<li style="margin:3px; color:red;">' + item + '</li>'
+                })
+                $(infobox).html(htmls)
+
+
+            }
+            else {
+                
+                $(".catg[catgid='" + $(catgid).val() + "']").html(msg);
+                $('#messageok').modal('hide');
+               
+
+            }
+        })
+
+    })
+    // افزودن برند
+
+
+    $(addcatg).click(function (e) {
+        e.preventDefault()
+       var sectionid = @sectionid
+           jQuery.post('/admin/addproducts_catgbyajax', { sectionid: sectionid} , function (result) {
+
+            $(messageokheader).html('افزودن برند')
+            $(messageokbody).html(result)
+            $('#messageok .modal-dialog').addClass('modal-lg')
+            $(messageok).modal()
+
+        })
+    })
+    //
+    $('#messageok').on('click', '#btn_addcatg', function () {
+
+
+        var mydata = new FormData()
+        
+
+        mydata.append('section_id', $(addsection_id).val())
+        mydata.append('categoryname', $(addcategoryname).val())
+        mydata.append('shortname', $(addshortname).val())
+        mydata.append('actionname', $(addactionname).val())
+        mydata.append('weight', $(addweight_catg).val())
+        mydata.append('status', $(addstatus_catg).val())
+        mydata.append('showprice', $(addshowprice).val())
+        mydata.append('purchaseonline', $(addpurchaseonline).val())
+        mydata.append('keywords', $('#addcatg_keywords').val())
+        mydata.append('description', $(adddescription).val())
+        mydata.append('fulldescription', $(addfulldescription).val())
+        mydata.append('image', document.getElementById("addimage").files[0])
+
+
+
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/addcatgbyajax',
+            data: mydata,
+            datatype: 'json',
+            processData: false,
+            contentType: false,
+        }).done(function (msg) {
+
+            var htmls = "<br/><br/>"
+
+
+            //values = JSON.parse(msg)
+            if (msg.status == 'error') {
+                htmls = htmls + '<li style="margin:3px; color:red;">' + msg.message + '</li>'
+                $(infobox).html(htmls)
+            } else if (msg.status == 'errorvalidation') {
+
+                $(msg.message).each(function (idx, item) {
+
+                    htmls = htmls + '<li style="margin:3px; color:red;">' + item + '</li>'
+                })
+                $(infobox).html(htmls)
+
+
+            }
+            else {
+
+                $(imagegallerydetaile).append(msg)
+                $(messageok).modal('hide')
+
+
+            }
+        })
+
+    })
+
+    // حذف برند
+    $('#imagegallerydetaile').on('click', '.catgdelete', function (e) {
+        e.preventDefault()
+        if (confirm("آیا می خواهید این برند حذف گردد")==true) {
+            
+        var catgid = $(this).attr('catgid')
+        jQuery.post('/admin/deletecatgbyajax', { catgid: catgid }, function (result) {
+            if (result == true) {
+                $(".catg[catgid='" + catgid + "']").remove();
+               
+            $(messageokheader).html('موفقیت حذف')
+            $(messageokbody).html('عملیات حذف با موفقیت انجام شد')
+            $(messageok).modal()
+            } else {
+                $(messagenotokheader).html('عدم موفقیت')
+                $(messagenotokbody).html('عملیات حذف با خطا مواجه شد')
+                $(messagenotok).modal()
+
+            }
+
+
+        })
+        }
+
+    })
+
+
+    function resetform() {
+        $('#form-horizontal :input').val('')
+    }
+</script>

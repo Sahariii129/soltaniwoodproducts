@@ -1,0 +1,365 @@
+﻿@using SoltaniWeb.Models.Domain
+
+@using SoltaniWeb.Models.Extensions
+
+@using Newtonsoft.Json;
+@using SoltaniWeb.Models.utility
+@model IEnumerable<tbl_products>
+@{
+    ViewBag.Title = "جستجوی کالای مورد نظر";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    var today = DateTime.Now.ToPersianDate();
+    ViewBag.description = "جستجوی محصولات و فراورده های چوبی در کالای چوب سلطانی ";
+    ViewBag.howtoindex = "index";
+
+
+}
+<script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
+<link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+<link href="~/soltanistatic/style/Panel.css" rel="stylesheet" />
+<script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 pading1px" id="ordermanagement">
+
+            <div id="mainpart" class=" pading1px mt-4">
+
+                <div class="card myfont">
+                    <div class="card-header py-3 d-flex" style="background-color:#332b3a; color:#fff;">
+                        <button id="btn_searhpanelshow" type="button" class="btn btn-default searchpanelbtn" aria-label="Left Align">
+                            <span class="fas fa-search " style="color:#ffca01;font-size:40px" aria-hidden="true"></span>
+                        </button>
+                        <h5 class="mb-0 pr-3 pr-lg-0">جستجوی کالای مورد نظر</h5>
+                        <span id="searchbasedon" style="font-weight:800">
+                        </span>
+
+                    </div>
+                    <div class="card-body panelbox" id="mypanel_id">
+                        <div id="psearch_id" class="psearch" style="border:unset !important">
+                            <div class="card myfont">
+                                <div class="card-header d-flex align-items-center justify-content-between py-4" id="searchpanel" style="background-color:#332b3a;color:#fff">
+                                    فرم جستجو کالا ها
+                                    <button type="button" class="close  closesearch">
+                                        <span style="color:#ffca01;" aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div id="searchdiv" class="card-body" style="padding:0 !important">
+                                    <partial name="~/Views/Shared/PartialSearchProducts/_searchboxProducts.cshtml">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div id="mymodalform" class="myform2">
+                        </div>
+                        <div id="mymodalformtoedit" class="myform3">
+                        </div>
+                        <div class="leftpanel pr-1">
+                            <div>
+                                <div id="panelbodyfororders" style="min-height:536px !important">
+                                    @if (Model != null)
+                                    {
+
+                                        <partial name="~/Views/Shared/PartialSearchProducts/_partialProductsinsearch.cshtml" model="@Model" />
+                                    }
+
+                                </div>
+                                <div class="loader">
+                                    <center>
+                                        <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer" id="footerid" style="min-height:62px !important;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="comparison d-none d-lg-block">
+        <div class="card">
+            <div class="card-body p-0 mediaCom">
+
+            </div>
+        </div>
+        <div class="card text-center">
+            <div class="card-body d-flex p-2">
+                <div class="">
+                    <a class="btn btn-exit">
+                        انصراف
+                    </a>
+                </div>
+                <div class="">
+
+
+
+                    <a href="/Products/comparisonProducts?p1=" class="btn btn-comparison">
+                        مقایسه کالا<span class="badge badge-numCamparison">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/soltanistatic/script/cookies.js"></script>
+<script>
+    
+    var productsselected = Cookies.getJSON("productsselected");
+    var productlist = []
+    //alert(productsselected)
+        if(productsselected != undefined) {
+
+    
+    if (productsselected.productlist != undefined) {
+        for (var i = 0; i < productsselected.productlist.length; i++) {
+            
+            productlist.push(productsselected.productlist[i])
+            jQuery.post('/Products/getproduct', { productid: productsselected.productlist[i] }, function (result) {
+                $('.mediaCom').append(result);
+            })
+            $('.comparison').addClass('show');
+            $('.badge-numCamparison').html(productsselected.productlist.length);
+            $('.btn-comparison').attr('href', '/Products/comparisonProducts?p1=' + productlist[0] + '&p2=' + productlist[1] + '&p3=' + productlist[2] + '&p4=' + productlist[3])
+        }
+    }
+        }
+    var itemnumbertocompare = productlist.length;
+    $('body').on('click', '.comparison .mediaCom .close span', function () {
+        var parent = $(this).parents('.media');
+        var productid = parent.attr('productid');
+        var index = jQuery.inArray(productid, productlist);
+        productlist.splice(index, 1);
+        $('.btn-comparison').attr('href', '/Products/comparisonProducts?p1=' + productlist[0] + '&p2=' + productlist[1] + '&p3=' + productlist[2] + '&p4=' + productlist[3])
+        var obtodelete = $('.media[productid=' + productid + ']')
+        var checkboxtouncheck = $('.checkboxproduct[productid=' + productid + ']')
+        checkboxtouncheck.prop('checked', '')
+        obtodelete.remove();
+        $('.badge-numCamparison').html(productlist.length);
+        if (productlist.length<=0) {
+            $('.comparison').removeClass('show');
+        }
+        Cookies.set('productsselected', { productlist: productlist });
+        //Cookies.set('productsselected', { productlist });
+        //Cookies.set('productsselected', productlist, { expires: 10 });
+    });
+
+    $('.btn-exit').on('click', function (event) {
+        $(this).parents('.comparison').removeClass('show');
+        productlist = [];
+        $('.checkboxproduct').prop('checked', '')
+        var mediatodelete = $('.media[productid]')
+        mediatodelete.remove();
+        $('.checkmark :after').css('display', 'none');
+        Cookies.remove("productsselected");
+    })
+
+    $('body').on('click', '.checkboxproduct', function (e) {
+        if (productlist.lenght <= 0) {
+            $('.comparison').removeClass('show');
+        }
+        else {
+            $('.comparison').addClass('show');
+        }
+        var itemnumbertocompare = productlist.length;
+        var productid = $(this).attr('productid');
+        var index = jQuery.inArray(productid, productlist)
+        if (index != '-1') {
+            productlist.splice(index, 1);
+            var obtodelete = $('.media[productid=' + productid + ']')
+            obtodelete.remove();
+        }
+        else {
+            if (itemnumbertocompare > 3) {
+                e.preventDefault()
+                $(messagenotokbody).html('بیشتر از 4 محصول قابل مقایسه نمی باشد.')
+                $(messagenotok).modal()
+                return;
+            }
+            productlist.push(productid);
+            jQuery.post('/Products/getproduct', { productid: productid }, function (result) {
+                $('.mediaCom').append(result);
+            })
+        }
+        //alert(productlist)
+        Cookies.set('productsselected', { productlist: productlist });
+        //Cookies.set('productsselected', { productlist: productlist });
+        ////Cookies.set('productsselected', { productlist });
+        //Cookies.set('productsselected', productlist, { expires: 10 });
+        $('.btn-comparison').attr('href', '/Products/comparisonProducts?p1=' + productlist[0] + '&p2=' + productlist[1] + '&p3=' + productlist[2] + '&p4=' + productlist[3])
+        $('.badge-numCamparison').html(productlist.length);
+    })
+    
+
+    $(btn_searhpanelshow).click(function () {
+        $(psearch_id).slideToggle(200);
+        if ($(psearch_id).hasClass('responsive') == false) {
+            $(psearch_id).addClass('responsive')
+        }
+    })
+
+    $('.closesearch').click(function () {
+        $(psearch_id).slideToggle(200);
+    })
+
+    $(panelbodyfororders).on('click', '.vertificationofdeliver', function () {
+        jQuery.post('/admin/addvertificationofdeliver', { cartid: $(this).val() }, function (result) {
+            $(messageokheader).html('فرم ثبت تحویل سفارش')
+            $(messageokbody).html(result)
+            $(messageok).modal();
+        })
+    })
+
+    // Search products
+    $('#searchdiv').on('click', '.searchproductsbyuser', function (e) {
+        e.preventDefault()
+        var filter = $('#filterstring').val()
+        var section_id = $('#section_id').val()
+        var category_id = $('#category_id').val()
+        var status = $('#status').val()
+        var order = $('#order').val()
+        var take = $(numberinpage).val()
+        $('.comparison .mediaCom .close').css('display','none')
+        if ($(psearch_id).hasClass('responsive')) {
+            $(psearch_id).slideToggle(200);
+        }
+     
+        var data = { filter: filter, section_id: section_id, category_id: category_id, take: take, status: status, order: order, productlist: productlist }
+        var jsondata = JSON.stringify(data)
+ 
+        $('#panelbodyfororders').html('')
+        $('.loader').show()
+        jQuery.post('/products/Searchproductsbyajax', data, function (result) {
+            $('.loader').hide()
+            $('#panelbodyfororders').html(result)
+            $('.comparison .mediaCom .close').css('display', 'block')
+        })
+    })
+
+    // paging
+    $('#panelbodyfororders').on('click', '.paging', function (e) {
+
+        e.preventDefault()
+        var filter = $('#filterstring').val()
+        var section_id = $('#section_id').val()
+        var category_id = $('#category_id').val()
+        var status = $('#status').val()
+        var order = $('#order').val()
+        var take = $(numberinpage).val()
+        var pageId = $(this).attr('pageId')
+        var skip = (parseInt(pageId) - 1) * take
+        var data = { filter: filter, section_id: section_id, category_id: category_id, take: take, status: status, order: order, skip: skip }
+        $('#panelbodyfororders').html('')
+        $('.loader').show()
+        jQuery.post('/products/Searchproductsbyajax', data, function (result) {
+            $('.loader').hide()
+            $('#panelbodyfororders').html(result)
+        })
+    })
+
+
+    // paging Next previous
+
+    $('#panelbodyfororders').on('click', '.prenext', function (e) {
+
+        e.preventDefault()
+        var filter = $('#filterstring').val()
+        var section_id = $('#section_id').val()
+        var category_id = $('#category_id').val()
+        var status = $('#status').val()
+        var order = $('#order').val()
+        var take = $(numberinpage).val()
+        var pageId = $(this).attr('pageId')
+        var type = $(this).attr('id')
+        var totalpage = $(this).attr('totalpage')
+        var maxskip = (parseInt(totalpage) - 1) * take
+        var skip = 0
+        if (type == 'next') {
+            skip = parseInt(pageId) * take
+        } else if (type == 'previous') {
+
+            skip = (parseInt(pageId) - 2) * take
+        } else {
+
+            return;
+        }
+        if (skip < 0) {
+            return;
+        }
+
+        if (skip > maxskip) {
+            return;
+        }
+        var data = { filter: filter, section_id: section_id, category_id: category_id, take: take, status: status, order: order, skip: skip }
+        $('#panelbodyfororders').html('')
+        $('.loader').show()
+        jQuery.post('/products/Searchproductsbyajax', data, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+    })
+
+
+
+
+
+    $('#panelbodyfororders').on('click', '.details', function () {
+
+        var id = $(this).val()
+
+        $('#p' + id).toggle(100)
+    })
+
+
+
+
+
+
+    $('#ordermanagement').on('click', '.sheading', function () {
+
+
+
+        var q = $(this).next()
+
+
+        q.toggle(200)
+
+
+
+
+    })
+
+
+
+
+    // to make a mymodalform movable
+
+
+    $('#panelbodyfororders').on('mousedown touchstart', '.moreinfo', function () {
+        //$('.moreinfo').click(function () {
+        var pid = $(this).attr("productid")
+
+        jQuery.post('/products/getproductinfo', { productid: pid }, function (result) {
+
+
+
+            $(messageokbody).html(result)
+
+            $(messageokheader).html('اطلاعات تکمیلی محصول :' + pid)
+            $(messageok).modal()
+
+        })
+
+
+
+    })
+
+</script>
+

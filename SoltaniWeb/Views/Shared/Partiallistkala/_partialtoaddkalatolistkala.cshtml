@@ -1,0 +1,284 @@
+﻿@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.structs
+@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository;
+
+
+@model tbl_listkala97
+@{
+    _4820_soltaniwebContext db4 = new _4820_soltaniwebContext();
+    var anbar = db4.tbl_anbar.Select(a => new { id = a.id, name = a.anbarname });
+    var i = 1;
+    var today = DateTime.Now.ToPersianDate();
+    productsrepository prep = new productsrepository();
+}
+
+<script src="~/Scripts/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+<script src="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+<link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+
+
+
+<div class="card myfont myformcontent" mode="@(Model!=null?"Edit": "Add")" id="mymodalform_id" listkalaid="@(Model!=null ? Model.id.ToString() : "")" style="border:2px ridge #000000;z-index:1050">
+    <div class="controltools">
+        @*<img class="contorltoolsimg minimize" id="minimizeaddform" mode="@(Model!=null?"Edit": "Add")" listkalaid="@(Model!=null ? Model.id.ToString() : "")" src="~/Content/img/icon/minimize-icon.png" />*@
+        <img class="contorltoolsimg closeform" id="closeaddform" mode="@(Model!=null?"Edit": "Add")" src="~/Content/img/icon/Button-Close-icon.png" />
+    </div>
+    <div class="card-header paneltomove" id="@(Model!=null ?"myheadingpaneltoedit" : "myheadingpanel")" style="background-color: @(Model!=null ?"#6a95cc" : "#6a95cc"); color:white; font-weight:900;">
+        <p>
+            @(Model != null ? "ویرایش آیتم" : "ثبت آیتم")
+
+        </p>
+
+    </div>
+    <div class="card-body">
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row align-items-center">
+                    <label class="col-4 col-lg-2 control-label">تاریخ ثبت</label>
+                    <div class="col-8 col-lg-4">
+                        <input class="form-control" id="sodoordateinform" value="@(Model!=null ? Model.sodoordate.ToPersianDate() : today)" />
+                    </div>
+                    <label class="col-4 col-lg-2 control-label">نوع</label>
+                    <div class="col-8 col-lg-4">
+                        <select class="form-control" id="htype" htypevalue="@(Model!=null ? Model.htype : 0)">
+                            <option value="1">ورود</option>
+                            <option value="-1">خروج</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row align-items-center">
+                    <label class="col-4 col-lg-2 control-label">نام کالا</label>
+                    <div class="col-8 col-lg-10">
+                        <input class="form-control" id="productidinform" productid="@(Model!=null ?  Model.productid.ToString() : "0")" value="@(Model!=null ? (Model.product.category.categoryname + " " + Model.product.name + " " + Model.product.codename): "")" placeholder="نام کالا را وارد نمایید..." />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row align-items-center">
+                    <label class="col-4 col-lg-2 control-label">انبار</label>
+                    <div class="col-8 col-lg-4">
+                        <select class="form-control" id="anbaridinform" anbarvalue="@(Model!=null ? Model.anbarid : 0)">
+                            @foreach (var item in anbar)
+                        {
+                                <option value="@item.id">@item.name</option>
+
+                        }
+
+                        </select>
+                    </div>
+
+                    <label class="col-4 col-lg-2 control-label">موجودی</label>
+                    <div class="col-8 col-lg-4">
+                        @*<input class="form-control" id="Inventory" disabled value="@(Model!=null ? prep.Get_InventoryofProductByID(Model.productid) : 0)" />*@
+
+                        <select id="Inventory" totalinventory="@(Model!=null?  prep.Get_InventoryofProductByID(Model.productid):0)" class="form-control">
+                            @if (Model == null)
+                        {
+                                <option>0</option>
+                        }
+                        else
+                        {
+                                <option>@("موجودی کل : " + prep.Get_InventoryofProductByID(Model.productid))</option>
+                                @foreach (var item in prep.Get_InventoryofProductByIDineachanbar(Model.productid))
+                            {
+                                    <option>@(item.anbarname + " : " + item.inventory)</option>
+                            }
+                        }
+
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row align-items-center">
+                    <label class="col-4 col-lg-2 control-label">تعداد</label>
+                    <div class="col-8 col-lg-4">
+                        <input class="form-control" id="kalanumberinform" value="@(Model!=null? Model.kalanumber.ToString() : "")" placeholder="تعداد کالا را وارد نمایید" />
+                    </div>
+                    <label class="col-4 col-lg-2 control-label">حد نصاب </label>
+                    <div class="col-8 col-lg-4">
+                        <input class="form-control" id="MinInventory" disabled value="@(Model!=null? (Model.product.inventory.HasValue ? Model.product.inventory.Value : 0) :0)" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row align-items-center">
+                    <label class="col-4 col-lg-2 control-label">فی </label>
+                    <div class="col-8 col-lg-4">
+                        <input class="form-control number" id="kalacostinform" value="@(Model!=null? string.Format("{0:#,##0.##}", Model.kalacost)  : "")" purevalue="@(Model!=null?  Model.kalacost.ToString()  : "")" />
+                    </div>
+                    <label class="col-4 col-lg-2 control-label">جمع کل</label>
+                    <div class="col-8 col-lg-4">
+                        <input class="form-control " id="TotalCost" disabled value="@(Model!=null? string.Format("{0:#,##0.##}", Model.totalcost) : "")" purevalue="@(Model!=null?  Model.totalcost.ToString() : "")" placeholder="" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row align-items-center">
+                    <label class="col-4 col-lg-2 control-label">توضیحات</label>
+                    <div class="col-8 col-lg-10">
+                        <textarea class="form-control" id="kaladescription" value="@(Model!=null? Model.kaladescription : "")">@(Model!=null? Model.kaladescription : "")</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center"><button id="additemtolistkalainform" userid="78" class="btn" style="background-color:#ffca01;color:#fff">ثبت</button></div>
+
+        </div>
+        <div class="alert alert-danger" style="display:none;">
+
+        </div>
+    </div>
+    <div class="card-footer" style="border-top:unset !important"></div>
+</div>
+
+
+
+
+
+
+
+<script>
+
+    setTimeout(function () {
+        $("#productidinform").filter(':visible').focus();
+    }, 500);
+    // Add commas
+    $('input.number').keyup(function (event) {
+        var stringvalue = $(this).val();
+        var purevalue = stringvalue.replace(/,/g, '')
+
+
+        $(this).attr('purevalue', purevalue)
+
+
+
+        var totalcost = purevalue * $(kalanumberinform).val()
+
+
+        $(TotalCost).attr('purevalue', totalcost)
+
+        $(TotalCost).val(totalcost)
+        $(TotalCost).val(function (index, value) {
+
+            return value
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ;
+        });
+
+
+
+
+        // skip for arrow keys
+        if (event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function (index, value) {
+
+            return value
+                .replace(/\D/g, "")
+                 .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ;
+        });
+
+
+
+
+
+    });
+
+
+    //
+    $(kalanumberinform).keyup(function (event) {
+        if (event.which >= 37 && event.which <= 40) return;
+        var totalpure = $(this).val() * $(kalacostinform).attr('purevalue')
+        $(TotalCost).val(totalpure)
+        $(TotalCost).val(function (index, value) {
+
+            return value
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ;
+        });
+
+
+
+
+    })
+
+    $(sodoordateinform).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    setTimeout(function () {
+        $("#productid").filter(':visible').focus();
+     }, 500);
+    // autocomplete products name
+    $("#productidinform").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    dataType: "json",
+                    type: 'Post',
+                    url: '@Url.Action("searchproduct", "admin")',
+                    data: { text: request.term },
+                    success: function (data) {
+                        $("#productidinform").removeClass('ui-autocomplete-loading');
+                        // hide loading image
+
+                        response($.map(data, function (item) {
+                            return {
+                                id: item.id,
+
+                                value: item.value,
+                                lable: item.lable
+                                //val: item.split('-')[1]
+                            }
+                        }));
+                    },
+
+
+                    error: function (data) {
+                        $("#productidinform").removeClass('ui-autocomplete-loading');
+                    }
+                });
+            },
+
+            minLength: 1,
+            select: function (event, result) {
+                //$("#productid_id").val(result.item.id);
+                $("#productidinform").attr('productid', result.item.id);
+                jQuery.post('/admin/Get_Inventory', { productid: result.item.id }, function (Result) {
+                    //var d = JSON.stringify(Result)
+                    //alert(d)
+                    var html = ''
+                    html += '<option> موجودی کل : ' + Result.inventory + '</option >'
+                    $.each(Result.inventorylist, function (idx, item) {
+
+                    html += '<option>'+ item.anbarname + ' : ' + item.inventory+'</option>'
+
+                    })
+                    $(Inventory).html(html)
+                    $(Inventory).attr('totalinventory', Result.inventory)
+                    $(MinInventory).val(Result.minInventory)
+                })
+            },
+            open: function () { },
+            close: function () { },
+            focus: function (event, ui) { },
+
+        });
+
+
+
+
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

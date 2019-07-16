@@ -1,0 +1,116 @@
+﻿@using SoltaniWeb.Models.Domain
+@model tbl_transportaiondetails
+
+
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<div id="myform" class="panel">
+    <div class="panel-heading" style="background-color:#0094ff;">
+        فرم مشخصات حمل سفارش
+    </div>
+    <div class="panel-body" style="background-color:#eee9e9;">
+        <div id="validationmessages">
+            <ul id="validationerrors" style="color:red;"></ul>
+        </div>
+        <form action="/purchasecart/savetransportation" method="post" class="form-horizontal">
+
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                  
+                    <input  type="hidden" name="cartid" id="cartid" value="@TempData["cartid"]"/>
+                    <label class="control-label col-md-2">نام مکان: </label>
+
+                    <div class="col-md-2">
+
+                        @Html.EditorFor(Model => Model.location_name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.location_name, "", new { @class = "text-danger" })
+
+                    </div>
+                    <label class="control-label col-md-2">شماره همراه: </label>
+
+                    <div class="col-md-2">
+
+                        @Html.EditorFor(Model => Model.tell, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.tell, "", new { @class = "text-danger" })
+
+                    </div>
+                    <label class="control-label col-md-2"> پیگیری کننده:  </label>
+
+                    <div class="col-md-2">
+
+                        @Html.EditorFor(Model => Model.person_peygiri, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.person_peygiri, "", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label class="control-label col-md-2">آدرس کامل: </label>
+
+                    <div class="col-md-10">
+
+                        @Html.EditorFor(Model => Model.location_address, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.location_address, "", new { @class = "text-danger" })
+
+                    </div>
+
+
+                </div>
+                <div class="col-md-offset-2">
+
+                    <input type="submit" id="savetransdetails" name="name" value="ثبت مشخصات حمل کالا" class="btn btn-info" style="margin:5px" />
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+    $('#myform').on('click', '#savetransdetails', function (e) {
+
+        e.preventDefault();
+      
+        var _this = $(this);
+        var _form = _this.closest("form");
+        var indata = _form.serializeArray();
+   
+
+        jQuery.post(_form.attr("action"), indata, function (data) {
+
+            if (data.success != 3) {
+               
+                var htmls = ""
+                $(data.errors).each(function (idx, item) {
+
+                    htmls = htmls + '<li style="color:red;">' + item + '</li>'
+                })
+
+                $(validationerrors).html(htmls)
+
+
+
+                $(lname).html(data.l_name)
+                $(laddress).html(data.l_address)
+                $(personpeygiri).html(data.l_peygiri)
+                $(tellpeygiri).html(data.l_tell)
+                if (data.success ==1 ) {
+                    $(':text').val('')
+                }
+                
+
+            } else {
+                alert('محلی روی نقشه جهت تحویل کالا مشخص نشده است. ')
+            }
+           
+         
+        })
+
+    })
+
+
+</script>

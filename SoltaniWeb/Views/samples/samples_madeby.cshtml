@@ -1,0 +1,55 @@
+﻿@model IEnumerable<SoltaniWeb.Models.Domain.tbl_person>
+
+@{
+    ViewBag.Title = "کالای چوب سلطانی| انواع نمونه کارها به تفکیک طراحان و مجریان ";
+    ViewBag.description = "انواع نمونه کارهای انجام شده به تفیک مجریان (کابینت سازان) به صورت اسلاید شو- در این صفحه شما نمونه کارهای مجریان و کابینت سازهای مختلف را مشاهده می کنید ";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.repository.samplerepository samplerep = new SoltaniWeb.Models.repository.samplerepository();
+
+}
+<link href="~/soltanistatic/style/gallery.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 contactTitle">گالری تصاویر : براساس طراح و مجری</h5>
+            </div>
+        </div>
+    </div>
+    <div id="imagegallerydetaile" class="row">
+
+        @foreach (var item in Model)
+        {
+            string imageroot = _hostingEnvironment.WebRootPath + "/Content/img/samples/" + item.tbl_files.FirstOrDefault().filename;
+            bool f = File.Exists(imageroot);
+
+            if (f == true)
+            {
+            <div class="col-lg-3 col-12 mb-lg-4 mb-5">
+                <div class="imagegallerydetaileBox" style="box-shadow:0 3px 10px #aab3c2;position:relative;z-index:0">
+
+                    <a href="~/samples/madeby?id=@item.id&key=@item.Fname @item.Lname"><img src="~/Content/img/samples/@item.tbl_files.FirstOrDefault().filename" alt="نمونه کارهای @item.Fname @item.Lname  "  class="img-thumbnail p-0" /></a>
+
+                    <div class="" style="background-color:#ffffff; ">
+
+                        <div class="py-3">
+                            <a href="~/samples/madeby?id=@item.id&key=نمونه-کار-های-@item.prefix-@item.Fname-@item.Lname"><h5 style="text-align :center ;">@item.prefix @item.Fname  @item.Lname </h5></a>
+
+                        </div>
+                        @*<div class="py-2">
+
+                            <center><a href="~/samples/slideshowmadeby?id=@item.id&key=نمونه-کار-های-@item.prefix-@item.Fname-@item.Lname"><img src="~/Content/img/icon/Play-icon.png" style=" width :32px; " />  اسلاید شو</a></center>
+                        </div>*@
+
+                    </div>
+                    <div>
+                        <div class="count"><span>@item.tbl_files.Count()</span></div>
+                    </div>
+                </div>
+            </div>
+            }
+
+        }
+    </div>
+</div>

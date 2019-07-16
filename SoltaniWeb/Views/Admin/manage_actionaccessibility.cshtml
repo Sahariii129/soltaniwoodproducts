@@ -1,0 +1,259 @@
+﻿@using SoltaniWeb.Models.structs;
+
+@model IEnumerable<Accessclass>
+@{
+    ViewBag.Title = "manage_actionaccessibility";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    var q = Model;
+
+    //var list1 = Model.GroupBy(a => a.user.username).Select(g1 => new { user = g1.Key, actionaccesslist = g1.OrderBy(l => l.acction_id) });
+}
+
+<div class="panel myfont">
+    <div class="panel-heading">مدیریت سطح دسترسی پیشرفته</div>
+    <div class="panel-body">
+        <table class="table table-responsive table-bordered">
+            <thead>
+
+                <tr>
+                    <th>ردیف</th>
+                    <th>
+                        <a class="usercontrollerheader" style="cursor:pointer;text-decoration:none; ">نام کاربر  </a>
+
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    j = j + 1;
+                    <tr class="@("user" + item.user)">
+                        <td style="background-color:#c0b7b7;"> @j    </td>
+
+                        <td style="background-color:#eae4e4;text-align:right;">
+
+                            <div class="btn-group">
+                                <button class="btn btn-danger username A" id="@item.actionaccesslist.FirstOrDefault().userid" style="cursor:pointer; text-decoration:none;">نام کاربری : @item.user</button>
+                                <button class="btn btn-success updateaccess A" userid="@item.actionaccesslist.FirstOrDefault().userid" style="cursor:pointer; text-decoration:none;">Update</button>
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" user="@item.user" class="activeallforthisuser"><span class="glyphicon glyphicon-ok-circle" style="margin-left:5px;" aria-hidden="true"></span>فعال </a></li>
+                                    <li><a href="#" user="@item.user" class="disactiveallforthisuser"><span class="glyphicon glyphicon-remove-circle" style="margin-left:5px;" aria-hidden="true"></span>غیر فعال </a></li>
+
+                                </ul>
+                            </div>
+
+                            <table style="display:none;" user="@item.user" class="table table-responsive table-bordered @("Controller" + item.actionaccesslist.FirstOrDefault().userid)">
+                                <tr>
+                                    <td>ردیف</td>
+                                    <td>
+                                        <a class="usercontrollerheader" style="cursor:pointer;text-decoration:none; ">نام کنترلر  </a>
+
+                                    </td>
+
+                                </tr>
+                                @{
+                                    i = 0;
+                                }
+                                @foreach (var item2 in @item.actionaccesslist.GroupBy(a => a.acction_.controller_.controller_name).Select(g2 => new { controller = g2.Key, other = g2.OrderBy(l => l.acction_.id) }))
+                                {
+                                    i = i + 1;
+                                    <tr>
+                                        <td style="background-color:#c0b7b7;"> @(i + "-" + j)    </td>
+
+                                        <td colspan="3">
+                                            <div class="btn-group">
+                                                <button class=" btn btn-primary controller" id="@(item2.controller + item.user)" style="cursor:pointer; text-decoration:none;">  @item2.controller </button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#" user="@item.user" controller="@item2.controller" class="activeallforthisuserandcontroller"><span class="glyphicon glyphicon-ok-circle" style="margin-left:5px;" aria-hidden="true"></span>فعال </a></li>
+                                                    <li><a href="#" user="@item.user" controller="@item2.controller" class="disactiveallforthisuserandcontroller"><span class="glyphicon glyphicon-remove-circle" style="margin-left:5px;" aria-hidden="true"></span>غیر فعال </a></li>
+
+                                                </ul>
+                                            </div>
+                                            <table user="@item.user" controller="@item2.controller" class="@("action"+ item2.controller + item.user) C @("actioncontroller" + item.user) action table table-bordered" style="display:none;">
+                                                <tr>
+                                                    <td>ردیف</td>
+                                                    <td>
+                                                        <a class="usercontrollerheader" style="cursor:pointer;text-decoration:none; ">نام کاربر/ نام کنترلر  </a>
+
+                                                    </td>
+                                                    <td>نام اکشن </td>
+                                                    <td>نام منو اصلی </td>
+                                                    <td style="text-align:center;">دسترسی</td>
+
+                                                </tr>
+                                                @{
+
+                                                    k = 0;
+                                                }
+                                                @foreach (var item3 in @item2.other.OrderBy(m => m.acction_.menu_id))
+                                                {
+                                                    k = k + 1;
+                                                    <tr>
+                                                        <td style="background-color:#c0b7b7;"> @(k + "-" + i + "-" + j)    </td>
+                                                        <td>  @(item2.controller + " / " + item.user)  </td>
+
+                                                        <td>@(item3.acction_.action_name )</td>
+                                                        <td>@(item3.acction_.menu_id != null ? item3.acction_.menu_.accesscaption : "" )</td>
+                                                        <td>
+                                                            <input class="form-control chb_permission" controller="@item2.controller" user="@item.user" value="@item3.id" type="checkbox" @(item3.permission == true ? "checked" : "") />
+
+                                                        </td>
+
+                                                    </tr>
+                                                }
+                                            </table>
+
+
+
+                                        </td>
+
+                                    </tr>
+
+                                }
+                            </table>
+
+                        </td>
+
+                    </tr>
+
+
+
+                }
+
+
+            </tbody>
+        </table>
+
+
+    </div>
+    <div class="panel-footer">
+        <a id="UpdateControllerAction" href="#" class="btn btn-success">به روز رسانی جدول</a>
+    </div>
+</div>
+@*<script src="~/Scripts/jquery-3.1.1.js"></script>*@
+<script>
+    $(UpdateControllerAction).click(function (e) {
+        e.preventDefault()
+        jQuery.post('/admin/GetControllerActions2', {}, function (msg) {
+
+
+            alert(msg)
+        })
+    
+
+
+    })
+
+
+
+    $('.username').click(function (e) {
+        e.preventDefault()
+        //alert('1')
+        var userid = $(this).attr('id')
+
+        $('.Controller' + userid).toggle('500')
+        $('.action').attr('user', userid).hide();
+
+
+
+    })
+    $('.controller').click(function (e) {
+        e.preventDefault()
+        var ctrlid = $(this).attr('id')
+        $('.action' + ctrlid).toggle('500')
+
+    })
+
+    $('.chb_permission').change(function () {
+        var id = $(this).val()
+
+        jQuery.post("/admin/changepermission", { id: id }, function (result) {
+
+        })
+
+
+    })
+
+    $('.activeallforthisuser').click(function (e) {
+        e.preventDefault()
+        var username = $(this).attr('user')
+        jQuery.post("/admin/activeallforthisuser", { user: username }, function (result) {
+
+            $(".chb_permission[user='" + username + "']").prop('checked', 'checked');
+            $(messageokbody).html("عملیات با موفقیت انجام شد.")
+            $(messageok).modal();
+        })
+
+
+    })
+
+    $('.disactiveallforthisuser').click(function (e) {
+        e.preventDefault()
+        var username = $(this).attr('user')
+        jQuery.post("/admin/disactiveallforthisuser", { user: username }, function (result) {
+            $(".chb_permission[user='" + username + "']").prop('checked', '');
+            $(messageokbody).html("عملیات با موفقیت انجام شد.")
+            $(messageok).modal();
+
+
+
+
+        })
+
+
+    })
+
+    $('.activeallforthisuserandcontroller').click(function (e) {
+        e.preventDefault()
+        var username = $(this).attr('user')
+        var controller = $(this).attr('controller')
+        jQuery.post("/admin/activeallforthisuserandcontroller", { user: username, controller: controller }, function (result) {
+
+            $(".chb_permission[user='" + username + "'][controller='" + controller + "']").prop('checked', 'checked');
+            $(messageokbody).html("عملیات با موفقیت انجام شد.")
+            $(messageok).modal();
+        })
+
+
+    })
+
+    $('.disactiveallforthisuserandcontroller').click(function (e) {
+        e.preventDefault()
+        var username = $(this).attr('user')
+        var controller = $(this).attr('controller')
+        jQuery.post("/admin/disactiveallforthisuserandcontroller", { user: username, controller: controller }, function (result) {
+
+            $(".chb_permission[user='" + username + "'][controller='" + controller + "']").prop('checked', '');
+            $(messageokbody).html("عملیات با موفقیت انجام شد.")
+            $(messageok).modal();
+        })
+
+
+    })
+
+    $('.updateaccess').click(function () {
+        var userid = $(this).attr('userid')
+        jQuery.post('/admin/updateaccessleveltouser', { userid: userid }, function (msg) {
+            if (msg == true) {
+                alert('فیلدهای سطح دسترسی به روز شدند')
+            } else {
+                alert('خطایی رخ داده است')
+            }
+
+        })
+    })
+</script>
+
+

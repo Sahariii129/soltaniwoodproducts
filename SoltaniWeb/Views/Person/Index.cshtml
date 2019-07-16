@@ -1,0 +1,324 @@
+﻿@using SoltaniWeb.Models.structs.PersonVM
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+<script src="~/lib/moment/moment.js"></script>
+<script src="~/lib/moment-jalaali/moment-jalaali.js"></script>
+<link rel="stylesheet" href="~/lib/persianDatepicker-master/css/persianDatepicker-default.css" />
+<script src="~/lib/persianDatepicker-master/js/persianDatepicker.min.js"></script>
+<script>
+    var counter = 0;
+
+    function OnDataBound() {
+        $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+
+    }
+
+    function OnDataBinding(e) {
+        //Implement the event handler for DataBinding
+        var page = e.sender.dataSource.page();
+        var pageSize = e.sender.dataSource.pageSize();
+        // reset row number based on the selected page in the pager
+        counter = (page - 1) * pageSize;
+    }
+    function renderNumber() {
+        return ++counter;
+    }
+
+
+</script>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">لیست مشتریان</div>
+        <div class="card-body">
+            <input type="button" id="clearFilterButton" class="btn btn-info" value="حذف فیلتر" />
+            <a asp-action="Create" class="btn m-btn--pill btn-success  m-btn--wide">ایجاد مشتری جدید</a>
+            <hr />
+            <div class="tab-pane fade  show active" id="addDatabase">
+
+                <div class="k-rtl">
+
+                    @(Html.Kendo().Grid<PersonViewModel>()
+                                  .Name("grid_person")
+                                  .Events(x => x.DataBinding("OnDataBinding")
+                                      .FilterMenuInit("filterMenuInit")
+                                      .FilterMenuOpen("filterMenuOpen")
+                                      .Filter("OnDataFilter"))
+                                  .Columns(columns =>
+                                  {
+
+                                          //  columns.Select().Width(50);
+                                          columns.Bound(p => p.GroupName).Sortable(false)
+                                          .Filterable(filterable =>
+                                              filterable.UI("groupFilter")
+                                          ).Filterable(filter =>
+                                          {
+                                              filter.Extra(false);
+                                              filter.Operators(op =>
+                                              {
+                                                  op.ForString(str =>
+                                                  {
+                                                      str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                                                  });
+
+
+                                              }); 
+                                          }).ClientTemplate("#= iterate(PersonGroups) #")
+                                          .Width(160).Title("نام گروه");
+                                      columns.Bound(p => p.FullNamePerson).Filterable(filter =>
+                                      {
+                                          filter.Operators(op =>
+                                          {
+                                              op.ForString(str =>
+                                              {
+                                                  str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                                              });
+
+
+                                          });
+                                      }).Width(130).Title("مشتری");
+                                      columns.Bound(p => p.Cell).Width(100).Filterable(true).Title("موبایل");
+                                      columns.Bound(p => p.CodeMeli).Width(100).Filterable(true).Title("کدملی");
+                                      columns.Bound(p => p.Tell).Width(100).Title("تلفن");
+                                      columns.Bound(c => c.CreateDatetime)
+                                          //.Filterable(filterable => filterable.UI("OnDataFilter"))
+                                          .ClientTemplate("<span data-toggle='tooltip' data-original-title='#=CreateDatetime# '>#=CreateDatetimeShamsi#</span>")
+                                          .Width(130)
+                                          .Filterable(filterable => filterable.UI("PersianDateTimeFilter"))
+                                          .Title("تاریخ ثبت");
+                                      columns.Bound(p => p.BrancheName).Sortable(false)
+                                          .Filterable(filterable =>
+                                              filterable.UI("BrancheNameFilter")
+                                          ).Filterable(filter =>
+                                          {
+                                              filter.Extra(false);
+                                              filter.Operators(op =>
+                                              {
+                                                  op.ForString(str =>
+                                                  {
+                                                      str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                                                  });
+
+
+                                              });
+                                          })
+                                          .Width(100).Title("شعبه");
+                                    
+                                      columns.Bound(c => c.Id)
+                                          .ClientTemplate("#=showStatus(Id)#")
+                                          .Width(120)
+                                          .Title("آدرس های کاربر");
+                                      columns.Bound(c => c.Id)
+                                          .ClientTemplate("#=showInformation(Id)#")
+                                          .Width(120)
+                                          .Title("اطلاعات کاربر");
+                                      columns.Bound(p => p.Id).Width(120).Title("ویرایش کاربر").ClientTemplate("<a  class='btn btn-success' href='person/Create/#=Id#'>ویرایش</a>");
+                                  })
+                                  .Pageable(pageable => pageable
+                                      .Refresh(true)
+                                      .PageSizes(new int[] { 10, 20, 50, 100 })
+                                      .ButtonCount(10))
+                                  .Sortable()
+                                  // .Events(ev => ev.Change("onChange"))
+                                  .PersistSelection()
+                                  .Scrollable()
+                                  .Resizable(resizable => resizable.Columns(true))
+                                  .Filterable()
+                                  .DataSource(dataSource => dataSource
+                                      .Ajax()
+                                      .PageSize(10)
+                                      .Model(model => model.Id(p => p.Id))
+                                      .ServerOperation(false)
+                                      .Read(read => read.Action("Persons_Read", "Person"))
+                                  ))
+                </div>
+                <div class="row">
+                    <div class="k-rtl">
+
+                        @{
+                            Html.Kendo().Window()
+                                .Name("windowAddressPerson")
+                                .Title("")
+                                .Actions(x => x.Close().Minimize().Maximize())
+                                .Visible(false)
+                                .Modal(true)
+                                .Height(600)
+                                .Width(1100)
+                                .Animation(c => c.Open(builder => builder.Zoom(ZoomDirection.In).Duration(AnimationDuration.Fast))
+                                    .Close(builder => builder.Zoom(ZoomDirection.Out).Duration(AnimationDuration.Fast))
+                                    .Enable(true))
+                                .Draggable()
+                                .Resizable()
+                                .Render();
+                        }
+                        @{
+                            Html.Kendo().Window()
+                                .Name("windowInformationPerson")
+                                .Title("")
+                                .Actions(x => x.Close().Minimize().Maximize())
+                                .Visible(false)
+                                .Modal(true)
+                                .Height(600)
+                                .Width(1100)
+                                .Animation(c => c.Open(builder => builder.Zoom(ZoomDirection.In).Duration(AnimationDuration.Fast))
+                                    .Close(builder => builder.Zoom(ZoomDirection.Out).Duration(AnimationDuration.Fast))
+                                    .Enable(true))
+                                .Draggable()
+                                .Resizable()
+                                .Render();
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var scroll = false;
+    function filterMenuInit(e) {
+
+        var popup = $(e.container[0]).data("kendoPopup");
+        popup.bind("close", function (e) {
+            if (scroll) {
+                e.preventDefault(); //prevent popup closing
+            }
+        });
+
+    }
+    function filterMenuOpen(e) {
+        if (e.field == "CreateDatetime") {
+            var firstInput = e.container.find(".k-textbox:first");
+            var secondInput = e.container.find(".k-textbox:last");
+
+            var value1 = firstInput.attr('data-jdate'), value2 = secondInput.attr('data-jdate');
+            var text1 = firstInput.val(), text2 = secondInput.val();
+            if (value1 && text1) {
+                firstInput.val(value1);
+                firstInput.change();
+            }
+
+            if (value2 && text2) {
+                secondInput.val(value2);
+                secondInput.change();
+            }
+        }
+    }
+
+    function OnDataFilter(args) {
+        if (args.filter)
+            if (args.field === "CreateDatetime") {
+                for (var i = 0; i < args.filter.filters.length; i++) {
+                    var filterValue = args.filter.filters[i].value;
+                    if (filterValue) {
+                        args.filter.filters[i].value = moment(filterValue, 'jYYYY/jMM/jDD').format('YYYY-MM-DD');
+                    }
+                }
+            }
+
+    }
+    function PersianDateTimeFilter(element) {
+        var id = "el-" + newId();
+        $(element[0]).addClass("k-input k-textbox").attr("style", "width:100%").attr("name", id).attr("id", id);
+
+        $(element[0]).persianDatepicker({
+            cellWidth: 40,
+            cellHeight: 30,
+            fontSize: 14,
+            onShow: function () {
+                scroll = true;
+            },
+            onHide: function () {
+                scroll = false;
+            },
+            onSelect: function () {
+                $(element[0]).change();
+            }
+        });
+    }
+    var newId = function () {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        for (var i = 0; i < 10; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        return text;
+    };
+</script>
+<script>
+
+    function iterate(object) {
+        var html = "<ul>";
+
+        for (var x = 0; x < object.length; x++) {
+            html += "<li>";
+            html += object[x];
+            html += "</li>";
+        }
+
+        html += "</ul>";
+        return html;
+    }
+    $("#clearFilterButton").click(function () {
+
+        $("#grid_person").data("kendoGrid").dataSource.filter({});
+    });
+    function showStatus(id) {
+        var str = "";
+        str += "<div style='width:100%;text-align:center;margin: 5px 0;'><a class='btn btn-info' onclick=\"OpenWindowPersonAddress('" + id + "')\"><span id='pnrstate-" + id + "' > <i class='fas fa-address-card'></i> </span></a>" +
+            "</div>";
+        return str;
+    }
+    function OpenWindowPersonAddress(id) {
+
+        var window = $("#windowAddressPerson").data("kendoWindow");
+        var url = '@Url.Action("PersonAddres")';
+        window.content("");
+        window.refresh({
+            url: url,
+            data: { personId: id }
+        });
+        window.center().open();
+
+    }
+    function showInformation(id) {
+        var str = "";
+        str += "<div style='width:100%;text-align:center;margin: 5px 0;'><a class='btn btn-info' onclick=\"OpenWindowInformations('" + id + "')\"><span id='pnrstate-" + id + "' ><i class='fas fa-info-circle'></i></span></a>" +
+            "</div>";
+        return str;
+    }
+    function OpenWindowInformations(id) {
+
+        var window = $("#windowAddressPerson").data("kendoWindow");
+        var url = '@Url.Action("PersonInformation")';
+        window.content("");
+        window.refresh({
+            url: url,
+            data: { personId: id }
+        });
+        window.center().open();
+
+    }
+    function groupFilter(element) {
+        element.kendoDropDownList({
+            dataSource: {
+                transport: {
+                    read: "@Url.Action("FilterMenuCustomization_Groups","GroupPerson")"
+                }
+            },
+            optionLabel: "--انتخاب گروه--"
+        });
+    }
+    function BrancheNameFilter(element) {
+        element.kendoDropDownList({
+            dataSource: {
+                transport: {
+                    read: "@Url.Action("FilterMenuCustomization_Branches", "Branche")"
+                }
+            },
+            optionLabel: "--انتخاب شعبه--"
+        });
+    }
+</script>

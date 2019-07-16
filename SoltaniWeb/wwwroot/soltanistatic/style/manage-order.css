@@ -1,0 +1,413 @@
+﻿.panelbox {
+    position: relative;
+}
+
+.myform2 {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+}
+
+.myform3 {
+    display: none;
+    z-index: 1001;
+    position: absolute;
+}
+
+
+.column {
+    float: right;
+    width: 50px;
+    padding: 5px;
+}
+
+.myrow {
+    width: 180px !important;
+}
+    /* Clearfix (clear floats) */
+    .myrow::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+.imgbtn {
+    cursor: pointer;
+}
+
+.loading-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 10;
+}
+
+.loader {
+    display: none;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 40%;
+    left: 45%;
+    text-align: center;
+    margin-left: -50px;
+    margin-top: -100px;
+    z-index: 2;
+    overflow: auto;
+}
+
+#panelbodyfororders {
+    height: 600px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.toolband {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    height: 40px;
+    width: 98%;
+    padding: 5px;
+    /*display: none;*/
+}
+
+    .toolband button {
+        float: left;
+        font-weight: 600;
+        color: #000000;
+    }
+
+.hidden {
+    display: none;
+}
+
+.psearch {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 90%;
+    z-index: 100;
+    max-width: 400px;
+    margin-right: 3px;
+    margin-top: 3px;
+}
+
+.sheadingH .sheading:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: 5px;
+    content: " ";
+    background-color: #ffca01;
+}
+
+.sheadingH .sheading.open {
+    background-color: #f8eeca !important;
+    border-top: 4px solid #ffca01 !important;
+    border-left: 4px solid #ffca01 !important;
+}
+
+    .sheadingH .sheading.open:before {
+        display: none;
+    }
+.validationrequired {
+    border: 3px solid red;
+}
+
+.headerorderrow {
+    border: 3px solid blue;
+    /*height: 70 px;*/
+    padding: 10px;
+}
+.orderinfo1.col-lg-4 {
+    border-left: 3px solid #ffca01;
+}
+.myformcontent .fright {
+    /*float: right !important;*/
+    font-family: 'Iranian Sans';
+    color: #000000;
+    font-weight: 900;
+    font-size: 16px !important;
+}
+
+.myblock {
+    width: 30%;
+    margin: 2px 2px 2px 20px;
+    display: inline-block;
+    border: 3px solid #1c9808;
+    padding: 5px;
+}
+
+.myformcontent .orderinfo1 {
+    margin: 0px !important;
+    border-radius: 5px;
+    /*height:560px;*/
+    min-height: 540px;
+}
+
+.myformcontent .pricetable thead {
+    display: block;
+    overflow: auto;
+}
+
+.myformcontent .pricetable tfoot {
+    display: block;
+    overflow: auto;
+}
+
+.myformcontent .pricetable tbody {
+    display: block;
+    height: 300px;
+    overflow: auto;
+}
+
+.myformcontent .pricetable th, td {
+    padding: .5em 1em;
+    text-align: center;
+    vertical-align: top;
+}
+
+.pname {
+    width: 400px;
+}
+
+.pnumber {
+    width: 50px;
+}
+
+.pdesc {
+    width: 400px;
+}
+
+.prow {
+    width: 30px;
+}
+
+.totalpnumberlbl {
+    width: 430px;
+    font-weight: 900;
+    color: red;
+}
+
+.totalpnumber {
+    width: 50px;
+    font-weight: 900;
+    color: red;
+}
+
+.myimgefrm {
+    margin: 5px;
+}
+
+.img1 {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.descriptionp {
+    margin-top: 2px;
+    position: relative;
+    height: 20px;
+}
+
+.myformcontent input[type="text"], .myselect, textarea {
+    font-weight: 800 !important;
+    color: red !important;
+    font-size: 16px !important;
+}
+
+.myformcontent tr {
+    font-weight: 800 !important;
+    color: darkblue !important;
+    font-size: 16px !important;
+    cursor: pointer;
+}
+
+.trfooter {
+    background-color: #be0f0f !important;
+    height: 25px !important;
+}
+
+    .trfooter td {
+        color: #ffffff !important;
+        font-weight: 900;
+    }
+/*.form-horizontal lable{
+        font-size:14px !important;
+        font-weight :900 !important;
+    }*/
+/*label {
+        font-weight: 900 !important;
+    }*/
+.ui-menu-item, option {
+    font-weight: 700 !important;
+    color: blue !important;
+    font-family: 'Iranian Sans';
+}
+
+.m {
+    font-weight: 700 !important;
+}
+
+.valid {
+    color: red;
+    display: none;
+}
+
+.controltools {
+    /*float : left;*/
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.contorltoolsimg {
+    width: 32px;
+    height: 32px;
+}
+
+.rowselected {
+    background-color: #9abce7 !important;
+    color: #ffffff !important;
+}
+.myformcontent .card-body {
+    height: 570px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.done {
+    position: absolute;
+    top: 50px;
+    left: 30px;
+}
+
+    .done img {
+        width: 40px;
+        height: 40px;
+    }
+
+.orderselected {
+    border: 5px solid red;
+}
+
+.daftar {
+    background-color: #6a95cc !important;
+}
+
+.shahrak {
+    background-color: #6a95cc !important;
+}
+
+.torderinfo td {
+    text-align: right !important;
+}
+#panelbodyfororders .card-footer {
+    background-color: #f8eec9;
+    color: #ffffff;
+    height: 70px;
+}
+#panelbodyfororders .torderdetails tbody, .torderdetails tfoot {
+    font-size: 12px;
+}
+.torderdetails tbody td {
+    text-align: right !important;
+}
+
+.torderdetails:before {
+    position: absolute;
+    top: -10px;
+    width: 10px;
+    height: 10px;
+}
+@media(max-width:991.98px) {
+    .psearch {
+        max-width: none !important;
+        width: 100%;
+    }
+
+    .form-control {
+        font-size: 1.5rem;
+    }
+
+    .TextButtom button {
+        height: 100% !important;
+        width: 70px !important;
+    }
+
+    .btn {
+        font-size: 30px;
+        padding: 10px 20px;
+    }
+
+    .psearch .close {
+        font-size: 40px;
+    }
+
+    .TextButtom input {
+        width: calc(100% - 70px);
+        font-size: 30px;
+    }
+
+    .myform2 {
+        width: 100% !important;
+        max-width:none !important;
+    }
+
+    .contorltoolsimg {
+        width: 50px;
+        height: 50px;
+    }
+    #panelbodyfororders {
+        height: 800px;
+    }
+    .myformcontent .card-body {
+        height: 800px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+    .myformcontent .fright {
+        font-size: 25px !important;
+    }
+    .myformcontent input[type="text"], .myselect, textarea {
+        font-size: 25px !important;
+    }
+    .myformcontent tr {
+        font-size: 25px !important;
+    }
+    .orderinfo1.col-lg-4 {
+        border-left:unset !important;
+    }
+    .img1{
+        width:50px;
+        height:50px;
+        margin:0 10px;
+    }
+    #add_tools{
+        width:75px;
+        height:75px;
+    }
+    .sheading {
+        padding: 1.25rem 1.25rem;
+    }
+
+    .done {
+        top: 90px;
+        left: 30px;
+    }
+
+        .done img {
+            width: 70px;
+            height: 70px;
+        }
+    #panelbodyfororders .card-footer {
+        height: 100px;
+    }
+    #panelbodyfororders .torderdetails tbody, .torderdetails tfoot {
+        font-size: 23px;
+    }
+}

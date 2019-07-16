@@ -1,0 +1,432 @@
+﻿@using SoltaniWeb.Models.Extensions
+
+
+@{
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    ViewBag.Title = "مدیریت تراکنش های مالی انجام شده";
+    int i = 1;
+    var today = DateTime.Now.ToPersianDate();
+    <script src="~/Scripts/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" />
+
+}
+
+
+
+<br />
+
+
+
+<div dir="rtl" align="right">
+    <div id="rsperror"></div>
+    <table id="list" cellpadding="0" cellspacing="0" class="table table-bordered"></table>
+    <div id="pager" style="text-align:center;"></div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body" id="bodymodal">
+
+                ...
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+
+
+
+
+
+    // قسمت مربوط به jqgrid
+
+    var searchOptions = ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc'];
+    $(document).ready(function () {
+
+        $.jgrid.formatter.integer.thousandsSeparator = ',';
+        $.jgrid.formatter.number.thousandsSeparator = ',';
+        $.jgrid.formatter.currency.thousandsSeparator = ',';
+
+
+
+        $('#list').jqGrid({
+            caption: "مدیریت تراکنش های مالی انجام شده",
+            //url from wich data should be requested
+            url: '@Url.Action("Gettransaction","admin")',
+            //url for edit operation
+            editurl: '@Url.Action("Edittransaction", "admin")',
+            //type of data
+            datatype: 'json',
+            jsonReader: {
+                root: "Rows",
+                page: "Page",
+                total: "Total",
+                records: "Records",
+                repeatitems: true,
+                userdata: "UserData",
+                id: "Id",
+                cell: "RowCells"
+            },
+            //url access method type
+            mtype: 'GET',
+            //columns names
+            colNames: ['ID', 'سبد', 'تاریخ','ساعت', 'مبلغ','شرح', 'شماره تراکنش', 'ID کاربر', 'نام کاربری'],
+            //columns model
+            colModel: [
+                {
+                    name: 'Id', index: 'Id', align: 'center', width: 50,
+                    editable: false
+                    , search: true, stype: 'text', searchoptions: { sopt: searchOptions }
+                },
+                {
+                    name: 'cartid', index: 'cartid', align: 'center', width: 50,
+                    editable: false
+                    , search: true, stype: 'text', searchoptions: { sopt: searchOptions }
+                },
+                {
+                    name: 'varizdate', index: 'varizdate', align: 'center', width: 150,
+                      editable: true, edittype: 'text',
+                      search: true, stype: 'text', searchOperators: true,
+                      //formatter: 'date', formatoptions: { newformat: 'y/m/d' },
+                      editoptions: {
+                          dataInit: function (elem) {
+                              $(elem).width(200);
+                          },
+                          maxlength: 100,
+                          // http://www.dotnettips.info/post/1382
+                          onclick: "PersianDatePicker.Show(this,'@today');"
+                      },
+                      searchoptions: {
+                          sopt: searchOptions,
+                          maxlength: 10,
+                          // http://www.dotnettips.info/post/1382
+                          onclick: "PersianDatePicker.Show(this,'@today');",
+                          onchange: "$(this).trigger('change');",
+                          onkeyup: "$(this).trigger('change');"
+                      },
+
+                      editrules: {
+                          required: true
+                      }
+                },
+                {
+                    name: 'transtime', index: 'transtime', align: 'center', width: 100,
+                    editable: false
+                    , search: true, stype: 'text', searchoptions: { sopt: searchOptions }
+                },
+                {
+                    name: 'amount', index: 'amount', align: 'center', width: 120,
+                    editable: true, edittype: 'text'
+                    , search: true, stype: 'text', searchoptions: { sopt: searchOptions }
+                    , formatter: 'currency',
+                    formatoptions:
+                    {
+                        decimalSeparator: '.',
+                        thousandsSeparator: ',',
+                        decimalPlaces: 0,
+                        prefix: ''
+                    },
+                },
+                {
+                    name: 'sharh', index: 'sharh', align: 'center', width: 300,
+                    editable: true, edittype: 'text'
+                    , search: true, stype: 'text', searchoptions: { sopt: searchOptions }
+                },
+                {
+                    name: 'transid', index: 'transid', align: 'center', width: 100,
+                    editable: true, edittype: 'text'
+                    , search: true, stype: 'text', searchoptions: { sopt: searchOptions }
+                },
+                {
+                    name: 'userid', index: 'userid', align: 'center', width: 100,
+                    editable: false
+                    , search: true, stype: 'text', searchoptions: { sopt: searchOptions }
+                },
+                {
+                    name: 'username', index: 'username', align: 'center', width: 200,
+                    editable: false
+                    , search: true, stype: 'text', searchoptions: { sopt: searchOptions }
+                },
+
+
+
+            ],
+            //pager for grid
+            pager: $('#pager'),
+            //number of rows per page
+            rowNum: 20,
+            rowList: [10, 20, 50, 100, 'All'],
+            //initial sorting column
+            sortname: 'Id',
+            //initial sorting direction
+            sortorder: 'DESC',
+            //we want to display total records count
+            viewrecords: true,
+            width: 'auto',
+            height: 450,
+            hidegrid: false,
+            direction: "rtl",
+            gridview: true,
+
+            rownumbers: true,
+            rownumbers: true,
+            footerrow: true, // the footer will be used for Grand Total
+            beforeSubmitCell: function (rowid, cellname, value, iRow, iCol) {
+                alert('beforeSubmitCell: ' + cellname);
+            },
+            //
+            /* definition of jqGrid */
+            onSelectRow: function (rowid) {
+             
+                
+                selRowId = $('#list').jqGrid('getGridParam', 'selrow')
+                celValue = $('#list').jqGrid('getCell', selRowId, 'cartid')
+                
+                // you can use getCell or getRowData to examine the contain of
+                // the selected row to decide whether the row is editable or not
+                if (celValue=="") {
+                    // eneble the "Edit" button in the navigator
+                    $("#edit_" + this.id).removeClass('ui-state-disabled');
+                    $("#del_" + this.id).removeClass('ui-state-disabled');
+                } else {
+                    //alert('این رکورد قابل تغییر و یا حذف توسط شما نمی باشد')
+                    // unselect previous selected row
+                    // disable the "Edit" and "Del" button in the navigator
+                    $("#edit_" + this.id).addClass('ui-state-disabled');
+                    $("#del_" + this.id).addClass('ui-state-disabled');
+                }
+                return true; // allow selection or unselection
+            },
+
+            //
+            loadComplete: function () {
+                //change alternate rows color
+                //$("tr.jqgrow:odd").css("background", "#E0E0E0");
+
+                $(".ui-pg-selbox option[value='All']").val(100000000);
+
+                ///
+                var reportSumcost = jQuery(list).jqGrid('getCol', 'totalcostkala', false, 'sum');
+                var reportSumkala = jQuery(list).jqGrid('getCol', 'kalanumberm', false, 'sum');
+                jQuery(list).jqGrid('footerData', 'set',
+                {
+
+
+                    totalcostkala: reportSumcost,
+                    kalanumber: reportSumkala,
+                });
+
+
+                ///
+
+                $("tr.footrow td").css({
+                    "background": "black",
+                    "color": "#FFF",
+                    "font-family": 'B Yekan',
+                    "font-size": '14px',
+                });
+
+            },
+            gridComplete: function () {
+                var rows = $("#list").getDataIDs();
+                for (var i = 0; i < rows.length; i++) {
+                    var status = $("#list").getCell(rows[i], "amount");
+                    if (status <0) {
+                        $("#list").jqGrid('setRowData', rows[i], false, { color: 'white', weightfont: 'bold', background: '#2f4f4f' });
+                    }
+                }
+            },
+            loadError: function (xhr, st, err) {
+                jQuery("#rsperror").html("Type: " + st + "; Response: " + xhr.status + " " + xhr.statusText);
+            },
+            beforeInitData: function () {
+                $("#editmod" + this.id).remove();
+            },
+
+        }).navGrid(
+                '#pager',
+                //enabling buttons
+                { add: true, del: true, edit: true, search: true },
+                //edit option
+                {
+                   
+                    beforeShowForm: function (form) {
+                        selRowId = $('#list').jqGrid('getGridParam', 'selrow')
+                        celValue = $('#list').jqGrid('getCell', selRowId, 'cartid')
+                           
+                                centerDialog(form, $('#list'));
+                                
+                           
+                        
+                    },
+                    onInitializeForm: function ($form) {
+                        $form.css({ height: "auto", width: "auto" });
+                        $form.closest(".ui-jqdialog").css({ height: "auto", width: "auto" });
+                    },
+                    width: 500, checkOnUpdate: true, checkOnSubmit: true, height: 340,
+                },
+                //add options
+                {
+                    width: 500, url: '@Url.Action("addnewtransaction", "admin")', height: 340,
+                    reloadAfterSubmit: true, checkOnUpdate: true, checkOnSubmit: true,
+                    closeAfteradd: true,
+                    beforeShowForm: function (form) {
+                        centerDialog(form, $('#list'));
+                    },
+                    onInitializeForm: function ($form) {
+                        $form.css({ height: "auto", width: "auto" });
+                        $form.closest(".ui-jqdialog").css({ height: "auto", width: "auto" });
+                    },
+
+                },
+                //delete options
+                {
+                    url: '@Url.Action("Deletetransaction", "admin")', reloadAfterSubmit: false
+                    },
+                    {
+                        // search options
+                        multipleSearch: true,
+                        showQuery: true,
+                        closeOnEscape: true,
+                        closeAfterSearch: true,
+                        ignoreCase: true
+
+
+                    }).jqGrid('navButtonAdd', '#pager', {
+                        caption: "", buttonicon: "ui-icon-print", title: "خروجی پی دی اف",
+                        onClickButton: function () {
+                            $("#list").jqGrid('excelExport', { url: '@Url.Action("GetProducts","admin")' });
+                        }
+                    }).jqGrid('navButtonAdd', '#pager',
+                            {
+                                caption: "", title: "Reorder Columns",
+                                buttonicon: "ui-icon-tag",
+                                onClickButton: function () {
+                                    jQuery("#list").jqGrid('columnChooser');
+                                }
+                            }).jqGrid('gridResize', { minWidth: 400 });
+        });
+
+        function getHiddenColumnsList() {
+            var colModel = $("#list").jqGrid('getGridParam', 'colModel');
+            var hiddenColumns = new Array();
+
+            if (!colModel)
+                return hiddenColumns;
+
+            for (var i = 0; i < colModel.length; i++) {
+                if (colModel[i].hidden) {
+                    hiddenColumns.push(colModel[i].name);
+                }
+            }
+            return hiddenColumns;
+        }
+
+
+
+
+
+        function unformatCurrency(cellvalue, options) {
+
+            return cellvalue.replace(",", "");
+        };
+
+
+
+
+        function centerDialog(form, grid) {
+            var dlgDiv = $("#editmod" + grid[0].id);
+            var parentDiv = dlgDiv.parent(); // div#gbox_list
+            var dlgWidth = dlgDiv.width();
+            var parentWidth = parentDiv.width();
+            var dlgHeight = dlgDiv.height();
+            var parentHeight = parentDiv.height();
+            var parentTop = parentDiv.offset().top;
+            var parentLeft = parentDiv.offset().left;
+            dlgDiv[0].style.top = Math.round(parentTop + (parentHeight - dlgHeight) / 2) + "px";
+            dlgDiv[0].style.left = Math.round(parentLeft + (parentWidth - dlgWidth) / 2) + "px";
+        }
+
+
+        function toolbarSearching() {
+            $('#list').filterToolbar({
+                groupOp: 'OR',
+                defaultSearch: "cn",
+                autosearch: true,
+                searchOnEnter: true,
+                searchOperators: true, // فعال سازي منوي اپراتورها
+                stringResult: true // وجود اين سطر سبب مي‌شود تا اپراتورها به سرور ارسال شوند
+            });
+        };
+
+        function singleSearching() {
+            $('#list').searchGrid({
+                closeAfterSearch: true
+            });
+        };
+
+        function advancedSearching() {
+            $('#list').searchGrid({
+                multipleSearch: true,
+                closeAfterSearch: true
+            });
+        };
+
+
+
+        function SearchBykalaName() {
+            //  Fetch the text from our <input> control
+            var searchString = $("#productid").val();
+
+            //  Prepare to pass a new search filter to our jqGrid
+            var f = { groupOp: "AND", rules: [] };
+
+            //  Remember to change the following line to reflect the jqGrid column you want to search for your string in
+            //  In this example, I'm searching through the UserName column.
+
+            f.rules.push({ field: "productid", op: "eq", data: searchString });
+
+            var grid = $('#list');
+            grid[0].p.search = f.rules.length > 0;
+            $.extend(grid[0].p.postData, { filters: JSON.stringify(f) });
+            grid.trigger("reloadGrid", [{ page: 1 }]);
+        }
+
+
+
+        $("#dynamicGrouping").change(function () {
+            var groupingName = $(this).val();
+            if (groupingName) {
+                $('#list').jqGrid('groupingGroupBy', groupingName, {
+                    groupOrder: ['desc'],
+                    groupColumnShow: [false],
+                    groupCollapse: true
+                });
+            } else {
+                $('#list').jqGrid('groupingRemove');
+            }
+        });
+
+</script>
+
+
+
+
+
+

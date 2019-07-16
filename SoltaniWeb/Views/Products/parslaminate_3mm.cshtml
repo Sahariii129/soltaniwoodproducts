@@ -1,0 +1,136 @@
+﻿@model IQueryable<SoltaniWeb.Models.Domain.tbl_products>
+
+@{
+    //ViewBag.Title = "AGE_Highgloss";
+    ViewBag.description = " نمونه رنگ های سه میل ملامینه ضد خش پارس لمینت " + " - " + "فروش در شیراز و استان فارس" + " -  " + " Pars Laminete مشخصات کلی ام دی اف های ";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    string username = Context.Session.GetString("username");
+    var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
+}
+<script src="~/Scripts/jquery-2.2.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+    <br />
+
+    <div class=" col-lg-9 col-md-12 col-sm-12 col-xs-12  ">
+        <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12  " style="margin-left:5px; background-color:#ffffff;  border-radius:5px; min-height :433px;margin-bottom:5px;">
+
+            <div class="row">
+                <div class="col-lg-9 col-xs-12">
+                    <h1 style="font-size:22px;"><span style="color:#11cf1c;">سه میل پارس لمینت </span> <span style="color:#ff0000;">Pars Laminate</span><span style="display :none ;">استان فارس - شیراز </span></h1>
+                </div>
+                <div class="col-lg-3 col-xs-12">
+                    <br />
+                    <img src="~/Content/img/logo/parslaminate.jpg" style="width :100%;height :50px;" alt="پارس لمینت - لوگو" />
+                </div>
+            </div>
+            <div class="row">
+
+
+                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>گروه تولیدی پارس لمینت در سال 1380 با هدف تولید انواع نئوپان و ام دی اف با روکش لترون فعالیت خود را آغاز نمود. و در سال 1388 تولید انواع ام دی اف با روکشهای P.V.C و های گلاس را به محصولات خود اضافه نموده.هم اکنون این گروه تولیدی در کارخانه ای به مساحت 6000 متر مربع و با پیشرفته ترین ماشین آلات تمام اتوماتیک روزانه قادر به تولید 3000 ورق ام دی اف 3 میلیمتر سفید و رنگی و 2000 ورق ام دی اف با روکشهای های گلاس و P.V.C می باشد.</p>
+                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span> در حال حاضر کالای چوب سلطانی به عنوان عاملیت فروش شرکت پارس لمینت در شیراز و استان فارس ورق های 3 میل تمام ملامینه ضد خش برجسته به رنگ های زیر را آماده فروش و بارگیری دارد.  </p>
+              
+
+                <center><img src="~/Content/img/products/parslaminate/Product-gloss-pvc.jpg" class=" img-thumbnail" style=" width:60%; height :170px;" /></center>
+                
+                  
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    چیدمان بر اساس  <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a style="cursor:pointer;" onclick="sortingbyalpha(@Model.FirstOrDefault().categoryid)"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px;"> </span>حروف الفبا  <span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" style="position:absolute; left:5px; top:12px;"></span></a></li>
+                                    <li><a style="cursor:pointer;" onclick="sortingdefault(@Model.FirstOrDefault().categoryid)"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px;"> </span> شماره کد <span class="glyphicon glyphicon-sort-by-order" aria-hidden="true" style="position:absolute; left:5px; top:37px;"></span></a></li>
+
+                                </ul>
+                            </div><!-- /btn-group -->
+                            <input id="searchp" type="text" class="form-control" name="textp" placeholder="نام یا کد محصول را وارد نمایید...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="serachforproducts(@Model.FirstOrDefault().categoryid)">جستجو!</button>
+                            </span>
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+
+                </div><!-- /.row -->
+
+
+
+
+            </div>
+            <div id="topiccolor" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top:5px;">
+
+                <p id="imagegallery" class="bg-success" style=" text-align :center ;">.:: کالیته ام دی اف 3 میل برجسته تمام ملامینه پارس لمینت  ::.-  <span id="baseon">چیدمان بر اساس شماره کد</span></p>
+
+            </div>
+
+        </div>
+
+        <div id="imagegallerydetaile" class="row myfont">
+            @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
+        </div>
+
+    </div>
+
+<br />
+
+
+
+<script src="~/Scripts/jquery-2.1.4.min.js"></script>
+<script>
+    function sortingdefault() {
+//alert("hi")
+        location.reload();
+
+    }
+
+
+
+    function sortingbyalpha(catgid) {
+
+
+        $.ajax({
+            url: '/products/sortingbyalpha',
+            type: 'POST',
+            dataType: "json",
+            data: { id: catgid },
+            error: function (err) {
+                alert(err.status + "   " + err.statusText);
+            }
+        }).done(function (msg) {
+
+            $("#imagegallerydetaile").html('');
+            $.each(msg, function (index, val) {
+                //alert(val.name)
+                $("#imagegallerydetaile").append(" <div class='col-lg-3 col-md-3 col-sm-6 col-xs-12 '><a href='#'><img src='/Content/img/products/" +val.image +"' alt='" + val.name+ "' style='width:100%; height :250px;' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-6 col-md-6 col-sm-6 col-xs-6'><a href='#'><h5 style='text-align :center ;'>" +val.name+" </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'> "+val.code+ " </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'>" + "" +" </h5></a> </div><div class='col-lg-12' style=' height:10px;'></div></div>");
+            });
+        });
+    }
+
+     $(function(){
+        $(".categorylist[section_id='" + @Model.FirstOrDefault().category.section_.id + "']").toggle(500)
+         $(".category[catg_id='" + @Model.FirstOrDefault().category.id + "']").css('background-color', '#4cff00')
+
+
+    })
+
+
+
+</script>
+
+
+
+
+

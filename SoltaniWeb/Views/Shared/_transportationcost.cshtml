@@ -1,0 +1,53 @@
+﻿@using SoltaniWeb.Models.Domain
+@model tbl_purchasekart
+@{
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    var ptcost=db.tbl_transportationcost.Where(a => a.cart_id == Model.id);
+    var weight= ptcost.Count()>0?ptcost.FirstOrDefault().totalweight.Value:0;
+    var totalcosttrans = ptcost.Count() > 0 ? ptcost.Sum(a => a.totaltcost.Value) : 0;
+}
+
+<table class="table table-responsive table-bordered" style="font-size:12px;">
+    <thead>
+        <tr style="background-color:red;color:#ffffff;">
+            <td colspan="4">مشخصات چگونگی حمل سفارش شما</td>
+        </tr>
+        <tr>
+            <td>
+                وسیله نقلیه
+            </td>
+            <td>
+                تعداد
+            </td>
+            <td>
+                کرایه
+            </td>
+            <td>
+              کرایه کل
+            </td>
+        </tr>
+    </thead>
+
+    @foreach (var item in ptcost)
+    {
+        <tr>
+            
+            <td>@item.vehicle_.vehiclename</td>
+            <td>@item.number</td>
+            <td>@item.tcost</td>
+            <td>@item.totaltcost</td>
+        </tr>
+        
+    }
+    <tr style="background-color:#ffffff;border:double;">
+
+        <td>وزن کل:</td>
+        <td>@(weight + " kg")</td>
+        <td>کل کرایه</td>
+        <td>@(totalcosttrans + " ریال")</td>
+    </tr>
+</table>
+
+
+
+

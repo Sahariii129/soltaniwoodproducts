@@ -1,0 +1,13 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.Services.Interfaces
+@inject IProductsServices _ProductsService
+@{
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    var sectionshasstatus = db.tbl_section.Where(a => a.status.HasValue == true);
+    var sections = sectionshasstatus.Where(a => a.status.Value == true && a.tbl_category.Count() > 0).OrderBy(a => a.ordering);
+    var sectionsnumber = sections.Count();
+    var catg = db.tbl_category.ToList();
+    var lastnews = db.tbl_news.LastOrDefault();
+
+
+}

@@ -1,0 +1,98 @@
+﻿
+
+@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.structs
+
+@model IEnumerable<ShowAbstractInventory>
+@{
+    var modelids = Model.Select(a => new { id = a.Id }).OrderByDescending(a => a.id);
+    int skip = ViewBag.skip == null ? 0 : (int)ViewBag.skip;
+    int take = ViewBag.pagesize == null ? 10 : (int)ViewBag.pagesize;
+    var modeltoshow = Model.OrderByDescending(a => a.Id).Skip(skip).Take(take);
+
+
+}
+<style>
+    .pricetable tbody {
+        display: block;
+       
+        overflow: auto;
+    }
+    .tbodygrid{
+        height:680px;
+    }
+    .subgridetbody {
+        max-height: 500px;
+    }
+    .idnumber {
+        width: 50px;
+    }
+    .name{
+        width :1400px;
+        text-align:right;
+    }
+    .kalanumber{
+        width:75px;
+    }
+    .subgridexpand{
+        cursor:pointer;
+    }
+    .subgrid2expand{
+        cursor:pointer;
+        margin-left :5px;
+    }
+    .subgridrefresh {
+        cursor: pointer;
+    }
+    .catgname {
+        width: 150px;
+    }
+    .productname {
+        width: 450px;
+        text-align:right;
+    }
+    .code {
+        width: 75px;
+    }
+    .inventory {
+        width: 100px;
+    }
+    .mininventory {
+        width: 100px;
+    }
+    .lastinfo{
+        width : 160px;
+    }
+    .subgrid{
+        margin-top:10px;
+        
+    }
+    .detailaboutinventory{
+        color:#5c0b0b;
+        font-size:12px;
+    }
+</style>
+
+<table class="table table-responsive table-bordered table-condensed sortable pricetable">
+    <thead>
+
+        <tr class="table-header">
+
+            <th class="phead hidden-xs idnumber">#</th>
+            <th class="phead  name">برند</th>
+            <th class="phead  kalanumber">موجودی</th>
+           
+        </tr>
+    </thead>
+
+    <tbody class="tbodygrid" id="tabletbody">
+         <partial name="~/Views/Shared/Partiallistkala/_tablebodyinventory.cshtml" model="@modeltoshow" />
+
+
+    </tbody>
+
+</table>
+<div id="toolsband_id">
+    <partial name="~/Views/Shared/Partiallistkala/_Toolsband.cshtml" model="new Toolsbar() { }"/>
+
+    </div>

@@ -1,0 +1,159 @@
+﻿@model SoltaniWeb.Models.repository.applicantrepfirst
+@using SoltaniWeb.Models.Domain
+
+@using SoltaniWeb.Models.Extensions
+@{
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    ViewBag.Title = "ثبت نام اولیه استخدام";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    var jobs = db.tbl_job.ToList();
+    var today = DateTime.Now.ToPersianDate();
+
+
+}
+
+<link href="~/soltanistatic/style/register.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 contactTitle">ثبت نام متقاضی کار</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-10">
+        <div class="card">
+            <div class="card-header" style="background-color:#332b3a; color:#fff">
+                ثبت نام اولیه متقاضیان استخدام
+            </div>
+            <div class="card-body" style="box-shadow:0 3px 10px #cbc3d1;">
+                <div class="row">
+                    <div class="col-lg-4 col-12 order-2 order-lg-1">
+                        @using (Html.BeginForm("applyformsave", "Home", FormMethod.Post))
+                    {
+                            @Html.AntiForgeryToken()
+
+                            <div class="form-horizontal myfont">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <div class="row">
+                                        @Html.LabelFor(model => model.f_name, htmlAttributes: new { @class = "control-label col-md-4 " })
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.f_name, new { htmlAttributes = new { @class = "form-control ", placeholder = "نام را فارسی تایپ نمایید" } })
+                                            @Html.ValidationMessageFor(model => model.f_name, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        @Html.LabelFor(model => model.l_name, htmlAttributes: new { @class = "control-label col-md-4 " })
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.l_name, new { htmlAttributes = new { @class = "form-control", placeholder = "نام خانوادگی را فارسی تایپ نمایید" } })
+                                            @Html.ValidationMessageFor(model => model.l_name, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        @Html.LabelFor(model => model.codemelli, htmlAttributes: new { @class = "control-label col-md-4 " })
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.codemelli, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.codemelli, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        @Html.LabelFor(model => model.cellnumber, htmlAttributes: new { @class = "control-label col-md-4 " })
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.cellnumber, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.cellnumber, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="control-label col-md-4"> جنسیت : </label>
+                                        <div class="col-md-8">
+                                            <select class="form-control" name="sex" id="sex">
+                                                <option value="2" selected>مونت</option>
+                                                <option value="1">مذکر</option>
+                                            </select>
+                                            @Html.ValidationMessageFor(model => model.sex, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="control-label col-md-4"> شغل مورد درخواست :  </label>
+                                        <div class="col-md-8">
+                                            <select class="form-control" name="job_id" id="job_id">
+
+                                                @foreach (var item in jobs)
+                                                {
+                                                    <option value="@item.jobid" @(item.jobid= =1?"selected":"")>  @item.jobtitle</option>
+
+                                                }
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="control-label col-md-4"> تاریخ تولد : </label>
+                                        <div class="col-md-8">
+
+                                            @*<input id="birthday" name="birthday" value="" class="form-control" placeholder="1362/06/01" />*@
+                                            @Html.EditorFor(model => model.birthday, new { htmlAttributes = new { @class = "form-control", placeholder = "1362/06/01" } })
+
+
+                                            @Html.ValidationMessageFor(model => model.birthday, "", new { @class = "text-danger" })
+                                            @*<span style="color:#a94442;" id="birthdayvalidation"></span>*@
+                                     
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="mt-5 text-left">
+                                        <input type="submit" value="ثبت" class="btn" id="sabt"/>
+                                    </div>
+                                </div>
+                            </div>
+                    }
+                        <center><span>@ViewBag.Message</span></center>
+                    </div>
+
+                    <div class="col-12 col-lg-8 order-1 order-lg-2">
+                        <ul>
+                            <li class="py-1">  <h6 style="text-align:justify;"> پس از ثبت نام اولیه به شماره موبایل شما کد تایید ارسال می گردد.</h6>   </li>
+
+                            <li class="py-1"> <h6 style="text-align:justify;"> با استفاده از کد ملی - شماره موبایل و کد تائیدی که برای شما ارسال می گردد در قسمت <a style="text-decoration:none; color:red;" href="/home/editapplicantinfo">تکمیل اطلاعات متقاضی</a> اقدام به تکمیل سایر اطلاعات خود نمایید. </h6> </li>
+
+                            <li class="py-1">  <h6 style="text-align:justify;">  پس از تکمیل فرم مربوط به "تکمیل اطلاعات متقاضی" همکاران ما در اسرع وقت با شما تماس حاصل خواهند کرد. </h6>   </li>
+
+                            <li class="py-1"> <h6 style="text-align:justify;"> <span style="color:red">توجه !</span> در صورتیکه بخش تکمیل اطلاعات متقاضی تکمیل نگردد با متقاضی تماسی گرفته نخواهد شد. </h6> </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+              
+            </div>
+
+        </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(birthday).click(function () {
+        PersianDatePicker.Show(this, '@today')
+
+    })
+
+</script>

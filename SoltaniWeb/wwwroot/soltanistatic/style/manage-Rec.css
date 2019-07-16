@@ -1,0 +1,177 @@
+﻿.out {
+    background-color: #761818;
+    color: #ffffff;
+}
+
+.selected {
+    background-color: #141f98;
+    color: #ffffff;
+}
+
+.table-header {
+    background-color: #6a95cc;
+    color: #fff;
+    width: 100%;
+}
+
+.panelbox {
+    position: relative;
+}
+
+.myform2 {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+    width: 600px;
+}
+
+.myform3 {
+    display: none;
+    z-index: 1001;
+    position: absolute;
+    width: 600px;
+}
+
+
+.column {
+    float: right;
+    width: 50px;
+    padding: 5px;
+}
+
+.myrow {
+    width: 180px !important;
+}
+    /* Clearfix (clear floats) */
+    .myrow::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+.imgbtn {
+    cursor: pointer;
+}
+
+.loading-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 10;
+}
+
+.loader {
+    display: none;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    text-align: center;
+    margin-left: -50px;
+    margin-top: -100px;
+    z-index: 2;
+    overflow: auto;
+}
+
+#panelbodyfororders {
+    border: 3px solid #332b3a;
+}
+
+.toolband {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    height: 40px;
+    width: 98%;
+    padding: 5px;
+    /*display: none;*/
+}
+
+    .toolband button {
+        float: left;
+        font-weight: 600;
+        color: #000000;
+    }
+
+.sheading:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: 5px;
+    content: " ";
+    background-color: #ffca01;
+}
+
+.sheading.open {
+    background-color: #f8eeca;
+    border-top: 4px solid #ffca01 !important;
+    border-left: 4px solid #ffca01 !important;
+}
+
+    .sheading.open:before {
+        display: none;
+    }
+
+.psearch {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 90%;
+    z-index: 100;
+    max-width: 400px;
+    margin-right: 3px;
+    margin-top: 3px;
+}
+.Toolscell img{
+    width:24px;
+    height:24px;
+}
+@media(max-width:991.98px) {
+    .psearch {
+        max-width: none !important;
+        width: 100%;
+    }
+
+    .form-control {
+        font-size: 1.5rem;
+    }
+
+    .TextButtom button {
+        height: 100% !important;
+        width: 70px !important;
+    }
+
+    .btn {
+        font-size: 30px;
+        padding: 10px 20px;
+    }
+
+    .psearch .close {
+        font-size: 40px;
+    }
+
+    .TextButtom input {
+        width: calc(100% - 70px);
+        font-size: 30px;
+    }
+
+    .myform2 {
+        width: 100%;
+    }
+
+    .contorltoolsimg {
+        width: 50px;
+        height: 50px;
+    }
+
+    .sheading {
+        padding: 1.25rem 1.25rem;
+    }
+    .Toolscell img {
+        width: 48px;
+        height: 48px;
+    }
+}

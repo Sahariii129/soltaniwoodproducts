@@ -1,0 +1,86 @@
+﻿<div class="modal myfont fade" id="messagenotok">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header p-2" style="background-color:#f58e97;border-bottom-color:#f58e97 !important">
+                <div><span id="messagenotokheader" style="font-weight:900;color:#fff;">  خطا</span></div>
+                <button type="button" class="close ml-0" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div id="messagenotokbody" class="modal-body text-center" style="color:#e74200;min-height:80px;">
+                خطا در اجرای عملیات
+            </div>
+            <div class="modal-footer p-1 flex-column text-center" id="messagenotokfooter" style="background-color:#332b3a;color:#fff">
+                <p class="mr-0 mb-0" style="color:#fff;font-size:10pt;"><span class="fas fa-headphones" style="font-size:12pt;  margin-left:5px; " aria-hidden="true"></span>بخش پشتیبانی : 07138310032 داخلی 3</p>
+                <p class="mb-0 ml-0" style="color:#fff;font-size:10pt;"><span class="far fa-clock" style="font-size:12pt;  margin-left:5px; " aria-hidden="true"></span> 8:30 الی 13:00 و 16:00 الی 19:30</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal myfont fade" id="messageok">
+    <div id="messageokmodal" class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header p-2" style="background-color:#6a95cc;">
+                <div><span id="messageokheader" style="font-weight:900;color:#fff;"> پیام سیستمی</span></div>
+                <button type="button" class="close ml-0" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" id="messageokbody" style="min-height:80px;">
+                عملیات با موفقیت انجام شد
+            </div>
+            <div class="modal-footer p-1 flex-column text-center" id="messageokfooter" style="background-color:#332b3a;color:#fff">
+
+                <p class="mb-0 mr-0" style="color:#fff; font-size:10pt;"><span class="fas fa-phone" style="font-size:12pt; margin-left:5px;" aria-hidden="true"></span>جهت دریافت اطلاعات بیشتر می توانید با بخش پشتیبانی سایت تماس حاصل فرمایید.  </p>
+                <p class="mb-0 ml-0" style="color:#fff;font-size:10pt;"><span class="fas fa-headphones" style="font-size:12pt;  margin-left:5px; " aria-hidden="true"></span>بخش پشتیبانی : 07138310032 واحد انفورماتیک -3</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal myfont fade" id="sendingfilemodal" username="" userid="">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#6a95cc;">
+                <div><span id="messagesendingfileheader" style="font-weight:900;color:#ffffff;"> فرم ارسال فایل</span></div>
+                <button type="button" class="close ml-0" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            </div>
+            <div class="modal-body text-center" id="sendingfilemodalbody">
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="control-label col-2 ">فایل </label>
+                            <div class="col-10">
+                                <input type="file" id="image" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <label class="control-label col-sm-2 ">متن </label>
+                            <div class="col-sm-10">
+                                <input id="caption" type="text" class="form-control" placeholder="متن مورد نظر خود را تایپ کنید">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success" id="btn_save">بارگذاری فایل</button>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div id="result_id" class="form-group">
+
+                </div>
+                <div class="form-group">
+                    <img id="img_preview" class="img-responsive" />
+                </div>
+            </div>
+            <div class="modal-footer text-center" style="background-color:#332b3a;">
+                <button id="sendfile_btn" style="display:none;" filenametosend="" caption="" class="btn btn-success">ارسال فایل</button>
+
+            </div>
+        </div>
+    </div>
+</div>

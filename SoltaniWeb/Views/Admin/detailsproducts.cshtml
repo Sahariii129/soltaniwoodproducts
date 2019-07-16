@@ -1,0 +1,27 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_products
+
+@{
+    ViewBag.Title = "detailsproducts";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+
+<div class=" row">
+    <div class=" col-lg-4 col-12">
+
+        @if (Model.image != null)
+        {
+        <center> <img src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.image)))" style=" width:100%;height:auto;  margin-bottom:30px;" /></center>
+        }
+        else
+        {
+            <center><img src="" style=" width:100%;height:auto;  margin-bottom:30px;" /></center>
+        }
+    </div>
+   
+
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

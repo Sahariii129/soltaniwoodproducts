@@ -1,0 +1,13 @@
+﻿@using SoltaniWeb.Models.Domain
+
+@model IEnumerable<tbl_products>
+
+
+
+    @foreach (var item in Model)
+    {
+       
+            @Html.Partial("_partial1productadd", item)
+    
+    }
+

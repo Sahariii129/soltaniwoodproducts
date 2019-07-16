@@ -1,0 +1,206 @@
+﻿
+@using SoltaniWeb.Models.structs
+
+@model IEnumerable<ShowAbstractInventory>
+@{
+    var totalpage = (int)ViewBag.totalpages;
+}
+
+
+@foreach (var item in Model)
+{
+    <tr class="listrow" listid="@item.Id">
+        <td class="prow hidden-xs  idnumber">@item.Id</td>
+        <td colspan="2" class="prow  name">
+            <span listid="@item.Id" style="color:green;" class="fas fa-plus subgridexpand"></span>
+            @item.Name
+            <span class="lineloading" listid="@item.Id" style="display:none;">
+                <img style="height:35px;" src="~/Content/img/icon/loadinganimation.gif" />
+            </span>
+            <span listid="@item.Id" style="margin-right:20px;float:left; margin-left:10px;" class="fas fa-refresh subgridrefresh"></span>
+            <span spansubgrid="@item.Id" class="myfont"></span>
+        </td>
+
+    </tr>
+    <tr style="background-color:#5b5858;color:white;">
+        <td class="prow hidden-xs  idnumber"></td>
+        <td class="prow  name"></td>
+        <td class="prow  kalanumber">@item.Inventory</td>
+    </tr>
+}
+
+<tr class="Table-Abstract">
+
+    <td colspan="2" class="totalpnumberlbl">جمع کل</td>
+    <td class="totalpnumber" id="totalpnumber">@(Model.Sum(a => a.Inventory))</td>
+
+</tr>
+<script>
+    $('.subgridrefresh').click(function () {
+        var catgid = $(this).attr('listid')
+        $('.lineloading[listid="' + catgid + '"]').show()
+
+        jQuery.post('/admin/GetInventoryReportOfProducts', { catgid: catgid }, function (e) {
+
+            var html = ''
+            html += '<table catgid="' + catgid + '" class="table subgrid myfont pricetable">'
+            html += '<thead>'
+            html += '<tr class="productrow" catgid="' + catgid + '">'
+            html += '<th class="idnumber">#</th>'
+
+            html += '<th class="productname">نام کالا</th>'
+            html += '<th class="code">کد</th>'
+            html += '<th class="inventory">موجودی</th>'
+            html += '<th class="mininventory">حد نصاب</th>'
+            html += '<th class="lastinfo">آخرین فی خرید</th>'
+            html += '<th class="lastinfo">تاریخ آخرین خرید</th>'
+            html += '<th class="lastinfo">آخرین فی فروش</th>'
+            html += '<th class="lastinfo">تاریخ آخرین فروش</th>'
+            html += '</tr>'
+            html += '</thead>'
+            html += '<tbody class="subgridetbody">'
+               
+            $.each(e, function (idx, item) {
+                html += '<tr class="productrow" catgid="' + catgid + '" productid="' + item.id + '">'
+                html += '<td class="idnumber">' + item.id + '</td>'
+
+                html += '<td class="productname"><span productid="' + item.id + '" style="color:green;" class="fas fa-plus subgrid2expand"></span>' + item.productname + '</td>'
+                html += '<td class="code">' + item.code + '</td>'
+                html += '<td  class="inventory">' + item.inventory + '<span style="display:none;" moredetails="' + item.id + '"></span></td>'
+                html += '<td class="mininventory">' + item.mininventory + '</td>'
+               
+                html += '<td class="lastinfo">' + item.lastBuyPrice + '</td>'
+                html += '<td class="lastinfo">' + item.lastBuyDate + '</td>'
+                html += '<td class="lastinfo">' + item.lastSellPrice + '</td>'
+                html += '<td class="lastinfo">' + item.lastSellDate + '</td>'
+
+
+
+
+                html += '</tr>'
+
+            })
+
+            html += '</tbody>'
+            html += '</table>'
+            $('.lineloading[listid="' + catgid + '"]').hide()
+            $('[spansubgrid="' + catgid + '"]').html(html)
+
+
+
+
+
+        })
+
+    })
+
+
+
+    $('.subgridexpand').click(function () {
+        var catgid = $(this).attr('listid')
+        if ($(this).hasClass('fa-plus')) {
+            $(this).removeClass('fa-plus')
+            $(this).addClass('fa-minus')
+            var Data = $('[spansubgrid="' + catgid + '"]').html()
+            if (Data.length != 0) {
+                $('[spansubgrid="' + catgid + '"]').css('display', 'block')
+                return
+            }
+
+        } else {
+            $(this).removeClass('fa-minus')
+            $(this).addClass('fa-plus')
+            $('[spansubgrid="' + catgid + '"]').css('display', 'none')
+
+            return;
+        }
+
+        $('.lineloading[listid="' + catgid + '"]').show()
+
+
+        jQuery.post('/admin/GetInventoryReportOfProducts', { catgid: catgid }, function (e) {
+
+            var html = ''
+            html += '<table catgid="' + catgid + '" class="table  subgrid myfont pricetable">'
+            html += '<thead>'
+            html += '<tr class="productrow" catgid="' + catgid + '">'
+            html += '<th class="idnumber">#</th>'
+
+            html += '<th class="productname">نام کالا</th>'
+            html += '<th class="code">کد</th>'
+            html += '<th class="inventory">موجودی</th>'
+            html += '<th class="mininventory">حد نصاب</th>'
+            html += '<th class="lastinfo">آخرین فی خرید</th>'
+            html += '<th class="lastinfo">تاریخ آخرین خرید</th>'
+            html += '<th class="lastinfo">آخرین فی فروش</th>'
+            html += '<th class="lastinfo">تاریخ آخرین فروش</th>'
+            html += '</tr>'
+            html += '</thead>'
+            html += '<tbody class="subgridetbody">'
+               
+            $.each(e, function (idx, item) {
+                html += '<tr class="productrow" catgid="' + catgid + '" productid="' + item.id + '">'
+                html += '<td class="idnumber">' + item.id + '</td>'
+
+                html += '<td class="productname"><span data-toggle="tooltip" title="Tooltip on top" productid="' + item.id + '" style="color:green;" class="fas fa-plus subgrid2expand"></span>' + item.productname + '</td>'
+                html += '<td class="code">' + item.code + '</td>'
+                html += '<td  class="inventory">' + item.inventory + '<span style="display:none;" moredetails="'+ item.id+'"></span></td>'
+                html += '<td class="mininventory">' + item.mininventory + '</td>'
+                html += '<td class="lastinfo">' + item.lastBuyPrice + '</td>'
+                html += '<td class="lastinfo">' + item.lastBuyDate + '</td>'
+                html += '<td class="lastinfo">' + item.lastSellPrice + '</td>'
+                html += '<td class="lastinfo">' + item.lastSellDate + '</td>'
+
+
+
+
+                html += '</tr>'
+
+            })
+
+            html += '</tbody>'
+            html += '</table>'
+            $('.lineloading[listid="' + catgid + '"]').hide()
+            $('[spansubgrid="' + catgid + '"]').html(html)
+
+
+
+
+
+        })
+    })
+
+
+
+
+    // to expand and show inventory of each product in every warehouse
+    $('.listrow').on('click', '.subgrid2expand', function () {
+
+        var productid = $(this).attr('productid')
+        if ($(this).hasClass('fa-plus')) {
+            $(this).removeClass('fa-plus')
+            $(this).addClass('fa-minus')
+            
+
+        } else {
+            $(this).removeClass('fa-minus')
+            $(this).addClass('fa-plus')
+            $('[moredetails="' + productid + '"]').css('display', 'none')
+
+            return;
+        }
+     
+        jQuery.post('/admin/GetDetailAboutIneventory', { productid: productid }, function (result) {
+           
+            var html = ''
+            $.each(result, function (idx, item) {
+                html += '<tr class="detailaboutinventory"  productid="' + item.id + '">'
+                html += '<td class="anbarname">' + item.anbarname + '</td>'
+                html += '<td class="inventory">' + item.inventory + '</td>'
+                html += '</tr>'
+            })
+           $('[moredetails="' + productid + '"]').html(html)
+            $('[moredetails="' + productid + '"]').show()
+                    })
+            })
+</script>

@@ -1,0 +1,6 @@
+﻿@using SoltaniWeb.Models.Domain
+@model IList<tbl_category>
+@foreach (var item in Model)
+{
+    <option value="@item.id" >@item.categoryname</option>
+}

@@ -1,0 +1,290 @@
+﻿
+
+@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.structs
+
+@model IEnumerable<ItemListKala>
+@{
+    var modelids = Model.Select(a => new { id = a.id }).OrderByDescending(a=>a.id);
+    int skip = ViewBag.skip==null ? 0 : (int)ViewBag.skip;
+    int take = ViewBag.pagesize == null ? 10 : (int) ViewBag.pagesize;
+    var modeltoshow = Model.OrderByDescending(a => a.id).Skip(skip).Take(take);
+    
+
+}
+
+
+<style>
+    .pricetable tbody {
+        display: block;
+        height: 550px;
+        overflow: auto;
+    }
+    .idnumberTop {
+        width: 50px !important;
+    }
+
+    .idnumber {
+        width: 50px;
+    }
+
+    .DateTop {
+        width: 120px;
+    }
+
+    .Date {
+        width: 120px;
+    }
+
+    .Time {
+        width: 100px;
+    }
+
+    .htype {
+        width: 75px;
+    }
+
+    .anbarname {
+        width: 100px;
+    }
+
+    .name {
+        width: 600px;
+    }
+
+    .code {
+        width: 100px;
+    }
+
+    .kalanumber {
+        width: 100px;
+    }
+
+    .cost {
+        width: 150px;
+    }
+
+    .totalcostkala {
+        width: 150px;
+    }
+
+    .kaladescription {
+        width: 300px;
+    }
+
+    .user-top {
+        width: 150px;
+    }
+
+    .user {
+        width: 145px;
+    }
+
+    .totalpnumberlbl {
+        width: 1000px;
+    }
+</style>
+
+<table class="table table-responsive table-bordered table-condensed sortable pricetable mb-0" style="position:relative">
+    <thead>
+        <tr class="table-header">
+            <th class="phead hidden-xs idnumberTop">#</th>
+            <th class="phead    DateTop">تاریخ</th>
+            <th class="phead hidden-xs   Time">ساعت</th>
+            <th class="phead hidden-xs  htype">نوع</th>
+            <th class="phead  anbarname">انبار</th>
+            <th class="phead  name">نام کالا</th>
+            <th class="phead hidden-xs   code">کد</th>
+            <th class="phead  kalanumber">تعداد</th>
+            <th class="phead hidden-xs   cost">فی - ریال</th>
+            <th class="phead hidden-xs   totalcostkala">مبلغ کل</th>
+            <th class="phead hidden-xs   kaladescription">شرح</th>
+            <th class="phead hidden-xs  user-top">کاربر</th>
+        </tr>
+    </thead>
+
+    <tbody id="tabletbody" style="overflow-y:scroll">
+
+
+        @*@await Component.InvokeAsync("Listkalacomponents" ,new {sabtdate=DateTime.Now.ToPersianDate(),take=10 })*@
+        <partial name="~/Views/Shared/Partiallistkala/_tablebodylistkala.cshtml" model="@modeltoshow" />
+
+    </tbody>
+  
+</table>
+<div id="toolsband_id">
+<partial name="~/Views/Shared/Partiallistkala/_Toolsband.cshtml"  model="new Toolsbar() { }" />
+
+</div>
+
+<script>
+ 
+    var listrowidselected = 0
+    var modelobj = @Html.Raw(Json.Serialize(Model))
+
+    var ids = [];
+
+    $(modelobj).each(function (n, m) {
+        ids.push(m.id)
+    })
+    $(tabletbody).on('dblclick', '.listrow', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected')
+            listrowidselected =0
+        } else {
+            $('*').removeClass('selected')
+
+            $(this).addClass('selected')
+
+            listrowidselected = $(this).attr('listid')
+        }
+
+
+    })
+
+
+    // click refresh btn
+
+    $(Btn_Refresh).click(function () {
+
+        jQuery.post('/admin/Getlastlistitem', {}, function (result) {
+
+            $(tabletbody).html(result)
+
+        })
+
+
+    })
+
+    $(pagesize_id).change(function () {
+       
+        var take = parseInt($(this).val());
+        
+        var skip = 0
+       
+      
+
+        var data01 = { model: ids, take: take, skip: skip }
+        $('.loader').show()
+
+        jQuery.post('/admin/reorderlistkala', data01, function (result) {
+            $('.loader').hide()
+            $(tabletbody).html(result)
+            $(pageindex).val('1')
+            var totalpage = $('.listrow').attr('totalpage')
+            $(totalpageindex).html(totalpage)
+        })
+
+
+
+
+    })
+
+
+    $(next).click(function () {
+       
+        var pagenumber = $(pageindex).val()
+       
+        var totalpage = $(totalpageindex).html()
+        var targetpagenumber = parseInt(pagenumber) + 1;
+        
+        if (targetpagenumber > totalpage)
+            return;
+
+        var take = parseInt($(pagesize_id).val())
+        var skip = parseInt(take * (parseInt(targetpagenumber) - 1))
+       
+        if (skip > 1000) {
+            $(messagenotokbody).html('به دلایل امنیتی این رکوردها قابل رویت نمی باشند')
+            $(messagenotok).modal()
+            return;
+        }
+        
+    
+      
+        var data01 = { model: ids, take: take, skip: skip }
+        $('.loader').show()
+        jQuery.post('/admin/reorderlistkala', data01, function (result) {
+            $('.loader').hide()
+            $(tabletbody).html(result)
+            $(pageindex).val(targetpagenumber)
+            $(totalpage).val(@ViewBag.totalpages)
+
+        })
+
+
+
+    })
+
+
+
+
+    /// push previous
+    
+    $(previous).click(function () {
+        var pagenumber = $(pageindex).val()
+        var totalpage = $(totalpageindex).html()
+        var targetpagenumber = parseInt(pagenumber) - 1;
+        if (targetpagenumber > totalpage || targetpagenumber<1)
+            return;
+
+        var take = parseInt($(pagesize_id).val())
+        var skip = parseInt(take * (parseInt(targetpagenumber) - 1))
+       
+        if (skip > 1000) {
+            $(messagenotokbody).html('به دلایل امنیتی این رکوردها قابل رویت نمی باشند')
+            $(messagenotok).modal()
+            return;
+        }
+        
+
+      
+        var data01 = { model: ids, take: take, skip: skip }
+        $('.loader').show()
+        jQuery.post('/admin/reorderlistkala', data01, function (result) {
+            $('.loader').hide()
+            $(tabletbody).html(result)
+            $(pageindex).val(targetpagenumber)
+
+        })
+
+
+
+    })
+    $(GotoFirst).click(function () {
+        var take = parseInt($(pagesize_id).val())
+        var data01 = { model: ids, take: take, skip: 0 }
+        $('.loader').show()
+        jQuery.post('/admin/reorderlistkala', data01, function (result) {
+            $('.loader').hide()
+            $(tabletbody).html(result)
+            $(pageindex).val(1)
+
+        })
+
+
+
+    })
+    $(GotoLast).click(function () {
+        var take = parseInt($(pagesize_id).val())
+        var skip = parseInt($(totalpageindex).html())
+        var data01 = { model: ids, take: take, skip: skip }
+        $('.loader').show()
+        jQuery.post('/admin/reorderlistkala', data01, function (result) {
+            $('.loader').hide()
+            $(tabletbody).html(result)
+            $(pageindex).val($(totalpageindex).html())
+
+        })
+
+
+
+    })
+
+  
+
+
+
+
+
+</script>

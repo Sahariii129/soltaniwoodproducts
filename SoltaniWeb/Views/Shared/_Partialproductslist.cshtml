@@ -1,0 +1,57 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository
+
+@model IEnumerable<tbl_products>
+@{
+
+
+    SoltaniWeb.Models.repository.samplerepository samrep = new SoltaniWeb.Models.repository.samplerepository();
+    int i = 0;
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    //string username = Context.Session.GetString("username");
+    string username = User.Identity.Name;
+    var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
+    var q = Model.ToList();
+}
+
+
+
+@foreach (var item in Model)
+{
+    <div class="col-12 col-lg-3">
+        <div class="card text-center">
+            <div class="card-body p-0">
+                <div class="imgProduct">
+                    <img class="img-fluid" src="@(item.thumbnail_image == null ?  "/Content/img/icon/img-na.png" :    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.thumbnail_image)))" data-aos="zoom-in" alt="@(item.category.categoryname + "| "+   item.name +"| "+ item.codename)" style="width:100%;" />
+                    <div class="features text-center">
+                        <div>وضعیت:<span> @entityrep.getexistproducts(item.idproduct)</span></div>
+                        <div>کلاس:<span>@item.grade</span></div>
+                        <div>ابعاد:<span>@item.dimension</span></div>
+                        @if(item.image !=null)
+                        {
+
+
+                        <div><a href="/products/getimage?id=@item.idproduct" data-title="@(item.category.categoryname + " " + item.name + " کد:" + item.codename)" data-lightbox="vahid-majidi" class="btn btn-view">مشاهده</a></div>
+                        }
+                       
+                        
+                        <div>
+                            <a href="../samples/samples?id01=@item.idproduct&key=@item.keywords" class="btn btn-samples">
+                                نمونه کارها
+                                <span class="badge badge-pill badge-samples mx-2">@item.tbl_samples.Count()</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <h6 class="my-lg-3 my-4">کد<span class="productCode mx-2">@item.codename</span>@item.name</h6>
+                <div class="my-2"><a class="btn btn-addToCart mb-2">افزودن به سبد خرید<i class="fas fa-shopping-cart fa-lg mx-2"></i></a></div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

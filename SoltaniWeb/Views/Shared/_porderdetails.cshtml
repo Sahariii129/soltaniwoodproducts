@@ -1,0 +1,70 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository
+@model IEnumerable<tbl_orderdetails>
+@{
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    
+    var totalnumber = 0;
+    decimal totalweight = 0;
+
+    abstractinfoofpurchasecart getinfo = new abstractinfoofpurchasecart();
+
+}
+
+
+<table class="mt-3 table table-responsive table-bordered torderdetails" style="display:table;border-color:#332b3a">
+    <thead>
+        <tr style="background-color:#6a95cc;color:#fff">
+            <td colspan="3">لیست کالاهای حواله</td>
+        </tr>
+        <tr style="background-color:#332b3a; color:#ffca01;">
+            <td>#</td>
+            <td>نام کالا</td>
+            <td>تعداد</td>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var i = 1;
+        }
+
+        @foreach (var item2 in Model)
+        {
+
+            <tr style="color:#000000; font-weight:800;background-color:#fff">
+                <td>@(i)</td>
+                <td>@(item2.product_.category.categoryname + " " + item2.product_.name + "--- " + item2.product_.codename)</td>
+                <td>@item2.number</td>
+            </tr>
+            <tr>
+                @{
+                    decimal weight = item2.product_.weight.HasValue == true ? item2.product_.weight.Value : 0;
+
+                }
+                <td colspan="3" style="background-color:#ffffff;color:#6a95cc">@("وزن واحد: " + weight )</td>
+
+            </tr>
+            
+
+                i++;
+
+                totalnumber = totalnumber + item2.number;
+                totalweight = totalweight + item2.number * weight;
+        }
+            
+               
+    </tbody>
+    <tfoot>
+        <tr>
+
+            <td colspan="3" style="background-color:#ffffff;text-align:left;">
+                @("وزن کل: " + totalweight + "kg - تعداد کل : " + totalnumber)
+            </td>
+
+        </tr>
+    </tfoot>
+</table>
+
+<div class="text-center">
+    <a href="/Reports/orderreport?id=1" class="btn" style="background-color:#332b3a;color:#ffca01" target="_blank">پرینت</a>
+</div>

@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/Content/styles/SoltaniCSS.css" rel="stylesheet" />
+    <link href="~/Content/styles/Slideshow.css" rel="stylesheet" />
+   
+    <script src="~/Scripts/jquery-3.1.1.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+</head>
+<body>
+    @*header band*@
+    <div class="headerband">
+        @*TopBand1*@
+        <partial name="~/Views/Shared/NewLayoutPartial/_PartialTopBand1.cshtml" />
+        @*TopBand2*@
+
+        <partial name="~/Views/Shared/NewLayoutPartial/_PartialTopBand2.cshtml" />
+
+
+        @*menu*@
+        <partial name="~/Views/Shared/NewLayoutPartial/_PartialTopMenu.cshtml" />
+
+    </div>
+    <div class="MyBody">
+
+        @RenderBody()
+       
+        <div class="footer">
+            <partial name="~/Views/Shared/partialfooter.cshtml" />
+
+        </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <div class="modal-content">
+
+            <!-- Modal content -->
+        </div>
+
+    </div>
+
+
+</body>
+</html>
+
+
+
+<script src="~/Scripts/swp.js"></script>

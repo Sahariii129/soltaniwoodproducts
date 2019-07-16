@@ -1,0 +1,27 @@
+﻿<div class="TopBand2">
+    <div class="SearchBox mobile">
+        <div class="imgBrand">
+            <img id="img" class="img-responsive" src="~/Content/img/logo/Soltaniletters.png" />
+        </div>
+        <form asp-controller="products" asp-action="Searchproducts">
+            <div class="Searchinputbox">
+                <div class="inputtextbox">
+                    <input name="filter" type="text" class="inputtextforsearch" autocomplete="off" placeholder="نام کالا، برند، دسته رنگ و یا کد کالای مورد نظر خود را جستجو کنید..." />
+                </div>
+
+                <div class="BtnSearch">
+                    <button type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+         </form>
+        
+    </div>
+    @*<a class="btn btn-group btn-success " href="/purchasecart/showcart?userid=78" aria-label="Left Align">
+        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+        سبد کالا
+        <span id="cartnumberitems" class="badge" style="color:red;">5</span>
+    </a>*@
+
+</div>

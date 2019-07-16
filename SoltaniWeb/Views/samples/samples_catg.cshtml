@@ -1,0 +1,56 @@
+﻿@model IEnumerable<SoltaniWeb.Models.Domain.tbl_DecorType>
+
+@{
+    ViewBag.Title = "کالای چوب سلطانی| انواع نمونه کارها به تفکیک نوع کار";
+    ViewBag.description = "انواع نمونه کارهای انجام شده به تفیک توع کار به صورت اسلاید شو- کابینت آشپزخانه - میز زیرتلوزیون - سرویس خواب - سرویس خواب کودک - کتابخانه - سرویس خواب- کانتر - دکور- طراحی دکوراسیون";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.repository.samplerepository samplerep = new SoltaniWeb.Models.repository.samplerepository();
+}
+<link href="~/soltanistatic/style/gallery.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 contactTitle">گالری تصاویر : براساس نوع کار</h5>
+            </div>
+        </div>
+    </div>
+    <div id="imagegallerydetaile" class="row">
+
+        @foreach (var item in Model)
+        {
+            string imageroot = _hostingEnvironment.WebRootPath + "/Content/img/samples/" + samplerep.getsamplesrandom(item.id).filename;
+            bool f = File.Exists(imageroot);
+
+            if (f == true)
+            {
+            <div class="col-lg-3 col-12 mb-lg-4 mb-5">
+
+                <div class="imagegallerydetaileBox" style="box-shadow:0 3px 10px #aab3c2;position:relative;z-index:0">
+                    <a href="~/samples/decortype?id=@item.id&key=@item.name"><img src="~/Content/img/samples/@samplerep.getsamplesrandom(@item.id).filename" alt="نمونه های مربوط به @item.name" class="img-thumbnail p-0" /></a>
+
+                    <div class="" style="background-color:#fff">
+
+                        <div class="py-3">
+                            <a href="~/samples/decortype?id=@item.id&key=@item.keywords"><h5 style="text-align :center ;"> @item.name</h5></a>
+                        </div>
+                        @*<div class="pb-2">
+
+                            <center><a href="~/samples/slideshowdecortype?id=@item.id&key=@item.keywords"><img src="~/Content/img/icon/Play-icon.png" style=" width :32px; " />  اسلاید شو</a></center>
+                        </div>*@
+
+                    </div>
+                    <div>
+                        <div class="count"><span>@item.tbl_files.Count()</span></div>
+                    </div>
+                </div>
+
+            </div>
+
+            }
+        }
+
+
+    </div>
+</div>

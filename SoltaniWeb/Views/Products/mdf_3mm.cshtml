@@ -1,0 +1,177 @@
+﻿@model IList<SoltaniWeb.Models.Domain.tbl_products>
+
+@{
+    //ViewBag.Title = "AGE_Highgloss";
+    ViewBag.description = " نمونه رنگ های سه میل کاغذی " + " - " + "فروش در شیراز و استان فارس" + " -  " + "   مشخصات کلی ام دی اف های سه میلل کاغذی  ";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    string username = Context.Session.GetString("username");
+    var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
+}
+<script src="~/Scripts/jquery-2.2.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+
+@*<div class="container-fluid">
+
+    <div class="col-xs-12  ">
+        <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12  " style="margin-left:5px; background-color:#ffffff;  border-radius:5px; min-height :470px; margin-bottom:5px;">
+
+            <div class="row">
+                <div class="col-lg-9 col-xs-12">
+                    <h1 style="font-size:22px;"><span style="color:#11cf1c;">ام دی اف سفید و رنگی سه میل کاغذی (لترون)  </span></h1>
+                </div>
+                <div class="col-lg-3 col-xs-12">
+                    <br />
+
+                </div>
+            </div>
+            <div class="row">
+
+
+                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>روکش کاغذی یا لترون ، يا فویل کاغذی (Paper Foil) که به اصطلاح تجاري لترون (Letron) می نامند. لترون نام يكي از توليد كنندگان مشهور اين نوع روكش است كه امروزه اغلب با نام اين شركت خوانده ميشود لترون در سال 1963 میلادی توسط یک شرکت آلمانی اختراع شد). در ایران، به نئوپان روکش شده با لترون، به اصطلاح لترون میگویند. در اكثر مواقع روکش کاغذی داراي نقوش، طرحها و رنگهاي تزئيني هستند كه بعنوان روكش تزئيني نهايي (دكور) استفاده ميشوند. اما در رنگ كاريهاي دقيق و ظريف براي پوشش سطح MDF و زيرسازي رنگ، از انواع بدون رنگ و طرح آن استفاده ميكنند. در اين صورت، اين روكش ميتواند صاف بوده يا دارای طرحهای برجسته مثل نقش رگههاي چوب ،تار و پود باشد و بعد از اتمام کار، رنگآمیزی شود.</p>
+                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>اين نوع روكش از ارزانترين انواع روكش مي‌باشد كه در مبلمان و لوازم ارزان قيمت مورد استفاده قرار مي‌گيرد.</p>
+                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>روكش کاغذی، در برابر سايش، خش و دیگر عوامل مكانيكي مقاومت ندارد و مقاومتش در برابر حرارت و رطوبت نيز كمتر از روكش‌هاي ملامينه و لامينت‌ها است.</p>
+                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>هم اکنون سه میل لترون (کاغذی) 183 در 244 (cm) در انواع رنگ زیر در کالای چوب سلطانی قابل عرضه می باشد.</p>
+
+
+                <center><img src="http://www.soltaniwoodproducts.com/Content/img/newsimages/news20167160885345488.jpg" class=" img-thumbnail" style=" width:60%; height :170px;" /></center>
+
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    چیدمان بر اساس  <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a style="cursor:pointer;" onclick="sortingbyalpha(@Model.FirstOrDefault().categoryid)"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px;"> </span>حروف الفبا  <span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" style="position:absolute; left:5px; top:12px;"></span></a></li>
+                                    <li><a style="cursor:pointer;" onclick="sortingdefault(@Model.FirstOrDefault().categoryid)"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px;"> </span> شماره کد <span class="glyphicon glyphicon-sort-by-order" aria-hidden="true" style="position:absolute; left:5px; top:37px;"></span></a></li>
+
+                                </ul>
+                            </div><!-- /btn-group -->
+                            <input id="searchp" type="text" class="form-control" name="textp" placeholder="نام یا کد محصول را وارد نمایید...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="serachforproducts(@Model.FirstOrDefault().categoryid)">جستجو!</button>
+                            </span>
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+
+                </div><!-- /.row -->
+
+
+
+
+            </div>
+            <div id="topiccolor" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top:5px;">
+
+                <p id="imagegallery" class="bg-success" style=" text-align :center ;">.:: کالیته ام دی اف 3 میل کاغذی (لترون)  ::.-  <span id="baseon">چیدمان بر اساس شماره کد</span></p>
+
+            </div>
+
+        </div>
+
+        <div id="imagegallerydetaile" class="row myfont">
+            @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
+        </div>
+    </div>
+
+</div>*@
+
+
+<br />
+
+<script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+
+
+<div class="container-fluid products" data-aos="fade-up">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 productsTitle">ام دی اف 3 میل<span style="color:#132666"></span></h5>
+            </div>
+            @if (Model.FirstOrDefault().category.fulldescription != null)
+            {
+                <div style="box-shadow:0 3px 10px #aab3c2; padding:30px">
+                    @Html.Raw(Model.FirstOrDefault().category.fulldescription)
+                </div>
+            }
+        </div>
+    </div>
+    <div id="imagegallerydetaile" class="row myfont">
+        @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
+    </div>
+</div>
+
+<script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+
+
+
+<script>
+    function sortingdefault() {
+//alert("hi")
+        location.reload();
+
+    }
+
+
+
+    function sortingbyalpha(catgid) {
+
+
+        $.ajax({
+            url: '/products/sortingbyalpha',
+            type: 'POST',
+            dataType: "json",
+            data: { id: catgid },
+            error: function (err) {
+                alert(err.status + "   " + err.statusText);
+            }
+        }).done(function (msg) {
+
+            $("#imagegallerydetaile").html('');
+            $.each(msg, function (index, val) {
+                //alert(val.name)
+                $("#imagegallerydetaile").append(" <div class='col-lg-3 col-md-3 col-sm-6 col-xs-12 '><a href='#'><img src='/Content/img/products/" +val.image +"' alt='" + val.name+ "' style='width:100%; height :250px;' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-6 col-md-6 col-sm-6 col-xs-6'><a href='#'><h5 style='text-align :center ;'>" +val.name+" </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'> "+val.code+ " </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'>" + "" +" </h5></a> </div><div class='col-lg-12' style=' height:10px;'></div></div>");
+            });
+        });
+
+
+
+
+
+    }
+
+
+    $(function () {
+
+
+        $(letron3mil).css('background-color', '#fef883')
+        $(list3).removeClass('collapse')
+
+
+      
+        $(".categorylist[section_id='" + @Model.FirstOrDefault().category.section_.id + "']").toggle(500)
+         $(".category[catg_id='" + @Model.FirstOrDefault().category.id + "']").css('background-color', '#4cff00')
+
+
+ 
+
+    })
+</script>
+
+
+
+
+

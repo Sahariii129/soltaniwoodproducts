@@ -1,0 +1,85 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository
+@using SoltaniWeb.Models.utility
+@using SoltaniWeb.Models.Extensions
+@model IEnumerable<MenuViewModel>
+
+
+<div class="card">
+    <div class="card-header">
+        <h4>
+
+      سطح دسترسی 
+        </h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-responsive table-hover" style="display:table;">
+            <tr>
+                <td>نام منو</td>
+                
+            </tr>
+            @foreach (var item in Model)
+            {
+            <tr listid="@item.menuid" userid="@item.userid">
+                <td>
+                    <span listid="@item.menuid" userid="@item.userid" style="color:green;" class="fas fa-plus subgridexpand"></span>
+                    <span title="@item.menunameinEN">@item.menuname</span>
+                    <span class="lineloading" listid="@item.menuid" style="display:none;">
+                        <img style="height:35px;" src="~/Content/img/icon/loadinganimation.gif" />
+                    </span>
+                    <span spansubgrid="@item.menuid" class="myfont"></span>
+                </td>
+                
+            </tr>
+            }
+        </table>
+    </div>
+    <div class="card-footer">
+
+    </div>
+</div>
+<script>
+
+
+    $('.subgridexpand').click(function () {
+        var menuid = $(this).attr('listid')
+        var userid = $(this).attr('userid')
+            var detailobject = $(this).parent().find('[spansubgrid]')
+        if ($(this).hasClass('fa-plus')) {
+            $(this).removeClass('fa-plus')
+            $(this).addClass('fa-minus')
+            var Data = detailobject.html()
+            //alert(Data)
+            if (Data.length != 0) {
+                detailobject.css('display', 'block')
+                return
+            }
+
+        } else {
+            $(this).removeClass('fa-minus')
+            $(this).addClass('fa-plus')
+            detailobject.css('display', 'none')
+
+            return;
+        }
+        var animateobject = $(this).parent().find('.lineloading')
+        animateobject .show()
+      
+
+
+        jQuery.post('/admin/GetActionsOfThisMenu', { menuid: menuid, userid: userid }, function (e) {
+            //alert(JSON.stringify(e))
+          //alert(e)
+            animateobject.hide()
+            detailobject.html(e)
+
+
+
+
+
+        })
+    })
+
+
+
+</script>

@@ -1,0 +1,67 @@
+﻿@model IEnumerable<SoltaniWeb.Models.Domain.tbl_person>
+
+@{
+    ViewBag.Title = "مدیریت اشخاص";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    int i = 1;
+
+}
+<script src="~/Scripts/sorttable.js"></script>
+
+<div class="container-fluid">
+    <p>
+        <a href="/admin/addperson" class="btn mt-5 mb-2" style="background-color:#ffca01;color:#fff">
+            افزودن شخص جدید
+        </a>
+        @*@Html.ActionLink("addperson", "addperson", "admin", new { @style = "cursor :pointer; text-decoration :none; color:#ffffff;" })*@
+
+    </p>
+    <div class="row ">
+        <div class=" col-md-12">
+            <table class="table table-responsive sortable" style="display:table">
+                <tr style="background-color:#332b3a;color:#fff">
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Fname)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Lname)
+                    </th>
+
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @i
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Fname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Lname)
+                        </td>
+
+                        <td>
+                            <a style=" cursor :pointer; text-decoration :none; " href="/admin/Edit_person/@item.id">Edit</a>|
+
+                            <a style=" cursor :pointer; text-decoration :none;  " href="/admin/Details_person/@item.id">Details</a>|
+                            <a style=" cursor :pointer; text-decoration :none; " data-ajax="true" data-ajax-method="POST" data-ajax-confirm="آیا مطمئن به حذف هستید؟" href="/admin/deleteperson/@item.id">Delete</a>|
+                        </td>
+                    </tr>
+
+                i++;
+
+            }
+
+            </table>
+
+        </div>
+    </div>
+</div>
+@Html.ActionLink("بازگشت به پنل مدیریتی", "adminpanel", "admin", new { @style = "cursor :pointer; text-decoration :none !important; color:#332b3a !important; font-weight:bold" })

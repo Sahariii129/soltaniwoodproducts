@@ -1,0 +1,1115 @@
+﻿@model SoltaniWeb.Models.repository.applicantrep
+@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Extensions
+@*@using SoltaniWeb.CustomModelBinders*@
+
+@{
+    ViewBag.Title = "تکمیل اطلاعات متقاضیان استخدام";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    var degrees = db.tbl_educationaldegree.ToList();
+    var jobs = db.tbl_job.ToList();
+    var today = DateTime.Now.ToPersianDate();
+    var appskills = db.tbl_skillappinfo.Where(a => a.appid == Model.applicant_id);
+    var contactinfos = db.tbl_appcontactsinfo.Where(a => a.applicant_id == Model.applicant_id);
+    var appidd = Model.applicant_id;
+    var i = 0;
+
+}
+
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/PersianDatePicker.js"></script>
+<link href="~/soltanistatic/style/recruitment.css" rel="stylesheet" />
+<div class="container-fluid Recruitment">
+    <div class="row">
+        <div class="col-12">
+            <div class="card myfont mt-4">
+                <div class="card-header" style="background-color:#332b3a;color:#fff">
+                    <h5> فرم استخدامی مربوط به : @(Model.f_name + " " + @Model.l_name + "[کد رهگیری:" + @Model.uniqekey + "]")</h5>
+                </div>
+                <div class="card-body">
+
+                    <ul class="nav nav-tabs pr-0 pt-4" role="tablist">
+                        <li id="li1th" role="presentation" class="nav-item"><a class="nav-link active" style="background-color:#6a95cc;" href="#firsttab" aria-controls="home" role="tab" data-toggle="tab">مرحله اول : اطلاعات اولیه شخصی</a></li>
+                        <li id="li2th" role="presentation" class="nav-item"><a class="nav-link" id="a2th" style="background-color:#6a95cc;" href="" aria-controls="profile" role="tab" data-toggle="tab">مرحله دوم : اطلاعات تماس</a></li>
+                        <li id="li3th" role="presentation" class="nav-item"><a class="nav-link" id="a3th" style="background-color:#6a95cc;" href="" aria-controls="profile" role="tab" data-toggle="tab">مرحله سوم : مهارت ها</a></li>
+                        <li id="li4th" role="presentation" class="nav-item"><a class="nav-link" id="a4th" style=" background-color:#6a95cc;" href="" aria-controls="profile" role="tab" data-toggle="tab">مرحله چهارم : سوابق اجرایی</a></li>
+                        <li id="li5th" role="presentation" class="nav-item"><a class="nav-link" id="a5th" style=" background-color:#6a95cc;" href="" aria-controls="profile" role="tab" data-toggle="tab">مرحله پنجم : بارگذاری تصویر </a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content pt-5">
+
+
+                        <div role="tabpanel" class="tab-pane active" id="firsttab">
+                            <form action="/home/saveotherinfoapplicant" class="form-horizontal">
+                                <br />
+                                @Html.AntiForgeryToken()
+                                <div class="form-horizontal">
+
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                                    <div class="form-group">
+                                        @Html.HiddenFor(model => model.applicant_id)
+                                        @Html.HiddenFor(model => model.uniqekey)
+                                        <div class="row align-items-center">
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> نام : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-7 col-lg-2 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.f_name, new { htmlAttributes = new { @class = "form-control" } })
+
+                                                @Html.ValidationMessageFor(model => model.f_name, "", new { @class = "text-danger" })
+
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> نام خانوادگی : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-7 col-lg-2 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.l_name, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.l_name, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5  col-lg-1 text-lg-left mb-3 mb-lg-0"> نام پدر : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-lg-1 col-7  mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.fathername, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.fathername, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-1 text-lg-left mb-3 mb-lg-0"> جنسیت : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-lg-1 col-7 mb-3 mb-lg-0">
+                                                <select class="form-control" name="sex" id="sex">
+
+                                                    <option value="1" selected=@(Model.sex==1)>مذکر</option>
+                                                    <option value="2" selected=@(Model.sex==2)>مونت</option>
+
+                                                </select>
+                                                @Html.ValidationMessageFor(model => model.sex, "", new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="form-group">
+                                        <div class="row align-items-center">
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> کد ملی : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.codemelli, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.codemelli, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> شماره شناسنامه : </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.shenasnamenum, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.shenasnamenum, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> محل تولد : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.borncity, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.borncity, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="row align-items-center">
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> شغل مورد درخواست : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                <select class="form-control" name="job_id" id="job_id">
+
+                                                    @foreach (var item in jobs)
+                                                    {
+                                                    <option value="@item.jobid" selected=@(Model.job_id==item.jobid)>@item.jobtitle</option>
+
+                                                    }
+
+                                                </select>
+                                                @Html.ValidationMessageFor(model => model.job_id, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> مدرک تحصیلی : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                <select class="form-control" name="degree_id" id="degree_id">
+
+                                                    @foreach (var item in degrees)
+                                                    {
+                                                    <option value="@item.educationid" selected=@(Model.degree_id==item.educationid)>@item.degree</option>
+
+                                                    }
+
+                                                </select>
+
+
+
+                                                @Html.ValidationMessageFor(model => model.degree_id, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> رشته تحصیلی : <sup style="color:red;">*</sup>  </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.edu_field, new { htmlAttributes = new { @class = "form-control", id = "nationality" } })
+                                                @Html.ValidationMessageFor(model => model.edu_field, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row align-items-center">
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> وضعیت تاهل : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                <select class="form-control" name="Married" id="Married">
+
+                                                    <option value=true selected=@(Model.Married==true)>متاهل</option>
+                                                    <option value=false selected=@(Model.Married==false)>مجرد</option>
+
+
+                                                    @*<option value=true>متاهل</option>
+                                                    <option value=false >مجرد</option>*@
+
+                                                </select>
+                                                @Html.ValidationMessageFor(model => model.Married, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> تعداد فرزند : </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.number_child, new { htmlAttributes = new { @class = "form-control", id = "number_child" } })
+                                                @Html.ValidationMessageFor(model => model.number_child, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> وضعیت نظام وظیفه : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                <select class="form-control" name="militaryservicestatus" id="militaryservicestatus">
+
+                                                    <option value="1" selected=@(Model.militaryservicestatus==1)>دارای کارت پایان خدمت</option>
+                                                    <option value="2" selected=@(Model.militaryservicestatus==2)> معافیت پزشکی</option>
+                                                    <option value="3" selected=@(Model.militaryservicestatus==3)> سایر معافیت</option>
+                                                    <option value="4" selected=@(Model.militaryservicestatus==4)>غایب</option>
+                                                    <option value="5" selected=@(Model.militaryservicestatus==5)>مشمول نیستم</option>
+                                                    <option value="6" selected=@(Model.militaryservicestatus==6)>سایر موارد</option>
+                                                </select>
+
+
+                                                @Html.ValidationMessageFor(model => model.militaryservicestatus, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row align-items-center">
+                                            <label class="control-label col-5 col-lg-1 text-lg-left mb-3 mb-lg-0"> دین : </label>
+                                            <div class="col-lg-1 col-7 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.Religion, new { htmlAttributes = new { @class = "form-control", id = "Religion" } })
+                                                @Html.ValidationMessageFor(model => model.Religion, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-1 text-lg-left mb-3 mb-lg-0"> ملیت :  </label>
+                                            <div class="col-lg-1 col-7 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.nationality, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.nationality, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> موبایل : </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.cellnumber, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.cellnumber, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> تاریخ تولد : </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+
+                                                <input id="birthday" name="birthday" value="@(Model.birthday.HasValue == true ? shamsi.ToShamsi(Model.birthday.Value).ToString("yyyy/MM/dd") : DateTime.Now.ToString("yyyy/MM/dd"))" class="form-control" />
+                                                @Html.ValidationMessageFor(model => model.birthday, "", new { @class = "text-danger" })
+
+                                                <script>
+
+                                    $(birthday).click(function () {
+                                        PersianDatePicker.Show(this, '@today')
+
+                                    })
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-group">
+                                        <div class="row align-items-center">
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> تا حالا بیمه شده اید؟ : </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                <select class="form-control" name="Insurance">
+
+                                                    <option value=true selected=@(Model.Insurance==true)>بلی</option>
+                                                    <option value=false selected=@(Model.Insurance==false)>خیر</option>
+
+                                                </select>
+                                                @Html.ValidationMessageFor(model => model.Insurance, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> مدت زمان بیمه : </label>
+                                            <div class="col-7 col-lg-2 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.Insurancepriod, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Insurancepriod, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> شماره بیمه :  </label>
+                                            <div class="col-7 col-lg-2 mb-3 mb-lg-0">
+                                                @Html.EditorFor(model => model.Insurancenumber, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Insurancenumber, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="row align-items-center">
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> سلامت روحی و جسمی : </label>
+                                            <div class="col-7 col-lg-2 mb-3 mb-lg-0">
+                                                <select class="form-control" name="Mentalphysicalhealth">
+
+                                                    <option value=true selected=@(Model.Mentalphysicalhealth==true)>بلی</option>
+                                                    <option value=false selected=@(Model.Mentalphysicalhealth==false)>خیر</option>
+
+                                                </select>
+                                                @Html.ValidationMessageFor(model => model.Mentalphysicalhealth, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> استعمال مواد دخانیات : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-7 col-lg-2 mb-3 mb-lg-0">
+                                                <select class="form-control" name="status_smoking">
+
+
+                                                    <option value=false selected=@(Model.status_smoking==false)>خیر</option>
+                                                    <option value=true selected=@(Model.status_smoking ==true)>بلی</option>
+                                                </select>
+                                                @Html.ValidationMessageFor(model => model.status_smoking, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> آیا هم اکنون شاغل هستید؟ <sup style="color:red;">*</sup> </label>
+                                            <div class="col-7 col-lg-2 mb-3 mb-lg-0">
+                                                <select class="form-control" name="workingnow">
+
+                                                    <option value=false selected=@(Model.workingnow==false)>خیر</option>
+
+                                                    <option value=true selected=@(Model.workingnow==true)>بلی</option>
+
+                                                </select>
+                                                @Html.ValidationMessageFor(model => model.workingnow, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="row align-items-center">
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> نحوه همکاری : <sup style="color:red;">*</sup> </label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                <select class="form-control" name="Type_cooperation">
+
+                                                    <option value="1" selected=@(Model.Type_cooperation==1)>تمام وقت</option>
+                                                    <option value="2" selected=@(Model.Type_cooperation==2)>پاره وقت</option>
+
+                                                </select>
+                                                @Html.ValidationMessageFor(model => model.Type_cooperation, "", new { @class = "text-danger" })
+                                            </div>
+                                            <label class="control-label col-5 col-lg-2 text-lg-left mb-3 mb-lg-0"> حقوق درخواستی : <sup style="color:red;">*</sup> </label>
+
+                                            <div class="col-7 col-lg-2 mb-3 mb-lg-0">
+                                                <select class="form-control" name="Expected_salary" id="Expected_salary">
+
+                                                    <option value="1" selected=@(Model.Expected_salary=="1")>کمتر از پانصد هزار تومان</option>
+                                                    <option value="2" selected=@(Model.Expected_salary=="2")> طبق اداره کار </option>
+                                                    <option value="3" selected=@(Model.Expected_salary=="3")>  1 میلیون تا 1 میلیون و 250 هزار تومان </option>
+                                                    <option value="6" selected=@(Model.Expected_salary=="4")>  1 میلیون 250 هزار تا 1 میلیون و 500 هزار تومان </option>
+                                                    <option value="7" selected=@(Model.Expected_salary=="5")> 1 میلیون و 500 هزار تا 2 میلیون تومان </option>
+                                                    <option value="4" selected=@(Model.Expected_salary=="6")> بیش از 2 میلیون تومان </option>
+                                                    <option value="5" selected=@(Model.Expected_salary=="7")> بیش از 3 میلیون تومان </option>
+
+
+                                                </select>
+                                            </div>
+
+                                            <label class="control-label col-5 col-lg-2 text-lg-left  mb-3 mb-lg-0"> نحوه آشنایی :</label>
+                                            <div class="col-lg-2 col-7 mb-3 mb-lg-0">
+                                                <select class="form-control" name="method_introduction" id="Expected_salary">
+
+                                                    <option value="1" selected=@(Model.method_introduction=="1")>از طریق روزنامه</option>
+                                                    <option value="2" selected=@(Model.method_introduction=="2")> از طریق دیوار </option>
+                                                    <option value="3" selected=@(Model.method_introduction=="3")> از طریق اینترنت </option>
+                                                    <option value="4" selected=@(Model.method_introduction=="4")> از طریق معرفی آشنایان </option>
+                                                    <option value="5" selected=@(Model.method_introduction=="5")> سایر روش ها </option>
+
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+
+
+
+
+                                        <div class="row">
+                                            <div class="col-12 text-left">
+
+
+                                                <input type="submit" value="تائید و ادامه ..." class="btn" style="background-color:#ffca01;color:#fff" id="saveajax" />
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                            </form>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="secondtab">
+                            <div class="row align-items-center" style="margin-top:10px;">
+
+                                <label class="control-label col-4 col-lg-2 text-lg-left">اطلاعات تماس : </label>
+                                <div class="col-8 col-lg-4">
+                                    <select class="form-control" name="status_smoking" id="contacttype_id">
+                                        @foreach (var item in db.tbl_contactype)
+                                        {
+                                        <option value=@item.id>@item.contacttype</option>
+                                        }
+
+                                    </select>
+                                    <input class="form-control" id="contact_value" type="text" />
+                                    <span id="errorvalid" style="color:red;"></span>
+                                </div>
+                                <div class="col-12 col-lg-6 mb-4 mb-lg-0"><button class="btn" id="addcontact" style="background-color:#ffca01;color:#fff">افزودن</button></div>
+
+                            </div>
+                            <div class="row mt-3 align-items-center" style="margin-top:5px;">
+                                <div class="col-12">
+                                    <h5 class="mb-2 bold" style="color:#132666">اطلاعات تماس</h5>
+                                    <table class="table table-responsive table-bordered table-condensed table-hover " style="display:table" id="tbl_contacts">
+                                        <tr style="background-color:#f8eec9;color:#132666">
+                                            <td> مشخصه   </td>
+                                            <td> مقدار   </td>
+                                            <td></td>
+                                        </tr>
+                                        @foreach (var item in contactinfos)
+                                        {
+                                            <tr id="@("delcontact" + item.id)">
+                                                <td> @item.contacttype_.contacttype   </td>
+                                                <td> @item.contact_value   </td>
+                                                <td><button value="@item.id" class="btn btn-warning delcontact"><img style=" height:24px;width:24px;" src="~/Content/img/icon/delete.png" alt="Alternate Text" /></button></td>
+                                            </tr>
+
+                                        }
+                                    </table>
+
+
+                                </div>
+                            </div>
+                            <script>
+
+                                $(addcontact).click(function () {
+
+
+
+                                    jQuery.post('/home/addcontact', { applicant_id: appidd, contacttype_id: $(contacttype_id).val(), contact_value: $(contact_value).val() }, function (result) {
+
+                                        var html = '';
+                                        var l = Object.keys(result).length
+
+                                        if (l == 0) {
+                                            $(errorvalid).html("مقدار ورودی معتبر نمی باشد")
+
+                                        } else {
+
+                                            $(result).each(function (idx, p) {
+                                                html += '<tr id="delcontact' + p.id + '">'
+                                                html += '<td>' + p.contacttype + '</td>'
+                                                html += '<td>' + p.contact_value + '</td>'
+                                                html += '<td><button  value="' + p.id + '"class="btn btn-warning delcontact"><img style=" height:24px;width:24px;" src="/Content/img/icon/delete.png" alt="Alternate Text" /></button></td>'
+                                                html += '</tr>'
+
+                                            })
+                                            $(errorvalid).html('')
+                                            $(contact_value).val('')
+                                            $(tbl_contacts).append(html)
+                                        }
+                                    })
+                                })
+
+                                $(tbl_contacts).delegate(".delcontact", "click", function () {
+                                    var id = $(this).val()
+
+
+                                    jQuery.post("/home/delcontact", { id: $(this).val() }, function (result) {
+
+
+
+                                        if (result == "True") {
+                                            $("#delcontact" + id).remove()
+
+                                        }
+
+
+
+
+                                    })
+
+                                })
+
+                            </script>
+
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="thirdtab">
+                            <h4 class="bold mb-4" style="color:#132666;"> فهرست مهارت ها : </h4>
+
+                            <div class="form-horizontal" style="margin-top:10px;">
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @Html.HiddenFor(model => model.applicant_id)
+
+                                @{
+                                int idx = 0;
+                                }
+                                <div class="form-group">
+                                    <div class="row align-items-center">
+                                        @foreach (var item in appskills.OrderBy(a => a.skillid))
+                                        {
+                                        <input type="hidden" name="skillid" value="@item.skillid" id="skillidlst[@idx]" class="skillid" />
+                                        <label class="control-label col-4 col-lg-2 text-lg-left mb-3 mb-lg-0">  @item.skill.skillname : <sup style="color:red;">*</sup> </label>
+                                        @if (item.skillid != 13)
+                                        {
+                                        <div class="col-8 col-lg-2 mb-3">
+
+                                            <select class="form-control skillvalue" name="skillvalue" id="skillvaluelst[@idx]">
+
+                                                <option value=1 selected=@(item.skillvalue=="1")>آشنا نیستم</option>
+                                                <option value=2 selected=@(item.skillvalue=="2")>کم</option>
+                                                <option value=3 selected=@(item.skillvalue=="3")>خوب</option>
+                                                <option value=4 selected=@(item.skillvalue=="4")>زیاد</option>
+                                                <option value="5" selected=@(item.skillvalue=="5")>خیلی زیاد</option>
+
+
+                                            </select>
+                                        </div>
+                                        }
+                                        else
+                                        {
+                                        <div class="col-8 col-lg-10 mb-3">
+
+                                            <input type="text" class="form-control skillvalue" value="@item.skillvalue" />
+                                        </div>
+                                        }
+
+                                        idx += 1;
+                                        }
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="col-12 text-left">
+                                        <input type="submit" value="تائید " class="btn" id="saveskills" style="background-color:#ffca01;color:#fff"/>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <script>
+
+                                $(saveskills).click(function () {
+
+                                    var skillids = [];
+                                    var skillvalues = [];
+                                    $('.skillid').each(function () {
+                                        skillids.push($(this).val())
+                                    })
+                                    $('.skillvalue').each(function () {
+                                        skillvalues.push($(this).val())
+                                    })
+
+
+                                    jQuery.post("/home/saveskillsforapp", { appid: appidd, skillidlst: skillids, skillvaluelst: skillvalues }, function (result) {
+                                        $(messageokbody).val('عملیات با موفقیت انجام شد');
+                                        $(messageok).modal();
+
+                                    })
+                                })
+                            </script>
+
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="forthtab">
+
+                            <br />
+                            <button class="btn" id="addhistorymodel" style="background-color:#ffca01;color:#fff">افزودن سابقه</button>
+
+                            <hr />
+
+                            <div class="row" id="historyjobexp">
+                                <div class="col-12">
+                                    <table class="table table-responsive table-bordered" id="historyjob">
+                                        <thead class="text-center">
+                                            <tr style="background-color:#f8eec9">
+                                                <th>شرکت</th>
+                                                <th>پست</th>
+                                                <th>عنوان شغل</th>
+                                                <th>شروع</th>
+                                                <th>پایان</th>
+                                                <th>مدت</th>
+                                                <th>علت ترک کار</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-center">
+                                            @foreach (var item in db.tbl_jobexperiences.Where(a => a.applicant_id == appidd))
+                                        {
+                                                <tr id="@("history"+ item.id)">
+
+                                                    <td>@item.CompanyName</td>
+                                                    <td>@item.post</td>
+                                                    <td>@item.jobname</td>
+                                                    @if (item.startdate.HasValue)
+                                        {
+                                        var st = item.startdate.Value;
+                                                        <td>@shamsi.ToShamsi(st).ToString("yyyy/MM/dd")</td>
+                                        }
+                                        else
+                                        {
+                                                        <td></td>
+                                        }
+                                                    @if (item.enddate.HasValue)
+                                        {
+                                        var et = item.enddate.Value;
+                                                        <td>@shamsi.ToShamsi(et).ToString("yyyy/MM/dd")</td>
+                                        }
+                                        else
+                                        {
+                                                        <td></td>
+                                        }
+
+                                                    <td>@item.Periodhistory</td>
+                                                    <td>@item.leavingreson</td>
+                                                    <td><button id="@("btndel" + item.id)" class="btndel" value="@item.id"><img src="~/Content/img/icon/delete.png" /></button><button id="@("btnedit" + item.id)" class="btnedit" value="@item.id"><img src="~/Content/img/icon/edit.png"/></button></td>
+
+
+                                                </tr>
+                                            i += 1;
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal myfont fade" id="jobhistorymodal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color:#6a95cc;color:#fff">
+                                            افزودن سابقه شغلی
+                                            <button type="button" class="close ml-0" data-dismiss="modal" aria-label="Close" style="color:#fff"><span aria-hidden="true">&times;</span></button>
+
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-horizontal" style="margin-top:10px;">
+
+                                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                                                <div class="form-group">
+                                                    <input type="text" name="id1" id="id1" class="form-control me1" style="display:none;" />
+
+                                                    @*@Html.HiddenFor(model => model.applicant_id)*@
+                                                    <div class="row align-items-center">
+                                                        <label class="control-label col-4 col-lg-2">  شرکت :  </label>
+                                                        <div class="col-8 col-lg-4">
+                                                            <input type="text" id="CompanyName1" value="" class="form-control" placeholder="شرکت پارسی" />
+                                                            @* @Html.ValidationMessageFor(model => model.tbl_jobexperiences.FirstOrDefault().CompanyName, "", new { @class = "text-danger" })*@
+                                                            <span style="color:red;" id="companyerror"></span>
+                                                        </div>
+
+                                                        <label class="control-label col-4 col-lg-2">  پست :  </label>
+                                                        <div class="col-8 col-lg-4">
+                                                            @*@Html.EditorFor(model => model.tbl_jobexperiences.FirstOrDefault().post, new { htmlAttributes = new { @class = "form-control" } })*@
+                                                            <input type="text" name="post" id="post1" value="" class="form-control" placeholder="مدیر" />
+
+                                                            @*  @Html.ValidationMessageFor(model => model.tbl_jobexperiences.FirstOrDefault().post, "", new { @class = "text-danger" })*@
+
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row align-items-center">
+                                                        <label class="control-label col-4 col-lg-2">     شغل : </label>
+                                                        <div class="col-8 col-lg-4">
+                                                            @*@Html.EditorFor(model => model.tbl_jobexperiences.FirstOrDefault().jobname, new { htmlAttributes = new { @class = "form-control" } })*@
+                                                            <input type="text" name="jobname" id="jobname1" value="" class="form-control" placeholder="حسابدار" />
+
+                                                            @*   @Html.ValidationMessageFor(model => model.tbl_jobexperiences.FirstOrDefault().jobname, "", new { @class = "text-danger" })*@
+
+                                                        </div>
+                                                        <label class="control-label col-4 col-lg-2">    مدت :  </label>
+                                                        <div class="col-8 col-lg-4">
+                                                            @*@Html.EditorFor(model => model.tbl_jobexperiences.FirstOrDefault().Periodhistory, new { htmlAttributes = new { @class = "form-control" } })*@
+                                                            <input type="text" name="Periodhistory" id="Periodhistory1" value="" class="form-control" placeholder="3 سال و 2 ماه" />
+
+                                                            @*    @Html.ValidationMessageFor(model => model.tbl_jobexperiences.FirstOrDefault().Periodhistory, "", new { @class = "text-danger" })*@
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="row align-items-center">
+                                                        <label class="control-label col-4 col-lg-2">    شروع :  </label>
+                                                        <div class="col-8 col-lg-4">
+                                                            @* @Html.EditorFor(model => model.tbl_jobexperiences.FirstOrDefault().startdate, new { htmlAttributes = new { @class = "form-control" } })*@
+                                                            <input type="text" name="startdate" id="startdate1" value="" class="form-control" />
+
+                                                            @*   @Html.ValidationMessageFor(model => model.tbl_jobexperiences.FirstOrDefault().startdate, "", new { @class = "text-danger" })*@
+
+                                                        </div>
+                                                        <label class="control-label col-4 col-lg-2">    پایان :  </label>
+                                                        <div class="col-8 col-lg-4">
+                                                            @*@Html.EditorFor(model => model.tbl_jobexperiences.FirstOrDefault().enddate, new { htmlAttributes = new { @class = "form-control" } })*@
+                                                            <input type="text" name="enddate" id="enddate1" value="" class="form-control" />
+
+                                                            @*   @Html.ValidationMessageFor(model => model.tbl_jobexperiences.FirstOrDefault().enddate, "", new { @class = "text-danger" })*@
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row align-items-center">
+                                                        <label class="control-label col-4 col-lg-3">    علت ترک کار :  </label>
+                                                        <div class="col-8 col-lg-9">
+                                                            @* @Html.TextAreaFor(model => model.tbl_jobexperiences.FirstOrDefault().leavingreson, new { htmlAttributes = new { @class = "form-control" } })*@
+                                                            <input type="text" name="leavingreson" id="leavingreson1" value="" class="form-control" placeholder="جابجایی شرکت" />
+                                                            <span style="color:red;" id="leavingerror"></span>
+                                                            @*     @Html.ValidationMessageFor(model => model.tbl_jobexperiences.FirstOrDefault().leavingreson, "", new { @class = "text-danger" })*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-12 text-center">
+                                                        <input type="submit" value="تائید " class="btn mt-3" data-dismiss="close" id="savehistoryjob" style="background-color:#ffca01;color:#fff"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <script>
+
+
+
+                $(jobhistorymodal).delegate('#startdate1', 'click', function () {
+
+                    PersianDatePicker.Show(this, '@today')
+
+                })
+                $(enddate1).click(function () {
+
+                    PersianDatePicker.Show(this, '@today')
+
+                })
+                        </script>
+                        <div role="tabpanel" class="tab-pane fade in" id="fifthtab">
+
+                            <br />
+                            <div class="card myfont mb-3">
+                                <div class="card-header" style="background-color:#f8eec9;color:#132666">
+                                    <center>بارگذاری تصویر 3 * 4 پرسنلی</center>
+
+                                </div>
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-6 col-12 form-horizontal">
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <label class="control-label col-3 col-lg-2 ">تصویر </label>
+                                                    <div class="col-9 col-lg-10">
+                                                        <input class="A" type="file" id="img_1" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row mt-4">
+                                                    <div class="col-12">
+                                                        <button type="submit" class="btn" id="btn_saveimg" style=" background-color:#ffca01;color:#132666">ذخیره</button>
+                                                        <button class="btn btn-danger" id="delimage" value="@Model.applicant_id">حذف تصویر</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <img id="img_preview" class="img-thumbnail" />
+
+                                            </div>
+                                            <div class="row loader">
+                                                <center>
+                                                    <img class="loading-image" src="~/Content/img/icon/130.gif" alt="loading..">
+                                                </center>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-12" id="img_app">
+                                            <div class="row">
+                                                @if (Model.applicant_image != null)
+                                                {
+                                                <div class="col-md-4 col-12">
+                                                    <img id="immmmm" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.applicant_image)))" class=" img-thumbnail" />
+                                                </div>
+
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer" style="border-top:none;">
+                                    <div id="rrr"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer pr-3">
+                    <h4 style="color:#6f08a7;"><span style="color:red;">توجه: </span>  در صورت تکمیل هر چه بیشتر و دقیق تر اطلاعات فوق, کارشناسان استخدام زود تر با شما ارتباط برقرار می کنند. </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal myfont fade" id="messageajax">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#64c112;">
+                پیام سیستمی
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            </div>
+            <div class="modal-body">
+                اطلاعات مربوط به مهارت های شما با موفقیت به روز رسانی گردید.
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+
+
+@if (TempData["step"] == "1")
+{
+    <script>
+        $(li1th).removeClass('active')
+        $(firsttab).removeClass('active')
+        $(secondtab).addClass('active')
+        $(li2th).addClass('active')
+        $(a2th).attr("href", "#secondtab")
+        $(a3th).attr("href", "#thirdtab")
+        $(a4th).attr("href", "#forthtab")
+        $(a5th).attr("href", "#fifthtab")
+
+    </script>
+}
+
+@if (TempData["access"] != null)
+{
+    <script>
+
+        $(a2th).attr("href", "#secondtab")
+        $(a3th).attr("href", "#thirdtab")
+        $(a4th).attr("href", "#forthtab")
+        $(a5th).attr("href", "#fifthtab")
+    </script>
+}
+
+
+
+
+
+
+
+<script src="~/Scripts/PersianDatePicker.js"></script>
+
+<script>
+    $(img_1).change(function () {
+
+        var reader = new FileReader();
+        reader.readAsDataURL(img_1.files[0])
+        reader.onloadend = function (e) {
+            img_preview.src = e.target.result
+        }
+    })
+
+    var appidd = @appidd
+    //$(saveskills).click(function () {
+
+    //    jQuery.post("/home/saveskills", {
+    //        appid: appidd,
+    //        windows: $(windows).val(),
+    //        internet: $(internet).val(),
+    //        type: $(typeskil).val(),
+    //        word: $(word).val(),
+    //        excell: $(excell).val(),
+    //        photoshop: $(photoshop).val(),
+    //        illustrator: $(illustrator).val(),
+    //        en_languge: $(en_language).val(),
+    //        access: $(access).val(),
+    //        powerpoint: $(powerpoint).val(),
+    //        other: $(otherskiles).val(),
+
+    //    }, function (results) {
+
+    //        $(messageajax).modal();
+
+    //    })
+
+
+
+    //})
+
+    $(contact_value).keydown(function () {
+
+        $(errorvalid).html('')
+    })
+
+
+
+
+
+</script>
+
+
+<script>
+
+    $(CompanyName1).keydown(function () {
+        $(companyerror).html('')
+    })
+    $(leavingreson1).keydown(function () {
+        $(leavingerror).html('')
+    })
+    $(addhistorymodel).click(function () {
+
+        $(leavingerror).html('')
+        $(companyerror).html('')
+        $(jobhistorymodal).modal();
+    })
+    var appid =@appidd
+    $(savehistoryjob).click(function (event) {
+        var id = $(id1).val()
+
+
+        if ($(CompanyName1).val().length == 0) {
+            $(companyerror).html('ورود نام شرکت الزامی است')
+            return
+        }
+
+        if ($(leavingreson1).val().length == 0) {
+            $(leavingerror).html('ورود علت ترک کار الزامی است')
+            return
+        }
+
+
+
+        if (id == '') {
+
+            jQuery.post("/home/savehistoryjob", {
+                appid: appid,
+                id: $(id1).val(),
+                companyName: $(CompanyName1).val(),
+                post: $(post1).val(),
+                jobname: $(jobname1).val(),
+                periodhistory: $(Periodhistory1).val(),
+                startdate: $(startdate1).val(),
+                enddate: $(enddate1).val(),
+                leavingreson: $(leavingreson1).val()
+
+
+            }, function (result) {
+                $("#jobhistorymodal :text").val('')
+                $(jobhistorymodal).modal('hide')
+
+                var html = ''
+
+                var radif = @db.tbl_jobexperiences.Where(a=>a.applicant_id==appidd).Count() +1
+
+                $(result).each(function (idx, p) {
+                    html += '<tr id=' + 'history' + p.id + ' >'
+
+                    html += '<td>' + p.companyName + '</td>'
+                    html += '<td>' + p.post + '</td>'
+                    html += '<td>' + p.jobname + '</td>'
+
+                    html += '<td>' + p.startdate + '</td>'
+                    html += '<td>' + p.enddate + '</td>'
+                    html += '<td>' + p.periodhistory + '</td>'
+                    html += '<td>' + p.leavingreson + '</td>'
+                    html += '<td><button id="' + "btndel" + p.id + '" class="btndel" value="' + p.id + '"><img src="/Content/img/icon/delete.png" style="height:24px; width:auto;" /></button>' + '<button id="' + "btnedit" + p.id + '" class="btnedit" value="' + p.id + '"><img src="/Content/img/icon/edit.png" style="height:24px; width:auto;" /></button>' + '</td>'
+                    html += '</tr>'
+                    $(historyjob).append(html);
+                    radif = radif + 1
+                })
+
+            })
+        } else {
+
+            jQuery.post("/home/savehistoryjob", {
+                appid: appid,
+                id: $(id1).val(),
+                companyName: $(CompanyName1).val(),
+                post: $(post1).val(),
+                jobname: $(jobname1).val(),
+                periodhistory: $(Periodhistory1).val(),
+                startdate: $(startdate1).val(),
+                enddate: $(enddate1).val(),
+                leavingreson: $(leavingreson1).val()
+
+            }, function (result) {
+                $("#jobhistorymodal :text").val('')
+                $(jobhistorymodal).modal('hide')
+
+                var html = ''
+
+                @*var radif = @db.tbl_jobexperiences.Where(a=>a.applicant_id==appidd).Count() +1*@
+
+                $(result).each(function (idx, p) {
+
+
+
+                    html += '<td>' + p.companyName + '</td>'
+                    html += '<td>' + p.post + '</td>'
+                    html += '<td>' + p.jobname + '</td>'
+
+                    html += '<td>' + p.startdate + '</td>'
+                    html += '<td>' + p.enddate + '</td>'
+                    html += '<td>' + p.periodhistory + '</td>'
+                    html += '<td>' + p.leavingreson + '</td>'
+                    html += '<td><button id="' + "btndel" + p.id + '" class="btndel" value="' + p.id + '"><img src="/Content/img/icon/delete.png" style="height:24px; width:auto;" /></button>' + '<button id="' + "btnedit" + p.id + '" class="btnedit" value="' + p.id + '"><img src="/Content/img/icon/edit.png" style="height:24px; width:auto;" /></button>' + '</td>'
+
+
+                    $("#history" + p.id).html(html);
+                    radif = radif + 1
+                })
+
+            })
+
+        }
+
+
+    })
+
+
+    $(historyjobexp).delegate('.btndel', 'click', function () {
+
+
+        if (confirm("آیا اطمینان به حذف دارید؟") == true) {
+            jQuery.post('/home/deletehistoryjob', { id: $(this).val() }, function (result) {
+
+                $("#history" + result).remove();
+
+            })
+        }
+
+
+
+    })
+
+
+    $(historyjobexp).delegate('.btnedit', 'click', function () {
+        //alert($(this).val())
+        $("#jobhistorymodal :text").val('')
+        jQuery.post('/home/gethistoryjobitem', { id: $(this).val() }, function (result) {
+            $(result).each(function (idx, p) {
+
+                $(id1).val(p.id)
+
+                $(CompanyName1).val(p.CompanyName)
+                $(jobname1).val(p.jobname)
+                $(post1).val(p.post)
+                $(Periodhistory1).val(p.Periodhistory)
+                $(startdate1).val(p.startdate)
+                $(enddate1).val(p.enddate)
+                $(leavingreson1).val(p.leavingreson)
+
+
+            })
+
+
+
+        })
+
+
+
+
+        $(jobhistorymodal).modal();
+
+
+
+
+
+    })
+
+
+
+    $(btn_saveimg).click(function () {
+
+
+        var mydata = new FormData()
+        mydata.append('id', appid)
+
+        mydata.append('img', img_1.files[0])
+
+        $.ajax({
+            type: 'POST',
+            url: '/home/uploadapplicantimage',
+            data: mydata,
+            datatype: 'json',
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('.loader').show()
+            },
+
+        }).done(function (msg) {
+            values = JSON.parse(msg)
+            $('.loader').hide();
+            var html = ''
+            $.each(values, function (idx, p) {
+                html += '<div class="col-md-4 col-xs-12">'
+                html += ' <img id="immmmm" src="data:image/jpeg;base64,' + p.img + '" class=" img-thumbnail" />'
+                html += '</div>'
+            })
+
+
+            $(img_app).html(html)
+            $(messageok).modal()
+        })
+
+
+    })
+
+    $(delimage).click(function () {
+
+
+        jQuery.post("/home/delimage", { appid: $(this).val() }, function (result) {
+            if (result == "True") {
+
+                $(img_app).html('')
+                $(messageok).modal()
+            } else {
+                $(messagenotok).modal()
+
+            }
+
+
+
+
+        })
+
+
+
+    })
+
+
+
+
+
+</script>

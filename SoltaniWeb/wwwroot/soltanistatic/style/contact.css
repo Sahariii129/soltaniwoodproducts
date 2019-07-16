@@ -1,0 +1,164 @@
+.contact .contactTitle{
+    text-align: center;
+    font-weight: bolder;
+    color: #6a95cc;
+    position: relative;
+}
+.contact .contactTitle:after{
+    position: absolute;
+    content: " ";
+    right: 0;
+    top: 20px;
+    width: 10%;
+    height: 4px;
+    background-color: #6a95cc;
+}
+.contact .contactTitle:before{
+    position: absolute;
+    content: " ";
+    left: 0;
+    top: 20px;
+    width: 10%;
+    height: 4px;
+    background-color: #6a95cc;
+}
+.contact .branch img {
+    width: 100%;
+    height: 550px;
+}
+.contact h6{
+    margin: 20px auto;
+    color: #6a95cc;
+}
+.contact h6 span{
+    color: #332b3a;
+}
+.contact .social{
+    max-width: 400px;
+    margin: 120px auto 30px;
+}
+.contact .social h6{
+    margin: 0;
+    padding: 10px;
+    background-color: #332b3a;
+    color: #ffca01;
+}
+.contact .social .socialText{
+    position: relative;
+    margin-bottom:50px;
+}
+.contact .social .socialText:after{
+    position: absolute;
+    top: 6px;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 100%;
+    transform: skewY(-30deg);
+    content: " ";
+    background-image: linear-gradient(90deg, #332b3a 20%,#ffca01);
+    box-shadow: 0 5px 7px #332b3a
+}
+.contact .social .socialText:before{
+    position: absolute;
+    top: 6px;
+    bottom: 0;
+    left: 0;
+    width: 15px;
+    height: 100%;
+    transform: skewY(30deg);
+    content: " ";
+    background-image: linear-gradient(-90deg, #332b3a 20%,#ffca01);
+    box-shadow: 0 5px 7px #332b3a
+}
+.contact .social i.fa-instagram{
+    color: #af1b9b;
+}
+.contact .social i.fa-telegram-plane{
+    color: #6a95cc;
+}
+.contact .social i.fa-twitter-square{
+    color: #80a6d8;
+}
+.contact .social i{
+    font-size: 40px;
+    padding: 50px 30px;
+    transition: .5s;
+}
+.contact .social i:hover{
+    animation: shake 0.75s cubic-bezier(.36,.07,.19,.97);
+    transform: translate3d(0, 0, 0);
+  	backface-visibility: hidden;
+  	perspective: 1000px;
+}
+    .contact .social img {
+        width: 50px;
+        transition:.5s;
+    }
+.contact .social img:hover {
+        animation: shake 0.75s cubic-bezier(.36,.07,.19,.97);
+        transform: translate3d(0, 0, 0);
+        backface-visibility: hidden;
+        perspective: 1000px;
+}
+.contact .social .email{
+    color: #332b3a !important;
+    font-size: 17px;
+}
+.contact .social .email:hover{
+    color: #6a95cc !important;
+}
+.contact .social .form-group{
+    margin: 40px auto 40px;
+    border-top: 3px solid #ffca01;
+    padding-top:20px;
+}
+.contact .social .form-control{
+    margin: 20px auto;
+}
+.contact .social .btn-danger{
+    background-color: #ffca01 !important;
+    border-color: #ffca01 !important;
+    cursor: pointer;
+}
+.contact .social .btn-success{
+    background-color: #6a95cc !important;
+    border-color: #6a95cc !important;
+    cursor: pointer;
+}
+@media(max-width:992px){
+    .contact .social{
+        min-width: 700px;
+    }
+    .contact .social i{
+        font-size: 70px;
+        padding: 50px 30px;
+    }
+    .contact .social .email{
+        font-size: 30px;
+    }
+    .contact .social .btn-success,.btn-danger{
+        font-size: 25px;
+        padding: 20px 40px;
+    }
+    .contact .branch img {
+        height: 850px;
+    }
+    .contact .social img{
+        width:85px;
+    }
+}
+@keyframes shake{
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0);
+    }  
+    20%, 80% {
+        transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}

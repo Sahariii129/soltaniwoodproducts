@@ -1,0 +1,310 @@
+﻿.panelbox {
+    position: relative;
+    padding: 0px;
+    /*border :10px solid #ffffff;*/
+}
+
+.myform2 {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+}
+
+.myform3 {
+    display: none;
+    z-index: 1001;
+    position: absolute;
+}
+
+
+.column {
+    float: right;
+    width: 50px;
+    padding: 5px;
+}
+
+.myrow {
+    width: 180px !important;
+}
+    /* Clearfix (clear floats) */
+    .myrow::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+.imgbtn {
+    cursor: pointer;
+}
+
+.loading-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 10;
+}
+
+.loader {
+    display: none;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    text-align: center;
+    margin-left: -50px;
+    margin-top: -100px;
+    z-index: 2;
+    overflow: auto;
+}
+
+
+
+.toolband {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    height: 40px;
+    width: 98%;
+    padding: 5px;
+    /*display: none;*/
+}
+
+    .toolband button {
+        float: left;
+        font-weight: 600;
+        color: #000000;
+    }
+
+.hidden {
+    display: none;
+}
+
+.psearch {
+    position: relative;
+    width: 400px;
+    float: right;
+    border: 5px solid #ffffff;
+}
+
+    .psearch .panel-heading {
+        background-color: #17c399;
+    }
+
+.TextButtom{
+    width:100%;
+    /*background-color:aqua;
+    border:1px solid red;*/
+   
+    
+
+}
+    .TextButtom input {
+        float: right;
+        width: calc(100% - 34px);
+        height: 34px;
+        border-bottom-right-radius: 5px;
+        border-top-right-radius: 5px;
+        font-size:12px;
+        padding-right:5px;
+    }
+    .TextButtom button {
+        float: right;
+        width: 34px;
+        height: 34px;
+        color: red;
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+    }
+    .leftpanel {
+        /*height: 600px;
+    overflow: scroll;*/
+        position: relative;
+        width: calc(100% - 400px);
+        float: right;
+        border: 5px solid #ffffff;
+    }
+
+    .leftpanel .panel-heading {
+        background-color: #17c399;
+    }
+
+    .leftpanel .panel-body {
+        height: 600px;
+        overflow: scroll;
+    }
+
+.searchpanelbtn {
+    display: none;
+}
+
+.productimage {
+    position: relative;
+    border: 5px solid green;
+}
+
+    .productimage img {
+        width: 100%;
+        height: 150px;
+    }
+
+
+.moreinfo{
+    cursor:pointer;
+}
+.productimage:hover .img-thumbnail {
+    border: 5px solid black;
+}
+
+
+
+.productinfo {
+    border: 2px solid #192237;
+    margin-bottom: 10px !important;
+    background-color: #ffffff;
+    position: relative;
+    float: right;
+    width: 100%;
+   
+}
+
+    .productinfo .section {
+        border-bottom: 1px dotted #f24d4d;
+        width: 100%;
+        height: 35px;
+        margin: 0px;
+        padding: 5px;
+        background-color: #8e0d0d;
+        color: #ffffff;
+    }
+
+.section p {
+    text-align: center;
+    font-weight: bolder;
+}
+
+
+
+.productinfo .brand {
+    /*border: 1px solid #ff6a00;*/
+    width: 100%;
+    height: 45px;
+    margin: 0px;
+    background-color: #8e0d0d;
+    color: #ffffff;
+}
+
+.brandname {
+    /*border: 1px solid #b6ff00;*/
+    width: 60%;
+    height: 45px;
+    margin: 0px;
+    float: right;
+}
+
+    .brandname a {
+        text-decoration: none;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+.brandimage {
+    /*border: 1px solid #b6ff00;*/
+    width: 40%;
+    height: 45px;
+    margin: 0px;
+    float: right;
+    background-color: #ffffff;
+}
+
+.productname {
+    height: 40px;
+    padding: 5px;
+    border-bottom: 1px dotted #8e0d0d;
+    background-color: #b2fbc5;
+}
+
+    .productname a {
+        text-decoration: none;
+        color: #000000;
+        cursor: pointer;
+        font-weight: bolder;
+    }
+
+.SellPrice {
+    height: 40px;
+    padding: 5px;
+    border-bottom: 1px dotted #8e0d0d;
+}
+
+    .SellPrice p {
+        text-align: right;
+    }
+
+
+.Dimension {
+    height: 40px;
+    padding: 5px;
+    border-bottom: 1px dotted #8e0d0d;
+}
+
+    .Dimension a {
+        text-decoration: none;
+        color: #000000;
+        cursor: pointer;
+        font-weight: bolder;
+    }
+
+.status {
+    /*height: 40px;*/
+    padding: 5px;
+    border-bottom: 1px dotted #8e0d0d;
+}
+
+    .status p {
+        text-align: right;
+        
+    }
+
+
+.Samples {
+    height: 40px;
+    padding: 5px;
+}
+
+    .Samples a {
+        text-decoration: none;
+        color: #000000;
+        cursor: pointer;
+        font-weight: bolder;
+    }
+
+@media screen and (max-width: 1200px) {
+    .psearch {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        z-index: 1;
+        width: 100%;
+        display: none;
+        border: 5px solid #ffffff;
+    }
+
+    .leftpanel {
+        position: relative;
+        width: 100%;
+        float: right;
+        border: 5px solid #ffffff;
+    }
+   
+    .searchpanelbtn {
+        display: inline-block;
+    }
+    .moreinfo {
+        cursor: pointer;
+    }
+    .pading1px{
+        padding:1px!important
+    }
+
+}

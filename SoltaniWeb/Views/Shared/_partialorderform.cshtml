@@ -1,0 +1,593 @@
+﻿
+
+@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.Domain
+@model tbl_order
+@{
+    _4820_soltaniwebContext db4 = new _4820_soltaniwebContext();
+    var brancheslist = db4.tbl_branches.ToList();
+    var i = 1;
+    var today = DateTime.Now.ToPersianDate();
+}
+@*<script src="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>*@
+
+<link href="~/soltanistatic/style/manage-order.css" rel="stylesheet" />
+<div class="card myfont myformcontent" mode="@(Model!=null?"Edit": "Add")" style="border:2px ridge #000000;">
+    <div class="controltools">
+        <img class="contorltoolsimg minimize mx-2" id="minimizeaddform" mode="@(Model!=null?"Edit": "Add")" orderid="@(Model!=null ? Model.id.ToString() : "")" src="~/Content/img/icon/minimize-icon.png" />
+        <img class="contorltoolsimg closeform" id="closeaddform" mode="@(Model!=null?"Edit": "Add")" src="~/Content/img/icon/Button-Close-icon.png" />
+    </div>
+    <div class="card-header paneltomove" id="@(Model!=null ?"myheadingpaneltoedit" : "myheadingpanel")" style="background-color: @(Model!=null ?"#6a95cc" : "#6a95cc"); color:white; font-weight:900;">
+        <h6>
+            @(Model != null ? "ویرایش حواله" : "حواله جدید")
+
+        </h6>
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 col-lg-4 orderinfo1" id="oinfo1">
+                <div class="form-horizontal pl-2">
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <label class="col-sm-3 control-label fright">شماره :</label>
+                            <div class="col-sm-9">
+                                <input type="text" disabled class="form-control" id="ordernumber" value="@(Model!=null ? Model.id.ToString() : "")">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="row align-items-center">
+                            <label class="col-sm-3 control-label fright">کاربر :</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control " userid="@(Model!=null? (Model.userid.ToString()) :  User.Identity.Name)" style="color:red;" disabled id="orderuser" value="@(Model!=null? (Model.user.name + " " + Model.user.Lname) : User.Identity.Name)" placeholder="...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="row align-items-center">
+                            <label class="col-sm-3 control-label fright">تاریخ :</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="orderdateid" value="@(Model != null ? Model.sodoor_date.ToPersianDate():  DateTime.Now.ToPersianDate())" placeholder="...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <label class="col-sm-3 control-label fright ">از شعبه : </label>
+                            <div class=" col-sm-9">
+                                <select class="form-control myselect" id="frombranchid">
+                                    @foreach (var item in brancheslist)
+                                {
+                                    if (Model != null)
+                                    {
+                                            <option class="optionfont" value="@item.id" selected="@(Model.from_branchid == item.id)">@item.branch_name</option>
+
+
+                                    }
+                                    else
+                                    {
+                                            <option class="optionfont" value="@item.id" selected="@(item.id==1)">@item.branch_name</option>
+                                    }
+                                }
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <label class="col-sm-3 control-label fright">به شعبه : </label>
+                            <div class=" col-sm-9">
+                                <select class="form-control myselect" id="tobranchid">
+                                    @foreach (var item in brancheslist)
+                                {
+                                    if (Model != null)
+                                    {
+                                            <option class="optionfont" value="@item.id" selected="@(Model.to_branchid == item.id)">@item.branch_name</option>
+
+
+                                    }
+                                    else
+                                    {
+                                            <option class="optionfont" value="@item.id" selected="@(item.id==2)">@item.branch_name</option>
+                                    }
+                                }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <label class="col-sm-3 control-label fright">مشتری : </label>
+                            <div class=" col-sm-9">
+                                <input type="text" class="form-control" id="forperson_id" placeholder="ورود این فیلد الزامی است" value="@(Model!=null?(Model.orderfor.Fname + " " +Model.orderfor.Lname):"")" />
+                                <input type="hidden" class="form-control" id="personid" value="@(Model!=null ? (Model.orderforid.ToString()):"")" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <label class="col-sm-3 control-label fright">موبایل : </label>
+                            <div class=" col-sm-9">
+                                <input type="text" @(Model != null ? (Model.orderfor.cell != null ? "disabled" : "") : "") class="form-control cellphone" personid="@(Model!=null ? Model.orderforid.ToString() : "")" id="cellphone_id" value="@(Model!=null ? Model.orderfor.cell : "")" placeholder="ورود موبایل الزامی است." />
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <label class="col-sm-3 control-label fright">شرح : </label>
+                            <div class="col-sm-9">
+                                <textarea rows="5" class="form-control" style="overflow-y:scroll;" id="orderdesc">@(Model!=null? Model.sharh : "")</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-8 orderinfo1" id="oinfo1">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" style="border:unset">
+                            <div class="card-header" style="background-color:#f8eec9; color:black;font-weight:900;border-bottom:2px solid #ffca01"> لیست کالاهای درخواستی</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 col-lg-11 order-2 order-lg-1">
+                                        <table class="table table-responsive table-hover sortable pricetable">
+                                            <thead>
+
+                                                <tr>
+                                                    <th class="prow hidden-xs">ردیف</th>
+                                                    <th class="pname">نام کالا</th>
+                                                    <th class="pnumber">تعداد</th>
+                                                    <th class="pdesc hidden-xs">شرح</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody id="tabletbody">
+                                                @if (Model != null)
+                                    {
+
+                                        foreach (var item in Model.tbl_orderdetails)
+                                        {
+
+                                                        <tr class="ptrclass " pdesc="@item.description" pnumber="@item.number" productid="@item.product_id" row="@(i)">
+                                                            <td class="prow hidden-xs">@(i)</td>
+                                                            <td class="pname" productid="@item.product_id">@(item.product_.category.categoryname + " | " + item.product_.name + " | " + item.product_.codename + " | " + item.product_.dimension )</td>
+                                                            <td class="pnumber">@item.number</td>
+                                                            <td class="pdesc hidden-xs">@item.description</td>
+                                                        </tr>
+                                            i++;
+
+                                        }
+                                    }
+
+
+                                            </tbody>
+                                            <tfoot>
+
+                                                <tr class="trfooter">
+
+                                                    <td colspan="2" class="totalpnumberlbl">جمع کل</td>
+                                                    <td class="totalpnumber" id="totalpnumber">@(Model != null ? (Model.tbl_orderdetails.Sum(a => a.number)) : 0)</td>
+
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <div class="col-12 col-lg-1 order-1 order-lg-2">
+                                        <div class="d-flex flex-row flex-lg-column my-3 my-lg-0">
+                                            <div class=" myimgefrm">
+                                                <img accesskey="a" id="additem" class="img1" src="~/Content/img/icon/Button-Add-icon.png" />
+                                            </div>
+                                            <div class=" myimgefrm">
+
+                                                <img id="edititem" class="img1" rowtoedit="" src="~/Content/img/icon/edit.png" />
+                                            </div>
+                                            <div class=" myimgefrm">
+
+                                                <img id="deleteitem" class="img1" rowtodelete="" src="~/Content/img/icon/delete.png" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-12 descriptionp">
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <button id="btn_saveorder" class="btn btn-success">ثبت </button>
+
+                                <a href="/Reports/orderreport?orderid=@(Model!=null ?  Model.id : 0)" class="btn btn-primary btn_printer" target="_blank">پرینت</a>
+                                <button class="btn btn-warning" id="orderexporttopdf" orderid="@(Model!=null ? Model.id : 0)">ارسال pdf </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // save pdf file
+    $(orderexporttopdf).click(function () {
+
+        var orderid = $(ordernumber).val()
+
+        if (orderid.length == 0) {
+            $(messagenotokbody).html('حواله هنوز ثبت نشده است')
+            $(messagenotok).modal()
+
+
+            return;
+        }
+        var msg = '';
+        msg += '<p class="msgtext">حواله ' + orderid + '</p>'
+        msg += '<a target="_blank" class="btn btn-success "  href="/admin/DownLoadFile/' + $(this).attr('filenametosend') + '">دانلود فایل</a>'
+
+
+
+
+        $.post('/Reports/orderexporttopdf', { orderid: orderid }, function (e) {
+            $(messageokheader).html('ارسال موفق')
+            $(messageokbody).html('حواله مذکور با موفقیت به تالار گفتگو ارسال گردید')
+            $(messageok).modal();
+        })
+
+
+
+    })
+
+
+
+
+    $('#orderdateid').click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+
+    // to show _partialadditemtoorder form
+
+    var i = 0;
+    //var totalnumber=0
+    $(additem).click(function () {
+        $.post('/admin/toshowpartialadditemtoorder', {}, function (result) {
+
+            $(messageokbody).html(result)
+            $(messageokheader).html('افزون کالا به لیست حواله')
+            $(messageokfooter).html('')
+
+
+
+            $(messageok).modal()
+        })
+
+    })
+
+    $(messageokbody).off().on('click', '#btn_additemmodalid', function (e) {
+var j=1
+    $('.ptrclass').each(function (x, p) {
+        var rownumber = $(this).attr('row')
+
+        if (rownumber >= j) {
+            j = parseInt(rownumber)+ 1
+            }
+
+
+    })
+
+        var newitemhtml = '';
+
+
+        newitemhtml += '<tr class="ptrclass" pdesc="' + $(itemdescriptioninmodal).val() + '" pnumber="' + $(itemnumberinmodalid).val() + '" productid="' + $(productnameinmodalid_id).val() +'" row="'+j +'" >'
+        newitemhtml += '<td class="prow">' + j +'</td>'
+        newitemhtml += '<td class="pname" pdesc="' + $(itemdescriptioninmodal).val()+ '" pnumber="' + $(itemnumberinmodalid).val() +'" productid="' + $(productnameinmodalid_id).val() +'">' + $(productnameinmodalid).val() +'</td>'
+        newitemhtml += '<td class="pnumber">' + $(itemnumberinmodalid).val() +'</td>'
+        newitemhtml += '<td class="pdesc">' + $(itemdescriptioninmodal).val() +'</td>'
+        newitemhtml += '</tr>'
+
+        $(tabletbody).append(newitemhtml)
+        var totalnumber = parseInt($(totalpnumber).html())
+        totalnumber += parseInt($(itemnumberinmodalid).val())
+        $(totalpnumber).html(totalnumber)
+        newitemhtml=''
+        $(messageok).modal('hide');
+    })
+    $(this).keypress(function (event) {
+        switch (event.keyCode) {
+
+            case 45:
+                $(additem).click()
+                break;
+            case 39:
+                document.body.innerHTML = 'right arrow';
+                break;
+
+        }
+    });
+
+    // autocomplete forperson
+    $("#forperson_id").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    dataType: "json",
+                    type: 'Post',
+                    url: '@Url.Action("searchmadeby", "admin")',
+                    data: { text: request.term },
+                    success: function (data) {
+
+                        $("#forperson_id").removeClass('ui-autocomplete-loading');
+                        // hide loading image
+
+                        response($.map(data, function (item) {
+                            return {
+                                id: item.id,
+
+                                value: item.value,
+                                lable: item.lable,
+                                cellphone: item.cellphone
+                            }
+                        }));
+                    },
+
+
+                    error: function (data) {
+                        $("#forperson_id").removeClass('ui-autocomplete-loading');
+
+                    }
+            });
+        },
+
+        minLength: 1,
+        select: function (event, result) {
+            $(personid).val(result.item.id)
+            $('.cellphone').val(result.item.cellphone)
+            if (result.item.cellphone != null) {
+
+            $('.cellphone').prop('disabled','disabled')
+            } else {
+                $('.cellphone').prop('disabled', '')
+            }
+
+        },
+        open: function () { },
+        close: function () { },
+        focus: function (event, ui) { },
+
+    });
+    //$('body').on('keydown', '#forperson_id', function (e) {
+    $(forperson_id).keypress(function (e) {
+
+        if (e.keyCode != 9) {
+
+            var forperson = $(personid).val();
+
+            if (forperson.length != 0) {
+
+
+                $(personid).val('')
+                $('.cellphone').val('')
+                $('.cellphone').prop('disabled','')
+
+            }
+
+        }
+
+    })
+    $(forperson_id).blur(function (e) {
+        var forpersonid = $(personid).val();
+        var forpersonname = $(this).val()
+        if (forpersonid.length == 0 && forpersonname.length != 0) {
+            if (confirm('این مشتری جدید است.') == true) {
+                jQuery.post('/admin/addnewperson', { fullname: forpersonname }, function (result) {
+
+                    $(personid).val(result)
+
+
+                })
+            }
+
+
+        }
+    })
+
+    // select row to edit or delete
+    $(tabletbody).on('click', '.ptrclass', function () {
+        var thisrow = $(this).attr('row')
+        if ($(this).hasClass('rowselected') == true) {
+            $(this).removeClass('rowselected')
+            $(edititem).attr('rowtoedit', '')
+
+            $(deleteitem).attr('rowtodelete', '')
+        } else {
+            $('*').removeClass('rowselected')
+            $(this).addClass('rowselected')
+            $(edititem).attr('rowtoedit', thisrow)
+
+            $(deleteitem).attr('rowtodelete', thisrow)
+        }
+
+        //}
+
+    })
+
+    // Delete selected row
+    $(deleteitem).click(function () {
+        var selectedrow = $(this).attr('rowtodelete')
+        var totalnumbere = parseInt($('#totalpnumber').html())
+        totalnumbere = totalnumbere - parseInt($('.ptrclass[row="' + selectedrow + '"]').attr('pnumber'));
+        $('.ptrclass[row="' + selectedrow + '"]').remove();
+
+        $('#totalpnumber').html(totalnumbere)
+    })
+    // Edit selected row
+    $(edititem).click(function () {
+        var selectedrow = $(this).attr('rowtoedit')
+        //alert(selectedrow)
+        var seletecttr = $('.ptrclass[row="' + selectedrow + '"]')
+        //alert(selectedrow)
+        var itemproductid = seletecttr.attr('productid')
+        var pnumber = seletecttr.attr('pnumber')
+        var pdesc = seletecttr.attr('pdesc')
+        var pname = seletecttr.children('.pname').html()
+
+        var datarowtoedit = { "itemid": itemproductid, "itemnumber": pnumber, "pdesc": pdesc, "itemname": pname, "row": selectedrow }
+        //var datatosend = JSON.stringify(datarowtoedit)
+        //     alert(datatosend)
+        $.post('/admin/toshowpartialedititemtoorder', datarowtoedit, function (data) {
+            //alert(data)
+            $(messageokbody).html(data)
+            $(messageokheader).html('فرم ویرایش')
+            $(btn_edititemmodalid).attr('selectedrow', selectedrow)
+            $(messageok).modal("show");
+
+        })
+    })
+    //
+    $(messageok).off().on('click', '#btn_edititemmodalid', function () {
+
+        var selectedrow = $(this).attr('selectedrow')
+
+        var totalnumbere = parseInt($('#totalpnumber').html())
+
+        totalnumbere = totalnumbere - parseInt($('.ptrclass[row="' + selectedrow + '"]').attr('pnumber'));
+
+        //newitemhtml += '<tr class="ptrclass" pdesc="' + $(itemdescriptioninmodal).val() + '" pnumber="' + $(itemnumberinmodalid).val() + '" productid="' + $(productnameinmodalid_id).val() + '" row="' + i + '" >'
+        var newitemhtml = '';
+        newitemhtml += '<td class="prow">' + $(this).attr('selectedrow') + '</td>'
+        newitemhtml += '<td class="pname" pdesc="' + $(itemdescriptioninmodal).val() + '" pnumber="' + $(itemnumberinmodalid).val() + '" productid="' + $(productnameinmodalid_id).val() + '">' + $(productnameinmodalid).val() + '</td>'
+        newitemhtml += '<td class="pnumber">' + $(itemnumberinmodalid).val() + '</td>'
+        newitemhtml += '<td class="pdesc">' + $(itemdescriptioninmodal).val() + '</td>'
+        //newitemhtml += '</tr>'
+
+
+        $('.ptrclass[row="' + selectedrow + '"]').html(newitemhtml);
+
+        $('.ptrclass[row="' + selectedrow + '"]').attr('pdesc', $(itemdescriptioninmodal).val())
+        $('.ptrclass[row="' + selectedrow + '"]').attr('pnumber', $(itemnumberinmodalid).val())
+        $('.ptrclass[row="' + selectedrow + '"]').attr('productid', $(productnameinmodalid_id).val())
+        $('.ptrclass[row="' + selectedrow + '"]').attr('row', selectedrow)
+        totalnumbere = totalnumbere + parseInt($(itemnumberinmodalid).val())
+
+        $(totalpnumber).html(totalnumbere)
+        //$('#totalpnumber').html()
+        $(messageok).modal("hide");
+
+
+
+
+
+
+    })
+
+
+    $('#btn_saveorder').click(function () {
+
+
+        $("*").removeClass("validationrequired")
+        var orderdate = $('#orderdateid').val();
+        var frombranch = $(frombranchid).val();
+        var tobranch = $(tobranchid).val();
+        var forperson = $(personid).val();
+        var orderdesc = $('textarea#orderdesc').val();
+        var cellphone = $(cellphone_id).val()
+        //alert(orderdesc)
+        if (forperson.length == 0) {
+            $('#forperson_id').val('')
+            $(forperson_id).addClass("validationrequired")
+
+            return;
+        }
+        if (cellphone.length == 0) {
+            $('#cellphone_id').val('')
+            $(cellphone_id).addClass("validationrequired")
+
+            return;
+        }
+        // save cellphone
+
+
+        //
+        var itemproductidlist = []
+
+        $('tr.ptrclass').each(function () {
+            var productid = $(this).attr('productid')
+            var itemnumber = $(this).attr('pnumber')
+            var itemdesc = $(this).attr('pdesc')
+            itemproductidlist.push({ itemid: productid, itemnumber: itemnumber, pdesc: itemdesc })
+
+        });
+
+        var orderid = $(ordernumber).val()
+        var data01 = { "orderid": orderid, "orderdate": orderdate, "frombranch": frombranch, "tobranch": tobranch, "forperson": forperson, "orderdesc": orderdesc, "cellphone": cellphone, itemlist: itemproductidlist }
+        var data = JSON.stringify(data01)
+        //alert(data)
+        //alert(data01)
+        // to detemine add or edit mode
+        if (orderid.length != 0) {
+            // edit mode
+            if (confirm('آیا می خواهید حواله اصلاح گردد؟')) {
+                $.ajax({
+
+                    url: '/admin/editorder',
+                    type: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data, textStatus, jqXHR) {
+
+                        $(messageokbody).html(data.message)
+
+                        $(messageok).modal("show");
+
+                    }
+                });
+            }
+
+            return;
+
+        } else {
+            // add mode
+            $.ajax({
+
+                url: '/admin/addneworder',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data, textStatus, jqXHR) {
+                    //console.log(data);
+                    //alert(data.message)
+                    $(messageokbody).html(data.message)
+                    $(ordernumber).val(data.orderid)
+                    $(messageok).modal("show");
+
+                    var printhref = '/Reports/orderreport?orderid=' + data.orderid
+
+                    $('.btn_printer').prop('href',printhref)
+
+                }
+            });
+
+
+        }
+
+
+
+
+    })
+
+
+</script>

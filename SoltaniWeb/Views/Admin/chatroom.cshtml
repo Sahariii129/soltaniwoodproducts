@@ -1,0 +1,1542 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Extensions
+@model tbl_user
+@{
+    ViewBag.Title = "chatroom";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    var signalrusers = db.tbl_signalrUsers;
+    var to_userid = Model.id;
+    var pinnedmessages = db.tbl_signalRmsg.Where(a => a.pin == true && a.datetime_pin.HasValue == true);
+    var onlineuserforchat = db.tbl_tbl_onlineusers.Where(a => a.connection_id != "");
+
+}
+<link href="~/soltanistatic/style/chatroom.css" rel="stylesheet" />
+
+@*<div class=" loader"><center><img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading.."></center></div>*@
+<ul class='custom-menu pr-0' id="usermenu" style="list-style-type:square;width:100px">
+    <li data-action="first" username="" userid="">username</li>
+    <li data-action="second" username="" userid="">userid</li>
+    <li data-action="third" username="" userid="">Third thing</li>
+</ul>
+<ul class="custom-menu pr-0" id="messagemenu" style="list-style-type:square;width:150px">
+    <li tools-name="Delete" msgid="0">Delete Message</li>
+    <li tools-name="Edit" msgid="0">Edit Message</li>
+    <li tools-name="Pin" msgid="0">Pin Message</li>
+    <li tools-name="Forward" msgid="0">Forward Message</li>
+    <li tools-name="Reply" msgid="0">Reply Message</li>
+
+</ul>
+
+
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 myfont">
+
+            <div class="card chatRoomCard mt-4">
+                <div class="card-header mypheading" style=" color:#fff; font-weight:900;">
+
+                    <h5 id="topbtn" class="d-flex justify-content-between align-items-center py-2">
+                        تالار گفتگوی برخط
+                    </h5>
+                </div>
+                <div class="card-body myfont m-0 p-0" style=" margin:5px; ">
+
+                    <div class="row">
+                        <div id="contact_part" class="col-12 col-lg-3 pl-auto pl-lg-0">
+                            <div class="card">
+                                <div class="card-header align-items-center py-4" style="color:#ffffff; font-weight:900;">فهرست کاربران :</div>
+                                <div id="contact_id" class="card-body">
+                                    <ul class="nav nav-tabs pr-0" role="tablist">
+                                        <li role="presentation" class="nav-item"><a href="#personalcontactlist" class="nav-link active bold" aria-controls="home" role="tab" data-toggle="tab">کاربران کادر</a></li>
+                                        <li role="presentation" class="nav-item"><a href="#onlinechatlist" class="nav-link bold" aria-controls="profile" role="tab" data-toggle="tab">کاربران آنلاین</a></li>
+
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="personalcontactlist">
+                                            <div class="row">
+                                                <div class="col-md-12 contact unitheight" typechat="personel" style="margin:3px;" status="public" id="" from_user="Public">
+                                                    <div class="row">
+                                                        <div class="col-sm-2 crightpart">
+
+                                                            <img src="~/Content/img/icon/User-Group-icon.png" class="img-responsive img-circle" id="userimg" />
+
+                                                        </div>
+                                                        <div class="col-sm-10 cleftpart ">
+                                                            @{
+                                                                var q2 = db.tbl_signalRmsg.Where(a => a.to_userid == null && a.datetime_read == null);
+
+                                                            }
+                                                            <div class="row">
+                                                                <div class="col-6  text-center">
+                                                                    <p class="listuser" status="public" id="" href="#" style="text-decoration:none;cursor:pointer;">Public</p>
+                                                                </div>
+                                                                <div class=" col-6  text-center">
+                                                                    <p style="text-align:left;margin-bottom:0"><span id="unreadpublic" userid="" unreadthisuser="public" class="badge  unread">@(q2.Count() > 0 ? q2.Count() : 0)</span></p>
+                                                                    <p style="text-align:left; direction:ltr;"> <span class="istypingforpublic" userid="" style="color:#18cc2c; margin-left:3px; margin-right:3px;">  </span></p>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @foreach (var item in signalrusers)
+                                            {
+                                                <div class="row">
+                                                    <div class="col-md-12 contact unitheight" typechat="personel" id="@item.userid" status="single" from_user="@item.username">
+                                                        <div class="row">
+                                                            <div class="col-sm-2 hidden-xs crightpart">
+                                                                <span userid="@item.userid" class="onlinestatus @(item.connectionId != null ? "Online" : "")"></span>
+                                                                @if (item.user.img != null)
+                                                                {
+
+                                                                    <img src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.user.img)))" class="" id="userimg" />
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    <img src="~/Content/img/icon/user.png" class="" id="userimg" />
+
+                                                                }
+                                                            </div>
+                                                            <div class="col-sm-10 cleftpart">
+                                                                @{
+                                                                    var q = db.tbl_signalRmsg.Where(a => a.from_userid == item.userid && a.to_userid == Model.id && a.datetime_read == null);
+
+                                                                }
+                                                                <div class="row">
+                                                                    <div class="col-6">
+
+                                                                        <p title="@item.username" class="listuser" id="@item.userid" status="single" href="#" form_userid="@item.userid">@(item.username.Length > 8 ? "..." + item.username.Substring(0, 8) : item.username)  </p>
+                                                                    </div>
+                                                                    <div class=" col-6">
+
+                                                                        <p style="text-align:left;margin-bottom:0"> <span userid="@item.userid" unreadthisuser="@(" unread"+item.userid)" class="badge unread ">@(q.Count() > 0 ? q.Count() : 0)</span></p>
+                                                                        <p style="text-align:left; direction:ltr;"> <span class="istyping" userid="@item.userid" style="color:#18cc2c; margin-left:3px; margin-right:3px;"> </span></p>
+                                                                    </div>
+                                                                </div>                                          
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            }
+                                            @*@  // پیام های سیستمی*@
+                                            <div class="row">
+                                                <div class="col-md-12 systemmsg unitheight" uname="پیام های سیستمی" status="public" id="systemmsgshow" from_user="Public">
+                                                    <div class="row">
+                                                        <div class="col-sm-2 hidden-xs crightpart">
+
+                                                            <img src="~/Content/img/icon/system-icon.png" class="img-responsive img-circle" id="userimg" />
+
+                                                        </div>
+                                                        <div class="col-sm-10 cleftpart ">
+                                                            <p class="listuser" status="public" id="" href="#" style="text-decoration:none;cursor:pointer;">System Message<span id="spannewsysmsg" style="color:red; float:left;"></span></p>
+                                                            @{
+                                                                var q3 = db.tbl_signalRmsg.Where(a => a.to_userid == null && a.datetime_read == null && a.msgcondition.Value == 1);
+
+                                                            }
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane" id="onlinechatlist">
+
+                                            @foreach (var item in onlineuserforchat)
+                                            {
+                                                <div class="col-md-12 onlinecontact" typechat="onlineuser" style="border-bottom:3px solid blue; margin:3px;" onlineuserid="@item.id" uname="@item.nameu">
+
+                                                    <a class="listuser" status="single" href="#" style="text-decoration:none;cursor:pointer;">@item.nameu  <span style="float:left;color:red;" onlineuserid="@item.id" class="newmessage"></span></a>
+
+                                                </div>
+
+                                            }
+
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="pin_part" class="col-12 col-lg-9 pr-auto pr-lg-0 d-none d-lg-inline-block">
+
+                            <div class="card">
+
+                                <div class="card-header d-flex align-items-center justify-content-between py-3" id="useractiveheading" typeofchat="personalchat" userid="" style=" color:#ffffff; font-weight:900; text-align:right" status="public">
+                                    <div>
+                                        @foreach (var item in pinnedmessages.OrderByDescending(a => a.datetime_pin))
+                                        {
+                                            <div class="btn-group dropup msgpined" msgid="@item.id">
+                                                <button type="button" class="btn importantmsg" msgid="@item.id">@item.topic_pin</button>
+
+                                                <button type="button" class="btn btn-danger text-white pinmsgremove " msgid="@item.id" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        }
+
+                                    </div>
+                                    <div>
+                                        <span id="btn-msgtools"></span> <span id="useractiveheadingspan">Select One to Chat</span>
+                                        <span id="backtocontact_id" class="fas fa-arrow-left" aria-hidden="true" style="margin-left:10px; margin-right:10px; display:none; cursor:pointer; color:#ffca01; font-weight:900;font-size:50px;"></span> @*<span class="d-none" id="spanpinpart">*@
+                                    </div>
+                                </div>
+                                <div class="card-body" id="chats" style="height:570px; overflow-y:scroll;">
+                                    <div id="chatsbody">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-end d-none d-lg-block" id="text_part">
+                        <div class="col-12 col-lg-9 mr-auto">
+                            <div class="row">
+                                <div class="col-10 col-lg-11 pl-0 px-lg-0">
+                                    
+                                        <form autocomplete="off">
+
+                                            <input type="text" id="messagetext" class="form-control"  placeholder="پیام خود را تایپ کنید ..." aria-describedby="basic-addon1">
+                                        </form>
+                                        @*<p class="emoji-picker-container">
+                                                <input data-emoji-input="unicode" id="messagetext" data-emojiable="true" type="text" class="form-control" placeholder="پیغام خود را تایپ کنید..." />
+                                            </p>*@
+                                    
+                                </div>
+                                <div class="col-2 col-lg-1 pr-0">
+                                    <span class="input-group-btn">
+                                        <button id="file_attachment" class="btn btn-default" type="button" style="width:100%">file</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div id="alert">
+
+                    </div>
+                    <input type="hidden" id="displayName" value="@(Model.name + " " + Model.Lname)" username="@Model.username" userid="@Model.id" />
+
+
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+@*<script src="~/Scripts/jquery-2.1.4.js"></script>*@
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+
+@*<script src="~/Scripts/Chat.js"></script>*@
+<script>
+    var activeuser = ''
+    var activeuserid = ''
+    $("#messagetext").focus();
+    $("#messagetext").val(' ');
+    var userid = $("#displayName").attr('userid')
+    var uname = $("#displayName").attr('username')
+
+    var connectionid = ""
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+
+
+    // to start connection 1
+
+
+
+
+ connection.start().catch(err => console.error(err.toString())).then(function () {
+        connection.invoke('getConnectionId')
+            .then(function (connectionId) {
+                // Send the connectionId to controller
+                console.log("connectionID: " + connectionId);
+                connectionid = connectionId
+                connection.invoke("register", $("#displayName").val(), $("#displayName").attr('username'), $("#displayName").attr('userid'), connectionId, "وارد شد"),
+                    $.post('/admin/issupporter', { id: userid }, function (e) {
+                        if (e.issupporter == true) {
+                            connection.invoke("registeronlineuser", e.username, e.email, connectionId, userid)
+                        }
+
+                    })
+
+
+            });
+
+
+    })
+
+    connection.onclose(() => setTimeout(
+
+        connection.start().catch(err => console.error(err.toString())).then(function () {
+            connection.invoke('getConnectionId')
+                .then(function (connectionId) {
+                    // Send the connectionId to controller
+                    console.log("connectionID: " + connectionId);
+                    connectionid = connectionId
+                    connection.invoke("register", $("#displayName").val(), $("#displayName").attr('username'), $("#displayName").attr('userid'), connectionId, "وارد شد"),
+                        $.post('/admin/issupporter', { id: userid }, function (e) {
+                            if (e.issupporter == true) {
+                                connection.invoke("registeronlineuser", e.username, e.email, connectionId, userid)
+                            }
+
+                        })
+
+
+                });
+
+
+        })
+
+
+
+        , 2000));
+
+    //connection.onclose(async () => {
+    //    await start();
+    //});
+     //stoptyping msg
+
+                  $("#messagetext").keyup(function (e) {
+                      var from_userid =@Model.id;
+                        var to_userid = $('#useractiveheading').attr('userid')
+                      var typeofchat = $('#useractiveheading').attr('typeofchat')
+                      if (typeofchat == 'personel') {
+                          connection.invoke("stoptypingmessage", from_userid, to_userid)
+                      }
+                  })
+
+                //typing msg
+
+                  $("#messagetext").keydown(function (e) {
+                      var from_userid =@Model.id;
+                        var to_userid = $('#useractiveheading').attr('userid')
+                      var typeofchat = $('#useractiveheading').attr('typeofchat')
+                      if (typeofchat == 'personel') {
+
+                      connection.invoke("typingmessage",from_userid, to_userid)
+                      }
+                  })
+
+     // enter msg
+    $("#messagetext").keypress(function (e) {
+        
+
+                    var msg = '<p class="msgtext">' + $(this).val()+'</p>'
+                    var msgtextpure = $(this).val()
+                      var from_userid =@Model.id;
+                        var to_userid = $('#useractiveheading').attr('userid')
+
+                    var supporter_id
+                    var uname = $("#displayName").attr('username')
+                    var towhom = $('#useractiveheading').attr('userid')
+
+                      if (e.which == 13) {
+                          e.preventDefault()
+
+                        var typeofchat = $('#useractiveheading').attr('typeofchat')
+
+                        if (typeofchat == 'personel') {
+
+
+                            connection.invoke("sendmessage",from_userid, to_userid, msg,msgtextpure)
+                        } else
+                        {
+                            $.post('/admin/getthissupporterid', { id: from_userid }, function (m) {
+                                supporter_id = m
+
+                                connection.invoke("sendmessagetoserver",msg, connectionid, uname, supporter_id, towhom)
+                            })
+
+                        }
+                        $("#messagetext").val('').focus();
+                        connection.invoke("stoptypingmessageforall",from_userid)
+                    }
+    })
+
+
+
+
+
+
+
+    // درج پیام در بالای صفحه در حالت چت آنلاین
+
+
+    connection.on("addmessage", function (uname, msg, msgid, time, senderidsupporter, onlineuser_id) {
+
+
+
+        var html = ''
+        html += '<div class="row">'
+
+        var onlineuserid = $(useractiveheading).attr('userid')
+
+
+        if (uname != $('#useractiveheadingspan').html()) {
+
+
+            if (senderidsupporter) {
+
+                html += '<div class="col-lg-6 col-10 speech-bubble-right msgbox" msgid= "' + msgid + ' >'
+            } else {
+
+                var title = 'پیام خصوصی جدید از  ' + uname;
+                notifyMe(title, msg)
+                //$.playSound('/Content/audio/newmessage.wav')
+
+                $(".newmessage[onlineuserid='" + onlineuser_id + "']").html('New Message');
+                return
+            }
+
+
+
+
+
+        } else {
+            html += '<div class="col-lg-6 col-10 speech-bubble-left msgbox" msgid= "' + msgid + ' >'
+        }
+        html += '<p class=" from">' + uname + '</p>'
+        html += '<p class="msgtext">' + msg + '</p>'
+        html += ' <p class="time px-1">' + time + '</p>'
+        html += '</div>'
+        html += '</div>'
+        $(chatsbody).append(html)
+
+
+
+
+        var $target = $('#chats');
+        $target.animate({ scrollTop: 1000000000 }, 1000);
+    })
+
+
+    // to delete message
+    $('body').on('click', '#msgdelete', function () {
+        if (confirm('آیا مطمئن هستید؟')) {
+            var msgid = $(this).attr('msgid')
+            var currentuserid = $("#displayName").attr('userid')
+
+            connection.invoke("deletemsg",msgid, currentuserid)
+        }
+
+
+    })
+    // to pin msg
+    $('body').on('click', '#msgpin', function () {
+
+        var msgid = $(this).attr('msgid')
+        var currentuserid = $("#displayName").attr('userid')
+        var html = '<div class="form-horizontal text-center">'
+        html += '<div class="form-group" >'
+        html += '<div class="row" >'
+        html += '<label class="control-label col-2 ">عنوان : </label>'
+        html += '<div class="col-10">'
+        html += '<input onfocus="this.select();" id="topicofimpmsg" type="text" class="form-control" value="پیام مهم" placeholder="عنوان این پیام مهم را درج نمایید">'
+        html += '</div>'
+        html += '</div>'
+        html += '</div>'
+        html += ' <button class="btn btn-success topin-btn" msgid="' + msgid + '" data-dismiss="modal">ثبت</button>'
+        html += '</div>'
+
+        $(messageokheader).html('تعیین عنوان پیام')
+        $(messageokfooter).html('')
+
+
+
+        $(messageokbody).html(html)
+        $(messageok).modal()
+        $('#topicofimpmsg').focusin()
+
+
+    })
+
+
+    $('body').on('click', '.topin-btn', function () {
+
+        var msgid = $(this).attr('msgid')
+        var currentuserid = $("#displayName").attr('userid')
+        var topic = $(topicofimpmsg).val()
+        connection.invoke("topin",msgid, currentuserid, topic)
+
+    })
+
+     // to edit msg
+                $('body').on('click', '.toeditmsg-btn', function () {
+
+                    var msgid = $(this).attr('msgid')
+
+                    var currentuserid = $("#displayName").attr('userid')
+                    var msgtext = $(texttoedit).val()
+                    connection.invoke("toeditmsg",msgid, currentuserid, msgtext)
+
+                })
+                // to Reply msg
+                $('body').on('click', '.toreply-btn', function () {
+
+                    var msgid = $(this).attr('msgid')
+                    jQuery.post('/admin/getmsginfo', { msgid: msgid }, function (msg) {
+
+                    var currentuserid = $("#displayName").attr('userid')
+
+                    var from_userid =@Model.id;
+                    var to_userid = $('#useractiveheading').attr('userid')
+                    var msgtext = '<div class="repliedmsg" sourcemsgid="' + msgid + '" style="background-color:rgb(248, 238, 201);border:2px solid #ffca01;border-radius:10px;padding:5px; cursor:pointer;"><p style="text-align:left; font-weight:800; color:#830909;">Reply to <span = style="color:#132666;">' + msg.from + '</span> <span style="text-align:justify; float:right; font-weight:600; color:#808080;">' + msg.msgtextpure.substring(0, 25) +'...</span></p></br></div><hr/><p class="msgtext">' +   $(texttoreply).val() +'</p>'
+                        connection.invoke("sendmessage",from_userid, to_userid, msgtext, $(texttoreply).val() )
+
+                    })
+
+                })
+                $('body').on('click', '.repliedmsg', function () {
+
+                    var a = $(this).attr('sourcemsgid')
+                    var s = $('#chatsbody').children('.row:first');
+                    var h = s.children('.msgbox').offset().top;
+                    var f = $('.msgbox[msgid=' + a + ']').offset().top;
+                    var h2 = -1 * h
+                    var h3 = h2 + f
+                    $('#chats').animate({
+                        scrollTop: h3
+                        //scrollTop: 2500
+                    },
+                       600);
+
+                })
+                // to delete msg
+                $('body').on('click', '.pinmsgremove', function () {
+
+                    var msgid = $(this).attr('msgid')
+                    var currentuserid = $("#displayName").attr('userid')
+
+                    connection.invoke("deletepinmsg",msgid, currentuserid)
+
+                })
+
+
+                $('body').on('click', '#importantmsg', function (e) {
+                    e.preventDefault()
+
+                    var msgid = $(this).attr('msgid')
+
+                    $.post('/admin/getmsginfo', { msgid: msgid }, function (msgtext) {
+                        $(messageokheader).html('پیام مهم')
+                        $(messageokbody).html(msgtext.msgtext)
+                        $(messageokfooter).html('dfdsbfhbd')
+                        $(messageok).modal()
+
+                    })
+
+                })
+
+    $('body').on('click', '#sendfile_btn', function () {
+
+
+                    var from_userid =@Model.id;
+                    var to_userid = $('#useractiveheading').attr('userid')
+                    var msg = '<p class="msgtext">' + $(this).attr('caption') + '</p>'
+                      msg += '<a target="_blank" class="btn btn-success" href="/admin/DownLoadFile/' + $(this).attr('filenametosend') + '">دانلود فایل</a>'
+                      var msgtextpure = $(this).attr('caption')
+
+
+
+                      $(sendingfilemodal).modal('hide');
+
+                      var typeofchat = $('#useractiveheading').attr('typeofchat')
+                      if (typeofchat == 'personel') {
+
+                          connection.invoke("sendmessage",from_userid, to_userid, msg,msgtextpure)
+                      } else {
+
+                          var connectionid = $.connection.hub.id
+                          var supporter_id
+                          var uname = $("#displayName").attr('username')
+                          var towhom = $('#useractiveheading').attr('userid')
+
+
+                          $.post('/admin/getthissupporterid', { id: from_userid }, function (m) {
+                              supporter_id = m
+
+                              $.connection.chatHub2.server.sendmessagetoserver(msg, connectionid, uname, supporter_id, towhom)
+                          })
+
+ }
+
+
+                })
+
+
+
+
+            //stoptypingmessageforall
+    connection.on("stoptypingmsgforall", function (from_id) {
+
+
+
+        $('.spantyping[from_id="' + from_id + '"]').remove()
+
+
+
+
+    })
+
+            //stoptypingmessage
+        connection.on("stoptypingmsg", function (from_id, from_name, to_id, to_name) {
+
+
+
+                if (to_name == 'public') {
+                    $('.istypingforpublic').html('')
+
+                } else {
+
+                    $('.istyping[userid="' + from_id + '"]').html('')
+                }
+
+
+
+            })
+            //typingmessage
+    connection.on("typingmsg", function (from_id, from_name, to_id, to_name) {
+
+
+                    var html = '<span class="spantyping" from_id="' + from_id + '">' + from_name +' is typing</span>'
+                if (to_name == 'public') {
+                    $('.istypingforpublic').html(html)
+
+                } else {
+                    //alert(to_name)
+                    $('.istyping[userid="' + from_id + '"]').html(html)
+                }
+
+
+
+            })
+
+
+            // درج پیام های سیستمی
+
+    connection.on("sendsystemmessgage", function (msgid, userid, username, systemmsg, changedatetime, typemessage) {
+
+
+                var status = $(useractiveheading).attr('status')
+                if (status == 'systemmsg') {
+
+                    var html = ''
+                    html += '<div class="row">'
+                html += '<div class="col-lg-6 col-10 speech-bubble-right msgbox" msgid= "' + msgid + ' >'
+                html += '<p class=" from">پیام سیستمی:</p>'
+                html += '<p class="msgtext">' + systemmsg + '</p>'
+                html += ' <p class="time px-1">' + changedatetime + '</p>'
+                html += '</div>'
+                    html += '</div>'
+                $(chatsbody).append(html)
+
+
+
+
+                var $target = $('#chats');
+                $target.animate({ scrollTop: 1000000000 }, 1000);
+                } else {
+                    $(spannewsysmsg).html('New Message')
+                    var title ='پیام سیستمی';
+                    notifyMe(title, systemmsg)
+                    //$.playSound('/Content/audio/newmessage.wav')
+
+
+
+                }
+
+
+            })
+
+
+    // to delete message
+    connection.on("deleteMessage", function (msgid) {
+
+                $(".msgbox[msgid='" + msgid + "']").remove()
+            })
+
+
+    // to set online
+    connection.on("setonline", function (onlinestatus) {
+
+    })
+
+    // add new message
+    connection.on("addNewMessage", function (msgid, id, name, message, thisdatetime, status, branch, messagetextpure) {
+
+
+
+
+                var usernameactive = $('#useractiveheading').html()
+                var useridactive = $('#useractiveheading').attr('userid')
+                var to = $("#displayName").attr('userid')
+        if (status == 'single') {
+            //alert(status)
+                    if (id != useridactive && id !=@Model.id) {
+                //alert(id + '  ' + useridactive + ' ' + status)
+
+                        var count = parseInt($(".unread[userid='" + id + "']").html())
+                        //alert('old:' + count)
+                        count +=1
+                        $(".unread[userid='" + id + "']").html('');
+                        $(".unread[userid='" + id + "']").html(count);
+                        //alert('new:' + count)
+                        var alertbox = ' <div class="alert alert-danger" role="alert">پیام خصوصی جدید از ' + name + ': ' + message + '</div>'
+                        $("#alert").html(alertbox)
+
+                        var title = 'پیام خصوصی جدید از  ' + name;
+                        notifyMe(title, messagetextpure)
+
+
+                    } else {
+                        //
+
+
+                        var html = ''
+                        html += '<div class="row">'
+                        if (useridactive == id) {
+
+                            html += '<div class="col-lg-6 col-10 speech-bubble-left msgbox"  msgid= "' + msgid + '">'
+
+
+
+
+
+                        } else {
+
+                            html += '<div class="col-lg-6 col-10 speech-bubble-right msgbox" msgid= "' + msgid + '">'
+                        }
+
+                        //
+                        html += '<p class=" from">' + name + '</p>'
+                        html += message
+                        html += '<p class="time px-1"><span style="margin-left:10px;" class="checkedmsg" msgid="' + msgid + '"></span>' + thisdatetime + '</p>'
+                        html += '</div>'
+                        html += '</div>'
+                        //
+
+
+                        $("#chatsbody").append(html);
+                        var $target = $('#chats');
+                        $target.animate({ scrollTop: 1000000000 }, 1000);
+                        if (useridactive == id) {
+
+                            $.post('/admin/setreadtimeofchat', { from: useridactive, to: to }, function (e) {
+
+                            })
+                        }
+
+                    }
+                } else {
+
+                    if (status != $(useractiveheading).attr('status')) {
+                        var count = parseInt($('#unreadpublic').html())
+                        count += 1
+                        $('#unreadpublic').html('');
+                        $('#unreadpublic').html(count);
+                        var alertbox = ' <div class="alert alert-danger" role="alert">پیام عمومی جدید از ' + name + ': ' + message + '</div>'
+                        $("#alert").html(alertbox)
+                        var title = 'پیام عمومی جدید از  ' + name;
+                        notifyMe(title, messagetextpure)
+                    } else {
+
+                        var html = ''
+                        html += '<div class="row">'
+                        if (branch ==1) {
+
+                            html += '<div class="col-lg-6 col-10 speech-bubble-right msgbox" msgid= "' + msgid + '">'
+                        } else {
+                            html += '<div class="col-lg-6 col-10 speech-bubble-left msgbox" msgid= "' + msgid + '">'
+                              }
+
+                        html += '<p class="from">' + name + '</p>'
+                            html += message
+                            html += '<p class="time px-1"><span style="margin-left:10px;" class="checkedmsg" msgid="' + msgid + '"></span>' + thisdatetime + '</p>'
+                            html += '</div>'
+                        html += '</div>'
+
+
+
+                            $("#chatsbody").append(html);
+                            var $target = $('#chats');
+                            $target.animate({ scrollTop: 1000000000 }, 1000);
+
+
+
+
+
+
+                            //$.playSound('/Content/audio/slow-spring-board.mp3')
+                            // notifications
+
+
+
+
+
+                            //
+
+
+
+
+
+                        }
+                    }
+                })
+            // to pin
+
+    connection.on("topinmsg", function (msgid, pindate, topic) {
+
+
+                var html = ' <div class="btn-group dropup msgpined " msgid="' + msgid + '">'
+                html +=' <button type="button" class="btn btn-danger importantmsg" msgid="'+ msgid +'">'+ topic +'</button>'
+                //html += '<button type="button" class="btn btn-primary">' + pindate +'</button>'
+                html += '<button type="button" class="btn btn-success pinmsgremove "  msgid="' + msgid +'" aria-haspopup="true" aria-expanded="false">'
+                html += '<span style="color:red;" class="fas fa-remove"  msgid="' + msgid +'" aria-hidden="true"></span>'
+
+                html += '</button>'
+                html += '</div>'
+
+
+                $('#spanpinpart').append(html)
+
+
+                //$.playSound('/Content/audio/pindedmsg.mp3')
+
+
+
+            })
+            // sign in alert
+    connection.on("signin", function (userinfo) {
+
+                var title = 'Sign in';
+                var systemmsg = userinfo + ' signed in.'
+                notifyMe(title, systemmsg)
+            })
+            // error in pin
+    connection.on("errorinpinopperation", function (errormsg) {
+
+                $(messagenotokheader).html('پیام خطا')
+                $(messagenotokbody).html(errormsg)
+                $(messagenotokfooter).html('')
+                $(messagenotok).modal()
+            })
+
+            // to delpinmsg
+    connection.on("delpinmsg", function (msgid) {
+
+
+                $(".msgpined[msgid='" + msgid + "']").remove()
+            })
+             // to editmsg
+        connection.on("toeditmsg", function (msgid, msgtext) {
+
+
+
+                $(".msgbox[msgid='" + msgid + "']").children("p.msgtext").html(msgtext)
+
+            })
+            // private msg
+    connection.on("addNewPrivateMessage", function (name, message, thisdatetime) {
+
+
+                var html = '<div class="col-md-12" style="margin:5px;">'
+                html += '<div class="col-md-4">'
+                html += ' <div class="card" style="border:3px ridge blue; border-top-left-radius:10px;border-bottom-right-radius:10px;">'
+                html += '<div class="card-header" style="background-color:#ffffff;padding:2px !important;" >' + name + '</div>'
+                html += '<div class="card-body" style="padding:5px !important;">'
+                html += '<div id="text" style="margin:5px;">' + message + ' </div>'
+                html += '<div id="files">'
+                html += ''
+                html += '</div>'
+                html += '</div>'
+                html += '<div class="card-footer" style="padding:1px !important"><p style="text-align:left;font-size:8pt;color:#726666;"><span style="margin-left:10px;" class="checkedmsg"></span>' + thisdatetime + ' </p></div>'
+                html += '</div>'
+                html += '</div>'
+                html += '</div>'
+
+                $("#chatsbody").append(html);
+                //$.playSound('/Content/audio/slow-spring-board.mp3')
+                var $target = $('#chats');
+                $target.animate({ scrollTop: $('#chatsbody').height() }, 1000);
+
+            })
+
+            // addto_onlinechatlist
+    connection.on("addto_onlinechatlist", function (onlineuserid, usernameonline) {
+
+
+
+                var html = ''
+                html += '<div class="col-md-12 onlinecontact" style="border-bottom:3px solid blue; margin:3px;" uname="' + usernameonline +'" onlineuserid="' + onlineuserid + '">'
+                html += '<a class="listuser" status="single" href="#" style="text-decoration:none;cursor:pointer;">' + usernameonline + '<span style="float:left;color:red;" onlineuserid="' + onlineuserid+'" class="newmessage"></span></a>'
+                html += '</div>'
+
+                $(onlinechatlist).prepend(html)
+
+            })
+            // sign-out onlineuser
+    connection.on("signout", function (id) {
+
+                $(".onlinecontact[onlineuserid='" + id + "']").remove()
+            })
+
+    // add online user
+    connection.on("addonlineusers", function (onlineusers) {
+
+
+                $(".onlinestatus").html('');
+
+
+                $(onlineusers).each(function (idx, u) {
+
+
+                    $(".onlinestatus[userid='" + u + "']").addClass('Online');
+                })
+
+
+
+            })
+        // send system message
+        connection.on("sendSystemMessage", function (thisdatetime, msg) {
+
+                var alertbox = ' <div class="alert alert-danger" role="alert"> ' + msg + '      ' + thisdatetime +   '</div>'
+                $("#alert").html(alertbox)
+
+
+
+                //$.playSound('/Content/audio/slow-spring-board.mp3')
+
+    })
+    // reading message
+    connection.on("reading", function (msg) {
+
+
+
+
+                $(".checkedmsg[msgid='" + msg + "']").html('<img src="/Content/img/icon/check-icon.png" />');
+
+            })
+
+
+        var loader ='<div class=" loader"><center><img class="loading-image" src="/Content/img/icon/39.gif" alt="loading.."></center></div>'
+
+        $(pin_part).on('click', '#backtocontact_id', function () {
+            $(pin_part).fadeOut(200)
+            $(text_part).fadeOut(200)
+            $(contact_part).show(200)
+            $(contact_id).css('height', '900px')
+        })
+
+        $('.contact').click(function (e) {
+            //stop typing
+              var from_userid =@Model.id;
+
+            connection.invoke("stoptypingmessageforall", from_userid).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+
+
+
+
+
+            var displayw = $(document).width()
+
+            if (displayw < 991.98) {
+                $(contact_part).fadeOut(200)
+                $(chats).css('height','800px')
+                $(pin_part).removeClass('d-none')
+
+                $(text_part).removeClass('d-none')
+
+                $(pin_part).show(200)
+
+                $(text_part).show(200)
+                $(backtocontact_id).show()
+            }
+
+            $('#btn-msgtools').html('')
+            $("*").removeClass('selected')
+            $("#chatsbody").html('');
+            $("#chatsbody").html(loader);
+            $('.loader').show()
+            $(this).addClass('selected')
+            e.preventDefault
+            var from_userid = $(this).attr('id')
+            var from_user = $(this).attr('from_user');
+            var status = $(this).attr('status')
+            var to = $("#displayName").attr('userid')
+            var to_userid =@to_userid
+
+                     $('#useractiveheadingspan').html(from_user)
+                 $('#useractiveheading').attr('userid', from_userid)
+                 $('#useractiveheading').attr('status', status)
+                 var typechat = $(this).attr('typechat')
+                 $('#useractiveheading').attr('typeofchat', typechat)
+                 $.post('/admin/getsignalmsgfrom', { to_userid: to_userid, from_userid: from_userid }, function (results) {
+
+                     $('.loader').hide()
+                     var html = ''
+
+
+                         //alert(results)
+                     $(results).each(function (idx, p) {
+                         html +='<div class="row">'
+                         if (p.contacttype == 'public') {
+                             if (p.branch == 1) {
+
+                                 html += '<div class="col-lg-6 col-10 speech-bubble-right msgbox"   msgid= "' + p.msgid + '">'
+                             } else {
+                                 html += '<div class="col-lg-6 col-10 speech-bubble-left msgbox"  msgid= "' + p.msgid + '">'
+
+                             }
+                             html += '<p class=" from">' + p.fromusername + '</p>'
+                             if (p.messagepure == null) {
+                                 html += '<p class="msgtext">' + p.message + '</p>'
+                             } else {
+
+                             html +=  p.message
+                             }
+                             if (p.isread == true) {
+                                 html += ' <p class="time px-1"><span style="margin-left:10px;" class="checkedmsg" msgid="' + p.msgid + '"><img src="/Content/img/icon/check-icon.png" /></span>' + p.thisdatetime + '</p>'
+                             } else {
+                                 html += ' <p class="time px-1"><span style="margin-left:10px;" class="checkedmsg" msgid="' + p.msgid + '"></span>' + p.thisdatetime + '</p>'
+                             }
+                             html += '</div>'
+
+                         } else {
+                             //alert(to_userid + '=' + p.fromuserid )
+                             if (to_userid == p.fromuserid) {
+
+                                 html += '<div class="col-lg-6 col-10 speech-bubble-right msgbox" msgid= "' + p.msgid + '">'
+                             } else {
+                                 html += '<div class="col-lg-6 col-10 speech-bubble-left msgbox" msgid= "' + p.msgid + '">'
+
+                             }
+
+                             html += '<p class=" from">' + p.fromusername + '</p>'
+                             if (p.messagepure == null) {
+                                 html += '<p class="msgtext">' + p.message + '</p>'
+                             } else {
+
+                                 html += p.message
+                             }
+
+                             if (p.isread == true) {
+                                 html += ' <p class="time px-1"><span style="margin-left:10px;" class="checkedmsg" msgid="' + p.msgid + '"><img src="/Content/img/icon/check-icon.png" /></span>' + p.thisdatetime + '</p>'
+                             } else {
+                                 html += ' <p class="time px-1"><span style="margin-left:10px;" class="checkedmsg" msgid="' + p.msgid + '"></span>' + p.thisdatetime + '</p>'
+                             }
+                             html += '</div>'
+
+
+
+                         }
+                         html += '</div>'
+                         })
+
+                    $("#chatsbody").append(html);
+                    var $target = $('#chats');
+
+                    $target.animate({ scrollTop: 1000000000 }, 0);
+                    if (status == 'public') {
+
+                        $('#unreadpublic').html('0');
+                    } else {
+
+                        $(".unread[userid='" + from_userid + "']").html('0')
+                    }
+
+            })
+
+        })
+
+
+
+
+
+
+
+
+    //
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+</script>
+
+<script>
+    $('body').on('click', '#btn_save', function () {
+
+        //$(btn_save).click(function () {
+        var mydata = new FormData()
+
+        mydata.append('username', $(sendingfilemodal).attr('username'))
+        mydata.append('userid', $(sendingfilemodal).attr('userid'))
+
+        mydata.append('caption', $(caption).val())
+        mydata.append('img', image.files[0])
+
+        $.ajax({
+            type: "POST",
+            url: '/admin/uploadfile',
+            data: mydata,
+            dataType: 'json',
+            contentType: false,
+            processData: false
+        }).done(function (msg) {
+
+            if (msg.results = 'ok') {
+                $(result_id).html('فایل مورد نظر با موفقیت بارگذاری گردید')
+
+                var from_userid = $(sendingfilemodal).attr('userid');
+                var to_userid = $('#useractiveheading').attr('userid')
+
+                $(sendfile_btn).attr('filenametosend', msg.id)
+                $(sendfile_btn).attr('caption', msg.caption)
+                $(sendfile_btn).show()
+
+            } else {
+                $(result_id).html(msg)
+            }
+
+
+        }).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(errorThrown + " " + XMLHttpRequest + " " + textStatus);
+        })
+
+
+    })
+
+
+
+
+
+
+    $('body').on('click', '.importantmsg', function (e) {
+        e.preventDefault()
+
+        var msgid = $(this).attr('msgid')
+
+        $.post('/admin/getmsginfo', { msgid: msgid }, function (msgtext) {
+            $(messageokheader).html(msgtext.topic + '  [' + msgid + ']')
+
+            var html = '<p style="color:blue; font-weight:900"><span style="color:red; font-size:14px;">' + msgtext.from + ': </span>' + msgtext.msgtext + '</p>'
+            var senddate = '<p style="color:white;"><span style="color:white; margin-right:10px;">' + msgtext.msgdate_send + '</span><span>' + msgtext.msgtime_send + '</span><span></span></p>'
+            $(messageokbody).html(html)
+            $(messageokfooter).html(senddate)
+            $(messageok).modal()
+
+        })
+
+    })
+
+
+
+
+
+    $('body').on('click', '#msgforward', function () {
+
+        var msgid = $(this).attr('msgid')
+
+        $.post('/admin/getmsgtext', { msgid: msgid }, function (msgtext) {
+
+            $(messagetext).val(msgtext)
+
+        })
+    })
+
+
+
+    //$('.contact').hover(function () {
+    //    var from_user = $(this).attr('from_user');
+    //    //cursor: pointer
+    //    Alert($(this))
+    //    $(this).css('cursor':'pointer')
+    //})
+
+
+</script>
+<script>
+    // کلیک روی نام اعضای انلاین
+    $(onlinechatlist).on('click', '.onlinecontact', function () {
+        var displayw = $(document).width()
+        if (displayw < 500) {
+            $(contact_part).fadeOut(200)
+            $(chats).css('height', '380px')
+            $(pin_part).removeClass('hidden-xs')
+            $(pin_part).removeClass('hidden-sm')
+            $(text_part).removeClass('hidden-xs')
+            $(text_part).removeClass('hidden-sm')
+            $(pin_part).show(200)
+
+            $(text_part).show(200)
+            $(backtocontact_id).show()
+        }
+
+
+
+
+
+
+        $("*").removeClass('selected')
+        $(this).addClass('selected')
+        var onlineuserid = $(this).attr('onlineuserid')
+        $(".newmessage[onlineuserid='" + onlineuserid + "']").html('');
+
+        var uname = $(this).attr('uname')
+
+        var typechat = $(this).attr('typechat')
+        $('#useractiveheading').attr('typeofchat', typechat)
+        $('#useractiveheadingspan').html(uname)
+        var supporterid = $("#displayName").attr('userid')
+        $('#useractiveheading').attr('userid', $(this).attr('onlineuserid'))
+        //(uname, msg, newmsg.id, newmsg.sendmsg_date.ToString("HH:mm")
+
+        $.post('/admin/getmsgofonlineuser', { onlineuserid: onlineuserid, supporterid: supporterid }, function (msg) {
+            var html = ''
+            
+            $(msg).each(function (idx, p) {
+                html += '<div class="row">'
+                if (onlineuserid != p.onlineuserid) {
+                    html += '<div class="col-lg-6 col-10 speech-bubble-right  msgbox" msgid= "' + p.id + ' >'
+                } else {
+                    html += '<div class="col-lg-6 col-10 speech-bubble-left  msgbox" msgid= "' + p.id + ' >'
+                }
+
+                html += '<p class="from">' + p.uname + '</p>'
+                html += '<p class="msgtext">' + p.text + '</p>'
+                html += ' <p class="time px-1">' + p.senddate + '</p>'
+                html += '</div>'
+                html += '</div>'
+
+            })
+
+            $(chatsbody).html(html)
+
+            var $target = $('#chats');
+            $target.animate({ scrollTop: 1000000000 }, 1000);
+
+        })
+    })
+
+
+    // Trigger action when the contexmenu is about to be shown
+    $('.contact').bind("contextmenu", function (event) {
+
+        // Avoid the real one
+        event.preventDefault();
+
+        // Show contextmenu
+        $('#usermenu').finish().toggle(100).
+
+            // In the right position (the mouse)
+            css({
+                top: event.pageY + "px",
+                left: event.pageX + "px"
+            });
+
+        var username = $(this).attr('from_user')
+        var userid = $(this).attr('id')
+        $('.custom-menu li').attr('username', username)
+        $('.custom-menu li').attr('userid', userid)
+    });
+
+
+    // If the document is clicked somewhere
+    $(document).bind("mousedown", function (e) {
+        // If the clicked element is not the menu
+        if (!$(e.target).parents(".custom-menu").length > 0) {
+            $('*').removeClass('msgboxselected')
+
+            // Hide it
+            $(".custom-menu").hide(100);
+        }
+    });
+
+
+    // If the menu element is clicked
+    $(".custom-menu li").click(function () {
+
+        // This is the triggered action name
+        switch ($(this).attr("data-action")) {
+
+            // A case for each action. Your actions here
+            case "first": alert($(this).attr('username')); break;
+            case "second": alert($(this).attr('userid')); break;
+            case "third": alert("third"); break;
+            case "Pin":
+                alert("Pin");
+                break;
+        }
+
+        // Hide it AFTER the action was triggered
+        $(".custom-menu").hide(100);
+    });
+
+
+</script>
+<script>
+    // tools-menu
+    $('#chatsbody').on('contextmenu', '.msgbox', function (event) {
+        //$('.msgbox').bind("contextmenu", function (event) {
+
+        event.preventDefault()
+
+        if ($(this).hasClass('msgboxselected')) {
+            $(this).removeClass('msgboxselected')
+            $('#btn-msgtools').html('')
+            return
+        }
+
+        var msgid = $(this).attr('msgid')
+        var y = event.pageY - 160
+        //alert(event.pageY)
+        //alert(event.pageX)
+        $('.custom-menu li').attr('msgid', msgid)
+        $('*').removeClass('msgboxselected')
+        $(this).addClass('msgboxselected')
+        $('#messagemenu').finish().toggle(100).css({
+            top: y + "px",
+            left: event.pageX + "px"
+
+        })
+
+    });
+
+
+
+    // If the menu element is clicked
+    $(".custom-menu li").click(function () {
+
+        // This is the triggered action name
+        switch ($(this).attr("tools-name")) {
+
+            // A case for each action. Your actions here
+            case "Delete":
+                if (confirm('آیا مطمئن هستید؟')) {
+                    var msgid = $(this).attr('msgid')
+                    var currentuserid = $("#displayName").attr('userid')
+                    connection.invoke("deletemsg", msgid, currentuserid)
+                    //$.connection.chatHub.server.deletemsg(msgid, currentuserid)
+                }
+
+
+                ; break;
+            case "Edit":
+                var msgid = $(this).attr('msgid')
+                var currentuserid = $("#displayName").attr('userid')
+
+                $.post('/admin/getmsginfo', { msgid: msgid }, function (msg) {
+                    if (msg.from_id != currentuserid) {
+                        $(messagenotokheader).html('پیام خطا')
+                        $(messagenotokbody).html('شما مجاز به انجام این کار نیستید')
+                        $(messagenotokfooter).html('')
+                        $(messagenotok).modal()
+
+                    } else {
+
+                        var html = '<div class="form-horizontal text-center">'
+                        html += '<div class="form-group" >'
+                        html += '<div class="row" >'
+                        html += '<label class="control-label col-sm-2 mb-0">پیام : </label>'
+                        html += '<div class="col-sm-10">'
+                        html += '<input onfocus="this.select();" id="texttoedit" type="text" class="form-control" value="' + msg.msgtextpure + '" placeholder="عنوان این پیام مهم را درج نمایید" />'
+                        html += '</div>'
+                        html += '</div>'
+                        html += '</div>'
+                        html += ' <button id="btn_editmsg" class="btn btn-success toeditmsg-btn" msgid="' + msgid + '" data-dismiss="modal">ثبت</button>'
+                        html += '</div>'
+
+
+                        $(messageokheader).html('اصلاح متن پیام')
+                        $(messageokfooter).html('')
+
+                        $(messageokbody).html(html)
+                        $(messageok).modal()
+                    }
+
+                })
+
+
+
+
+
+
+                break;
+            case "Pin":
+                var msgid = $(this).attr('msgid')
+                var currentuserid = $("#displayName").attr('userid')
+                var html = '<div class="form-horizontal text-center">'
+                html += '<div class="form-group" >'
+                html += '<div class="row" >'
+                html += '<label class="control-label col-sm-2 ">عنوان : </label>'
+                html += '<div class="col-sm-10">'
+                html += '<input onfocus="this.select();" id="topicofimpmsg" type="text" class="form-control" value="پیام مهم" placeholder="عنوان این پیام مهم را درج نمایید" />'
+                html += '</div>'
+                html += '</div>'
+                html += '</div>'
+                html += ' <button class="btn btn-success topin-btn" msgid="' + msgid + '" data-dismiss="modal">ثبت</button>'
+                html += '</div>'
+
+                $(messageokheader).html('تعیین عنوان پیام')
+                $(messageokfooter).html('')
+
+
+
+                $(messageokbody).html(html)
+                $(messageok).modal()
+                $('#topicofimpmsg').focusin()
+
+
+
+
+                break;
+            case "Forward":
+                var msgid = $(this).attr('msgid')
+
+                $.post('/admin/getmsgtext', { msgid: msgid }, function (msgtext) {
+
+                    $(messagetext).val(msgtext)
+
+                })
+
+                break;
+            case "Reply":
+                var msgid = $(this).attr('msgid')
+                var currentuserid = $("#displayName").attr('userid')
+                var html = '<div class="form-horizontal text-center">'
+                html += '<div class="form-group" >'
+                html += '<div class="row" >'
+                html += '<label class="control-label col-2 ">پیام : </label>'
+                html += '<div class="col-10">'
+                html += '<textarea onfocus="this.select();" id="texttoreply" type="text" class="form-control" value="" placeholder="پیام پاسخ را تایپ نمایید"></textarea>'
+
+                html += '</div>'
+                html += '</div>'
+                html += '</div>'
+                html += ' <button id="btn_editmsg" class="btn btn-success toreply-btn" msgid="' + msgid + '" data-dismiss="modal">ثبت</button>'
+                html += '</div>'
+
+
+                $(messageokheader).html('پاسخ به پیام')
+                $(messageokfooter).html('')
+
+                $(messageokbody).html(html)
+                $(messageok).modal()
+
+
+
+
+                break;
+        }
+
+        // Hide it AFTER the action was triggered
+        $(".custom-menu").hide(100);
+    });
+
+
+
+
+
+    $(file_attachment).click(function () {
+
+        $(sendingfilemodal).attr('username', $("#displayName").attr('username'))
+        $(sendingfilemodal).attr('userid', $("#displayName").attr('userid'))
+        $(img_preview).attr('src', '')
+        $(caption).val('')
+        $(result_id).html('')
+        $(sendfile_btn).hide()
+        $(img).val('')
+        $(sendingfilemodal).modal()
+    })
+
+    $(img).change(function () {
+
+        var reader = new FileReader();
+        reader.readAsDataURL(img.files[0])
+        reader.onloadend = function (e) {
+
+            img_preview.src = e.target.result
+            $(image_preview).modal()
+        }
+    })
+    // system notification
+
+
+    $(systemmsgshow).click(function () {
+
+
+        $("*").removeClass('selected')
+        $(this).addClass('selected')
+        $(chatsbody).html('')
+        $(spannewsysmsg).html('')
+
+        var uname = $(this).attr('uname')
+
+        var typechat = $(this).attr('typechat')
+        $('#useractiveheading').attr('typeofchat', typechat)
+        $('#useractiveheadingspan').html(uname)
+        $(useractiveheading).attr('status', 'systemmsg')
+
+        $('.loader').show()
+        $.post('/admin/getsystemmessages', {}, function (msg) {
+
+            var html = ''
+            $(msg).each(function (idx, u) {
+                html += '<div class="row">'
+                html += '<div class="col-lg-6 col-10 speech-bubble-right msgbox" msgid= "' + u.msgid + ' >'
+                html += '<p class=" from">پیام سیستمی</p>'
+                html += '<p class="msgtext">' + u.systemmsg_text + '</p>'
+                html += ' <p class="time px-1">' + u.changedatetime + '</p>'
+                html += '</div>'
+                html += '</div>'
+            })
+
+
+            $(chatsbody).append(html)
+
+
+
+
+            var $target = $('#chats');
+            $target.animate({ scrollTop: 1000000000 }, 1000);
+
+            $('.loader').hide()
+
+        })
+    })
+
+
+
+
+</script>

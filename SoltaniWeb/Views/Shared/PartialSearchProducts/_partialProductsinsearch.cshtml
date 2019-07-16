@@ -1,0 +1,128 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository
+@using SoltaniWeb.Models.utility
+@using SoltaniWeb.Models.Services
+@inject  IUserServices UserServices
+
+@model IEnumerable<tbl_products>
+@{
+    abstractinfoofpurchasecart getinfo = new abstractinfoofpurchasecart();
+    int take = ViewBag.pagesize;
+    int skip = ViewBag.skip;
+    var cartids = Model.Select(a => new { id = a.idproduct }).ToList();
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+
+
+    var selectedlist = ViewBag.selectedlist != null ? new List<int>(ViewBag.selectedlist) : new List<int>() { };
+  
+
+}
+<div class="row">
+    <div class=" col-12 searchresult pading1px ">
+        <div>
+            <div class="text-center py-4" style="background-color:#332b3a;color:#fff">
+                <h6 class="mb-0"><span>تعداد یافته ها : </span><span class="badge badge-pill" style="background-color:#fff;color:#332b3a">@ViewBag.number</span></h6>
+            </div>
+        </div>
+        <div class="row p-0 p-lg-4" style="position:relative">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-3 col-12 pading1px my-2 my-lg-0">
+                    <div class="card" style="position:relative">
+                        <div class="status">
+                            <button class="btn btn-status btn-sm @(entityrep.getexistproducts(item.idproduct)=="موجود"?"green":(entityrep.getexistproducts(item.idproduct)=="محدود"?"orange":"red"))">
+                                <span class="statusspan">@entityrep.getexistproducts(item.idproduct)</span>
+                                @if (User.Identity.IsAuthenticated && UserServices.UserCanSeeMoreProductInfo(User.Identity.Name))
+                                {
+
+                                    <span class="Inventoryspan">: @entityrep.getentityitem(item.idproduct)</span>
+                                }
+                            </button>
+                        </div>
+                        <div class="card-body p-1">
+                            <div class="productimage">
+                                @{
+                                    if (item.thumbnail_image != null)
+                                    {
+
+                                        <a id="color" title="@item.category.categoryname @item.name کد: @item.codename"><img src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.thumbnail_image)))" alt="@item.category.categoryname|   @item.name| @item.codename" /></a>
+                                    }
+                                    else
+                                    {
+
+                                        <a id="color" title="@item.category.categoryname @item.name کد: @item.codename"><img src="~/Content/img/icon/img-na.png" alt="@item.category.categoryname|   @item.name| @item.codename" /></a>
+
+
+                                    }
+
+
+                                }
+                                <div class="brandimage text-center">
+                                    <img src="@(item.category.image!=null ?    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.category.image)) : "")" alt="@item.category.categoryname" style="width:100%; height:100%" />
+                                </div>
+                                <div class="text-center @(item.thumbnail_image==null? "d-none":"")" id="view"><div><a class="btn view" id="color" href="/products/getimage?id=@item.idproduct" data-lightbox="vahid-majidi" title="@item.category.categoryname @item.name کد: @item.codename">مشاهده</a></div></div>
+
+                                <div class="text-center @(item.category.purchaseonline!=true? "d-none":"")" productid="@item.idproduct" id="addToCart"><div><span class="btn btn-addToCart">افزودن به سبد خرید<i class="fas fa-shopping-cart px-1"></i></span></div></div>
+
+
+                            </div>
+                            <div class="productinfo p-1">
+                                <div class="section text-center">
+                                    <h6 class="mb-0">@item.category.section_.name</h6>
+                                </div>
+                                <div class="col-lg-12 productname">
+                                    <a href="../samples/samples?id01=@item.idproduct&key=@item.keywords"><h6 style="text-align :center;color:#6a95cc;margin-bottom:0"> @item.name - @item.codename </h6></a>
+                                </div>
+
+
+
+                                @if (User.Identity.IsAuthenticated && UserServices.UserCanSeeMoreProductInfo(User.Identity.Name))
+                                {
+                                    <div class="col-12 SellPrice text-center">
+                                        <div>
+                                            <p style="color:#ec505d">
+                                                قیمت فروش : <span>@string.Format("{0:#,##0.##}", item.lastcellcost) ریال</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-none d-lg-block">
+                                        <label class="container">
+                                            مقایسه
+                                            <input productid="@item.idproduct" class="checkboxproduct" type="checkbox" checked="@(selectedlist.Contains(item.idproduct))"/>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="text-lg-center" id="moreinfo"><div><span class="moreinfo btn btn-sm" productid="@item.idproduct">اطلاعات بیشتر</span></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                    }
+
+        </div>
+    </div>
+    <div class="col-12">
+        <ul class="pagination pr-0 row">
+            <li class="page-item">
+                <a class="prenext page-link" id="previous" pageId="@(ViewBag.pagenumber)" aria-label="Previous" take="@(ViewBag.pagesize)" totalpage="@(ViewBag.totalpages)">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for (int i = 1; i < ViewBag.totalpages + 1; i++)
+            {
+                <li class="page-item"><a class="page-link paging" id="@(ViewBag.pagesize*(i-1))" style="background-color:@(ViewBag.pagenumber==i?"#b7c9e1":"");" pageId="@i">@i</a></li>
+            }
+
+            <li class="page-item">
+                <a class="prenext page-link" id="next" aria-label="Next" pageId="@(ViewBag.pagenumber)" take="@(ViewBag.pagesize)" totalpage="@(ViewBag.totalpages)">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+

@@ -1,0 +1,157 @@
+﻿@{
+    ViewBag.Title = "مدیریت سطح دسترسی";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    int i = 0;
+    int j = 0;
+}
+
+<!DOCTYPE html>
+
+
+
+
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <style>
+        .A {
+            background-color: lightpink;
+        }
+
+        .B {
+            background-color: yellow;
+        }
+    </style>
+</head>
+
+@using SoltaniWeb.Models.Domain
+@model IEnumerable<tbl_accesslevels>
+@{ 
+    var userlist = Model.GroupBy(a => a.user.username).ToList().Select(g1 => new { user = g1.Key, otherlist = g1.OrderBy(l => l.access.actiontypeNavigation.id) });
+
+}
+
+<div class="panel">
+    <div class="panel-title"><center> مدیریت سطح دسترسی کاربران</center></div>
+    <div class="panel-body">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 myfont" style="margin-top:20px;" id="productlist">
+            <div class="panel-body" style=" background-color:#ededec; border-radius :5px;">
+                <table class="table table-responsive table-bordered table-hover sortable">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">ردیف</th>
+                            <th style="width: 200px;">
+
+                                
+                                <a style="cursor:pointer;text-decoration:none; color:#fff; " onclick="$('.k').slideUp(1000);">نام کاربر</a>
+                               
+                                 
+                            
+                            
+                            </th>
+                            <th style="width: 400px;">آیتم </th>
+                            <th style="width: 150px;">دسترسی</th>
+                            <th style="width: 150px;">عملیات</th>
+
+
+                        </tr>
+                                           
+
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in userlist)
+                        {
+                            j = j + 1;
+                            <tr>
+                                <td style="background-color:#c0b7b7; width: 60px;"> @*@j*@    </td>
+
+                                <td style="background-color:#eae4e4;text-align:right;" colspan="4"><a onclick="$('.@item.user').toggle(1000);" style="cursor:pointer; text-decoration:none;color:@(item.otherlist.FirstOrDefault().user.online==true?"Green;" : "red;")">نام کاربری : @item.user</a>    </td>
+
+                            </tr>
+                            foreach (var item2 in @item.otherlist.OrderBy(a=>a.access.ordernumber))
+                            {
+                                i = i + 1;
+                                <tr class="@item.user k" style="display:none;">
+                                    <td style="width: 60px;">  @*@i*@ </td>
+                                    <td style="width: 200px;">  @item.user </td>
+                                    <td style="width: 400px;">  @item2.access.accesscaption </td>
+
+                                    
+                                        <td style="width: 150px;" class="setting" accesslevelid="@(item2.id )">@item2.accessvalue
+                                    
+                                    
+                                    
+                                    </td>
+
+                                   
+                                        <td style="width: 150px;">
+                                            <a href="#" class="editaccesslevel" accesslevelid="@(item2.id )" ><img src="~/Content/img/icon/switch.png" style="height:24px; width:auto;" /></a>
+                                            @*<a data-ajax="true" data-ajax-method="POST" href="/admin/editaccesslevel?id=@item2.id" data-ajax-update="#@("settt" + item2.id )" data-ajax-mode="replace"><img src="~/Content/img/icon/switch.png" style="height:24px; width:auto;" /></a>*@
+                                            @*   @Ajax.ActionLink("+", "editaccesslevel", "admin", new {id=item2.id }, new AjaxOptions{HttpMethod="Post" ,UpdateTargetId="("settt" + item2.id )" , InsertionMode=InsertionMode.Replace , Confirm="مطمئن هستید؟"  })*@
+                                        </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    table {
+        border-collapse: collapse;
+    }
+
+    thead {
+        display: block;
+        overflow: auto;
+        color: #fff;
+        background: #000;
+    }
+
+    tbody {
+        display: block;
+        height: 500px;
+        background: #ededec;
+        overflow: auto;
+    }
+
+    th, td {
+        padding: .5em 1em;
+        text-align: center;
+        vertical-align: top;
+        border-left: 1px solid #fff;
+    }
+</style>
+
+
+@*<script src="~/Scripts/jquery-2.2.1.js"></script>*@
+<script>
+    $('.editaccesslevel').click(function (e) {
+        e.preventDefault()
+        var accesslevelid = $(this).attr('accesslevelid')
+        //alert(accesslevelid)
+        jQuery.post('/admin/editaccesslevel', { id: accesslevelid }, function (result) {
+            //alert($(".setting[accesslevelid='" + accesslevelid + "']").html())
+            $(".setting[accesslevelid='" + accesslevelid + "']").html(result)
+          
+
+        })
+
+
+
+    })
+
+
+</script>

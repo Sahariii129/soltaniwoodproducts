@@ -1,0 +1,162 @@
+﻿@using SoltaniWeb.Models.Domain
+
+@model tbl_user
+@{
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    var b = Model;
+}
+<style>
+    .formuseredit input{
+        font-size:12px;
+    }
+
+</style>
+
+<div class="form-horizontal formuseredit">
+    <input type="hidden" id="id" value="@Model.id"/>
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3">نام کاربری:</label>
+            <div class="col-sm-9">
+
+                <input type="text" id="username" class="form-control" value="@Model.username" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3">گذر واژه:</label>
+            <div class="col-sm-3">
+
+                <input type="text" id="password" class="form-control" value="@Model.password" />
+            </div>
+            <label class="control-label col-sm-3">تائید گذر واژه:</label>
+            <div class="col-sm-3">
+
+                <input type="text" id="confirmpass" class="form-control" value="@Model.confirmpass" />
+            </div>
+        </div>
+    </div>
+   
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3">نام: </label>
+            <div class="col-sm-3">
+
+                <input type="text" id="fname" class="form-control" value="@Model.name" />
+            </div>
+            <label class="control-label col-sm-3">نام خانوادگی:</label>
+            <div class="col-sm-3">
+
+                <input type="text" id="lname" class="form-control" value="@Model.Lname" />
+            </div>
+        </div>
+    </div>
+   
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3">شماره تماس:</label>
+            <div class="col-sm-9">
+
+                <input type="text" id="cellphone" class="form-control" value="@Model.cellphone" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3">ایمیل:</label>
+            <div class="col-sm-9">
+
+                <input type="text" id="email" class="form-control" value="@Model.email" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3">نوع کاربر:</label>
+            <div class="col-sm-3">
+                <select id="access" class="form-control">
+                    <option value=0    selected=@(Model.Access ==0) >مدیر</option>
+                    <option value=1 selected=@(Model.Access ==1) >کاربر کادر</option>
+                    <option value=2 selected=@(Model.Access ==2) >کاربر عادی</option>
+                </select>
+            </div>
+            <label class="control-label col-sm-3">وضعیت حساب:</label>
+            <div class="col-sm-3">
+                <select id="statususer" class="form-control">
+                    <option value=true selected=@(Model.status ==true) >فعال</option>
+                    <option value=false selected=@(Model.status ==false) >غیر فعال</option>
+
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3">توضیحات:</label>
+            <div class="col-sm-9">
+
+                <textarea rows="3" id="userdescription" class="form-control" value="این کاربر رفته است. ">@Model.userdescription</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3">تصویر :</label>
+            <div class="col-sm-3">
+                <input type="file" id="image" />
+
+                <div class="loader">
+                    <center>
+
+                        <img class="loading-image" src="~/Content/img/icon/130.gif" alt="loading..">
+                    </center>
+                </div>
+                <div id="infobox"></div>
+            </div>
+            <div class="col-sm-6">
+
+                @if (Model.img != null)
+            {
+
+                    <img id="imgpre" height="150" width="150" style="border:3px solid blue; border-radius:10px; float:left;" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.img)))" />
+                }
+                else
+                {
+                    <img id="imgpre" height="150" width="150" style="border:3px solid blue; border-radius:10px; float:left;" src="" />
+
+                }
+
+            </div>
+            </div>
+
+        </div>
+    <div class="text-center">
+        <button class="btn" style="background-color:#ffca01;color:#fff" id="btn_saveuser">ثبت</button>
+    </div>
+
+</div>
+
+
+
+<script>
+    // نمایش پریویو تصویر
+    $('#image').change(function () {
+
+        var reader = new FileReader();
+        reader.readAsDataURL(image.files[0])
+        reader.onloadend = function (e) {
+
+            imgpre.src = e.target.result
+
+        }
+    })
+
+
+
+</script>
+    
+
+

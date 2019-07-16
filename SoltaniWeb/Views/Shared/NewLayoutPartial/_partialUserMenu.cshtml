@@ -1,0 +1,34 @@
+﻿@using SoltaniWeb.Models.structs
+@model IEnumerable<UserPanelViewModel>
+
+
+
+    <div class="collapseProfileBox">
+        <h6 class="profileBoxHeader">نام کاربری</h6>
+        <div class="row mb-0 ">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-12 col-lg-6">
+
+                    <p><a href="/admin/@item.actionname"><i class="fas fa-minus fa-lg mx-2"></i>@item.accesscaption</a></p>
+
+                </div>
+
+
+
+            }
+
+
+            <div class="col-sm-6">
+                <p id="LogOut"><a href=""><i class="fas fa-sign-out-alt fa-lg mx-2"></i>خروج</a></p>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+

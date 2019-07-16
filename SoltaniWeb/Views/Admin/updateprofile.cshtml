@@ -1,0 +1,161 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_usermoreinfo
+@using SoltaniWeb.Models.Extensions
+@{
+    ViewBag.Title = "updateprofile";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    var today = DateTime.Now.ToPersianDate();
+}
+
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<link href="~/soltanistatic/style/profile.css" rel="stylesheet" />
+@*<script src="~/Scripts/jquery-3.1.1.js"></script>*@
+@*<script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card myfont mt-4">
+                <div class="card-header py-4 py-lg-3 text-center" style="background-color:#332b3a;color:#fff">
+                    به روز رسانی پروفایل
+
+                </div>
+                <div class="card-body">
+                    <form action="/admin/updateoraddprofile">
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @if (Model != null)
+                            {
+
+                                <input type="hidden" name="id" value="@Model.id" />
+                            }
+                            <input type="hidden" name="user_id" value="@ViewBag.user_id" />
+
+                            <div class="form-group">
+                                <div class="row align-items-center">
+                                    @*@Html.LabelFor(model => model.fathername, htmlAttributes: new { @class = "control-label col-md-1" })*@
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">نام پدر: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @Html.EditorFor(model => model.fathername, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.fathername, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">کد ملی: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @Html.EditorFor(model => model.codemelli, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.codemelli, "", new { @class = "text-danger" })
+                                    </div>
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">جنسیت: </label>
+
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        <select class="form-control" name="sex">
+                                            @if (Model == null)
+                                            {
+                                                <option>   </option>
+                                                <option value="1">مذکر</option>
+                                                <option value="2">مونث</option>
+                                            }
+                                            else
+                                            {
+
+                                                <option value="" selected="@(Model.sex.HasValue==false)">   </option>
+                                                <option value="1" selected="@(Model.sex==1)">مذکر</option>
+                                                <option value="2" selected="@(Model.sex==2)">مونث</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row align-items-center">
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">شغل: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @Html.EditorFor(model => model.job, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.job, "", new { @class = "text-danger" })
+                                    </div>
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">تاریخ تولد: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @if (Model != null)
+                                        {
+
+                                            <input type="text" name="birthday" value="@(Model.birthday.HasValue == true ? shamsi.ToShamsi(Model.birthday.Value).ToString("yyyy/MM/dd") : shamsi.ToShamsi(DateTime.Now).ToString("yyyy/MM/dd"))" id="birthday" class="form-control" />
+                                        }
+                                        else
+                                        {
+                                            <input type="text" name="birthday" value="" id="birthday" class="form-control" />
+                                        }
+                                        @* @Html.EditorFor(model => model.birthday, new { htmlAttributes = new { @class = "form-control" } })*@
+                                        @Html.ValidationMessageFor(model => model.birthday, "", new { @class = "text-danger" })
+                                    </div>
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">تلفن منزل: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @Html.EditorFor(model => model.home_tell, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.home_tell, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row align-items-center">
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">تلفن محل کار: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @Html.EditorFor(model => model.work_tell, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.work_tell, "", new { @class = "text-danger" })
+                                    </div>
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">تلفن همراه 1: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @Html.EditorFor(model => model.cellphone1, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.cellphone1, "", new { @class = "text-danger" })
+                                    </div>
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">تلفن همراه 2: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @Html.EditorFor(model => model.cellphone2, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.cellphone2, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row align-items-center">
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">آدرس محل سکونت: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @Html.EditorFor(model => model.home_address, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.home_address, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row align-items-center">
+                                    <label class="col-4 col-lg-1 mb-4 mb-lg-0 control-label">آدرس محل کار: </label>
+                                    <div class="col-8 col-lg-3 mb-4 mb-lg-0">
+                                        @Html.EditorFor(model => model.work_address, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.work_address, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <input type="submit" value="ثبت و ذخیره" class="btn mt-3" style="background-color:#ffca01;color:#fff"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="card-footer" style="border-top:unset !important">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(birthday).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+</script>

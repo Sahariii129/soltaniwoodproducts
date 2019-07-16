@@ -1,0 +1,187 @@
+﻿@model IQueryable<SoltaniWeb.Models.Domain.tbl_samples>
+
+@{
+    //ViewBag.Title = "AGT";
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.repository.productsrepository Rep_pro = new SoltaniWeb.Models.repository.productsrepository();
+    int idproduct = (int)(ViewBag.idproduct);
+    var q = Rep_pro.getproductsbyid(idproduct);
+    var product = db.tbl_products.Find(idproduct);
+    var catg = product.category;
+    var keywords = product.keywords;
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+}
+
+<head>
+    <title></title>
+
+
+    <script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
+    <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+    <link href="~/soltanistatic/style/samples.css" rel="stylesheet" />
+
+</head>
+
+<div class="container-fluid samplesPage">
+    @if (Model != null)
+    {
+        <div class="row my-4">
+            <div class="col-12">
+                <div style="position:relative">
+                    <h5 class="my-5 contactTitle">نمونه کارهای طراحی و ساخته شده با @Model.FirstOrDefault().products.category.categoryname رنگ @Model.FirstOrDefault().products.name کد @Model.FirstOrDefault().products.codename </h5>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="productBox mb-4">
+            <div class="row">
+                <div class="col-lg-4">
+                    @if (Model.FirstOrDefault().products.image != null)
+                    {
+
+                        <img class="img-fluid mb-5 mb-lg-0" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.FirstOrDefault().products.image)))" alt="@Model.FirstOrDefault().products.name" />
+                    }
+                </div>
+                <div class="col-lg-4 text-center">
+                    <img class="brand img-fluid mb-4 mb-lg-3" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.FirstOrDefault().products.category.image)))" alt="@Model.FirstOrDefault().products.category.categoryname">
+                    <h6>دسته بندی: <span>@catg.section_.name</span></h6>
+                    <h6>برند: <span>@catg.shortname</span></h6>
+                    <h6>نام: <span>@product.name</span></h6>
+                    <h6>کد رنگ: <span>@product.codename</span></h6>
+                    <h6>وضعیت: <span>@entityrep.getexistproducts(idproduct)</span></h6>
+                    <h6>ابعاد: <span>@product.dimension</span></h6>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <div><a href="" class="gray">اشتراک گذاری<i class="fas fa-share-alt fa-lg mx-2"></i></a></div>
+                    @if (catg.showprice == true)
+                    {
+                        <h5 class="blue bold mt-4"><span>@(product.lastcellcost != null ? string.Format("{0:#,##0.##}", product.lastcellcost) : "0")   </span>تومان</h5>
+
+                    }
+                    else
+                    {
+                        <h5 class="blue bold mt-4">تماس بگیرید ... </h5>
+                    }
+
+                    @if (catg.purchaseonline == true)
+                    {
+
+                        <button class="btn btn-addToCart mt-4">افزودن به سبد خرید<i class="fas fa-shopping-cart mx-1"></i></button>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                string imageroot = _hostingEnvironment.WebRootPath + "/Content/img/samples/" + item.files.filename;
+                bool f = File.Exists(imageroot);
+
+                if (f == true)
+                {
+                    <div class="col-lg-2 col-12 mb-lg-4 mb-5">
+                        <div style="box-shadow:0 2px 5px #808080">
+                            <a href="~/Content/img/samples_L/@item.files.filename" data-lightbox="vahid-majidi" title="@item.files.decortype.name ساخته شده با @item.products.category.categoryname @item.products.name اثر @item.files.madeby.prefix @item.files.madeby.Fname @item.files.madeby.Lname "><img src="~/Content/img/samples/@item.files.filename " alt="@item.files.keywords" class="img-thumbnail p-0" /></a>
+                            <div id="@item.Id" style="background-color:#ffca01; color:#132666; position:absolute; top:120px;right:30px; padding-left:10px; padding-right:10px; display:none; border-radius:3px; font-size:14px; font-family:'B Zar';">@shamsi.GetStringDate(item.date)</div>
+                            <div class="" style="background-color:#ffffff; ">
+                                <div class="">
+                                    <a href="/samples/decortype?id=@item.files.decortype.id&key=@item.files.decortype.keywords"><h5 style="text-align :center ;padding-top:10px"> @item.files.decortype.name </h5></a>
+                                </div>
+                                <div class="">
+                                    <h5 style="text-align :center ;padding:10px">ID: @item.files.id </h5>
+                                </div>
+                                <div class="">
+                                    <h5 style=" text-align: center ; font-size:12px;margin-bottom:0"> طراحی و اجرا: </h5>
+                                </div>
+                                <div class="pb-2">
+                                    <a href="/samples/madeby?id=@item.files.madebyid&key=@item.files.madeby.Fname   @item.files.madeby.Lname "><h5 style="text-align :center ; font-size:12px;">  @item.files.madeby.Fname  @item.files.madeby.Lname </h5></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+    }
+
+    else
+    {
+
+        <div class="row my-4">
+            <div class="col-12">
+                <div style="position:relative">
+                    <h5 class="my-5 contactTitle">نمونه کارهای طراحی و ساخته شده با @catg.categoryname رنگ @product.name کد @product.codename </h5>
+                </div>
+            </div>
+        </div>
+        <div class="productBox mb-4">
+            <div class="row">
+                <div class="col-lg-4">
+                    @if (product.image != null)
+                {
+
+                        <img class="img-fluid mb-5 mb-lg-0" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(product.image)))" alt="@product.name" />
+                    }
+                </div>
+                <div class="col-lg-4 text-center">
+                    <img class="brand img-fluid mb-4 mb-lg-3" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(catg.image)))" alt="@catg.categoryname">
+                    <h6>دسته بندی: <span>@catg.section_.name</span></h6>
+                    <h6>برند: <span>@catg.shortname</span></h6>
+                    <h6>نام: <span>@product.name</span></h6>
+                    <h6>کد رنگ: <span>@product.codename</span></h6>
+                    <h6>وضعیت: <span>@entityrep.getexistproducts(idproduct)</span></h6>
+                    <h6>ابعاد: <span>@product.dimension</span></h6>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <div><a href="" class="gray">اشتراک گذاری<i class="fas fa-share-alt fa-lg mx-2"></i></a></div>
+                    @if (catg.showprice == true)
+                {
+                        <h5 class="blue bold mt-4"><span>@(product.lastcellcost != null ? string.Format("{0:#,##0.##}", product.lastcellcost) : "0")   </span>تومان</h5>
+
+                    }
+                    else
+                    {
+                        <h5 class="blue bold mt-4">تماس بگیرید ... </h5>
+                    }
+                    @if (catg.purchaseonline == true)
+                {
+
+                        <button class="btn btn-addToCart mt-4">افزودن به سبد خرید<i class="fas fa-shopping-cart mx-1"></i></button>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+    @if (!string.IsNullOrEmpty(keywords))
+            {
+        <div class="keyword d-flex mt-4">
+            <div><p class="bold ml-5 ml-lg-4 px-4">کلمات کلیدی</p></div>
+            <div>
+                @foreach (var item in keywords.Split('-'))
+                {
+                <a href="/products/Searchproducts?filter=@item" class="btn">@item</a>
+                }
+
+            </div>
+        </div>
+
+
+    }
+    </div>
+
+
+    <script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+
+
+
+

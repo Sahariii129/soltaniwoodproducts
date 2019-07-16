@@ -1,0 +1,148 @@
+﻿@model IList<SoltaniWeb.Models.Domain.tbl_products>
+@{
+    //ViewBag.Title = "AGT";
+    ViewBag.description = " نمونه رنگ های ام دی اف برجسته و فوق برجسته اکسترا " + " - " + "فروش در شیراز و استان فارس" + " -  " + " XTRA مشخصات کلی ام دی اف   ";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.repository.samplerepository samrep = new SoltaniWeb.Models.repository.samplerepository();
+    int i = 0;
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    string username = Context.Session.GetString("username");
+    var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
+}
+
+<head>
+    <title></title>
+
+
+    <script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
+    <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+
+</head>
+
+<div class="container-fluid products" data-aos="fade-up">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 productsTitle">ام دی اف برجسته و فوق برجسته اکسترا پلاس<span style="color:#132666"> XTRA PLUS</span></h5>
+            </div>
+            @if (Model.FirstOrDefault().category.fulldescription != null)
+            {
+                <div style="box-shadow:0 3px 10px #aab3c2; padding:30px">
+                    @Html.Raw(Model.FirstOrDefault().category.fulldescription)
+                </div>
+            }
+        </div>
+    </div>
+    <div id="imagegallerydetaile" class="row myfont">
+        @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
+    </div>
+</div>
+
+   
+    <script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+
+<script>
+
+
+    function filterbyA(catgid) {
+        //alert("hi")
+
+        $.ajax({
+            url: '/products/filterbyA',
+            type: 'POST',
+            dataType: "json",
+            data: { id: catgid },
+            error: function (err) {
+                alert(err.status + "   " + err.statusText);
+            }
+        }).done(function (msg) {
+
+            $("#imagegallerydetaile").html('');
+            $("#baseon").html("<span id='baseon'>کلاس A : طرح ساده</span>")
+            //$("#topiccolor").html(" <p id='imagegallery' class='bg-success' style=' text-align :center ; cursor :pointer;'>.:: کالیته هایگلاس ترک AGT ::.  -  <span id='baseon'>چیدمان بر اساس شماره کد</span></p>")
+            $.each(msg, function (index, val) {
+                //alert(val.name)
+                if (catgid != 2) {
+                    //alert("NO ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-3 col-md-3 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-9 col-md-9 col-sm-9 col-xs-9'><a href='#'><h5 style='text-align :center ;'>" + val.name + " </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'> " + val.code + " </h5></a></div>      <div class='col-lg-9 col-md-9 col-sm-9 col-xs-9' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار - <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' /></a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                } else {
+                    //alert("ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='font-size:8px;'> <a href='/samples/samples?id01=" + val.id + "'><h5 style='text-align:center; font-size:12px;'>" + val.name + "-" + val.code + " </h5></a>            </div><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' />اسلاید شو</a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                }
+
+            });
+        });
+
+    }
+    function filterbyB(catgid) {
+        //alert("hi")
+
+        $.ajax({
+            url: '/products/filterbyB',
+            type: 'POST',
+            dataType: "json",
+            data: { id: catgid },
+            error: function (err) {
+                alert(err.status + "   " + err.statusText);
+            }
+        }).done(function (msg) {
+
+            $("#imagegallerydetaile").html('');
+            $("#baseon").html("<span id='baseon'>کلاس B : طرح چوب</span>")
+            //$("#topiccolor").html(" <p id='imagegallery' class='bg-success' style=' text-align :center ; cursor :pointer;'>.:: کالیته هایگلاس ترک AGT ::.  -  <span id='baseon'>چیدمان بر اساس شماره کد</span></p>")
+            $.each(msg, function (index, val) {
+                //alert(val.name)
+                if (catgid != 2) {
+                    //alert("NO ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-3 col-md-3 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-9 col-md-9 col-sm-9 col-xs-9'><a href='#'><h5 style='text-align :center ;'>" + val.name + " </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'> " + val.code + " </h5></a></div>      <div class='col-lg-9 col-md-9 col-sm-9 col-xs-9' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار - <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' /></a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                } else {
+                    //alert("ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='font-size:8px;'> <a href='/samples/samples?id01=" + val.id + "'><h5 style='text-align:center; font-size:12px;'>" + val.name + "-" + val.code + " </h5></a>            </div><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' />اسلاید شو</a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                }
+
+            });
+        });
+
+    }
+    function filterbyC(catgid) {
+        //alert("hi")
+
+        $.ajax({
+            url: '/products/filterbyC',
+            type: 'POST',
+            dataType: "json",
+            data: { id: catgid },
+            error: function (err) {
+                alert(err.status + "   " + err.statusText);
+            }
+        }).done(function (msg) {
+
+            $("#imagegallerydetaile").html('');
+            $("#baseon").html("<span id='baseon'>کلاس C : طرح سه بعدی</span>")
+            //$("#topiccolor").html(" <p id='imagegallery' class='bg-success' style=' text-align :center ; cursor :pointer;'>.:: کالیته هایگلاس ترک AGT ::.  -  <span id='baseon'>چیدمان بر اساس شماره کد</span></p>")
+            $.each(msg, function (index, val) {
+                //alert(val.name)
+                if (catgid != 2) {
+                    //alert("NO ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-3 col-md-3 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-9 col-md-9 col-sm-9 col-xs-9'><a href='#'><h5 style='text-align :center ;'>" + val.name + " </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'> " + val.code + " </h5></a></div>      <div class='col-lg-9 col-md-9 col-sm-9 col-xs-9' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار - <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' /></a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                } else {
+                    //alert("ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='font-size:8px;'> <a href='/samples/samples?id01=" + val.id + "'><h5 style='text-align:center; font-size:12px;'>" + val.name + "-" + val.code + " </h5></a>            </div><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' />اسلاید شو</a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                }
+
+            });
+        });
+
+    }
+
+    $(function(){
+        $(".categorylist[section_id='" + @Model.FirstOrDefault().category.section_.id + "']").toggle(500)
+         $(".category[catg_id='" + @Model.FirstOrDefault().category.id + "']").css('background-color', '#4cff00')
+
+
+    })
+
+</script>

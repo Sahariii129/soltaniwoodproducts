@@ -1,0 +1,147 @@
+﻿@using SoltaniWeb.Models.Domain
+@model IEnumerable<tbl_products>
+@{
+    ViewBag.Title = "مقایسه کالاهای مورد نظر";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+<link href="~/soltanistatic/style/comparison.css" rel="stylesheet" />
+
+<div class="container-fluid compage">
+    <div class="row">
+        <div class="col-12 pading1px" id="ordermanagement">
+            <div class=" pading1px mt-4">
+                <div class="card myfont">
+                    <div class="card-header text-center py-3 d-flex">
+                        <h5 class="mb-0 pr-3 pr-lg-0">مقایسه ی کالاهای مورد نظر</h5>
+                    </div>
+                    <div class="card-body pt-1" style="background-color:#fff">
+                        <div class="row rowfirst">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="position:relative">
+                                    <img class="img-fluid" src="@(item.image==null ? "~/Content/img/icon/img-na.png" : (string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.image))))" />
+                                    <h6 class="py-3" style="color:#132666">@(item.category.categoryname + " " + item.name)</h6>
+                                    <div><a href="../samples/samples?id01=@item.idproduct&key=@item.keywords" class="btn">مشاهده و خرید محصول</a></div>
+                                    <i class="fas fa-caret-down fa-2x"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">دسته:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0">@(item.category.section_.name)</h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">برند:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0"><span class="ml-1"><img class="brand" src="@(item.category.image==null ? "~/Content/img/icon/img-na.png" : (string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.category.image))))" /></span></h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">کد:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0">@(item.codename)</h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">کلاس:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0">@(item.grade)</h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">ابعاد:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0">@(item.dimension)</h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">وزن:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0">@(item.weight)</h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">ساخت:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0"></h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">تم رنگ:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0"></h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0"> رنگ های مشابه:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0"></h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">قیمت فروش:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0">@((item.category.showprice == true) ? string.Format("{0:#,##0.##}", item.lastcellcost) : " تماس بگیرید")</h6>
+                                </div>
+                            }
+                        </div>
+                        <div class="row py-1 rowfeatures"><h5 class="pr-2 mb-0">کلمات کلیدی:</h5></div>
+                        <div class="row py-3">
+                            @foreach (var item in Model)
+                            {
+                                <div class="col-lg-3 p-0 text-center" style="border-left:1px solid #dde4ee;border-right:1px solid #dde4ee">
+                                    <h6 class="mb-0">@(item.keywords)</h6>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).scroll(function () {
+        var y = $(this).scrollTop();
+        if (y > 300) {
+            $('.rowfirst').addClass('rowFix');
+            //$('.rowfirst img').css('transform', 'scale(-.5)');
+        } else {
+            $('.rowfirst').removeClass('rowFix');
+            //$('.rowfirst img').css('transform', 'scale(1)');
+        }
+    })
+</script> 
+           

@@ -1,0 +1,25 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_files
+
+@{
+    ViewBag.Title = "showsample";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    ViewBag.howtoindex = "index";
+}
+<html lang="fa" dir="ltr">
+<head>
+    <link href="../../Content/bootstrap.css" rel="stylesheet" />
+   
+    <title>@ViewBag.title</title>
+</head>
+<body>
+    <div class=" row">
+        <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+            <img src="~/Content/img/samples_L/@Model.filename" style="  margin-bottom:30px; width:95%; margin:5px;"/>
+
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="../../Scripts/bootstrap.min.js"></script>

@@ -1,0 +1,350 @@
+﻿@using SoltaniWeb.Models.Extensions
+
+@{
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    ViewBag.Title = "گزارش کالا جهت سفارش";
+
+    int i = 1;
+    var today = DateTime.Now.ToPersianDate();
+
+}
+
+
+
+<div class="row">
+    <div class="col-lg-12 col-xs-12">
+
+        <div dir="rtl" align="right">
+            <div id="rsperror"></div>
+            <table class="table table-responsive" id="list" cellpadding="0" cellspacing="0"></table>
+            <div id="pager" style="text-align:center;"></div>
+
+            <div class="btn-group" role="group" aria-label="...">
+                <a href="../admin/adminpanel" class="btn btn-default">پنل مدیریت</a>
+                <a href="../admin/manage_listkala" class="btn btn-primary">پنل مدیریت انبار وب</a>
+                <a href="../admin/manage_entity" class="btn btn-success">گزارش موجودی انبار وب</a>
+                <a href="../admin/reporttoorder" class="btn btn-danger">گزارش کالاهای کسری</a>
+                <a href="../admin/manage_sections" class="btn btn-default">مدیریت بخش محصولات</a>
+
+            </div>
+        </div>
+        
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body" id="bodymodal">
+
+                ...
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+
+    <script>
+
+
+
+
+        // قسمت مربوط به jqgrid
+
+        var searchOptions = ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc'];
+        $(document).ready(function () {
+
+            $.jgrid.formatter.integer.thousandsSeparator = ',';
+            $.jgrid.formatter.number.thousandsSeparator = ',';
+            $.jgrid.formatter.currency.thousandsSeparator = ',';
+
+            $('#list').jqGrid({
+                caption: "گزارش کالا جهت سفارش",
+                //url from wich data should be requested
+                url: '@Url.Action("get_order", "admin")',
+                //url for edit operation
+                editurl: '@Url.Action("EditProduct", "admin")',
+                //type of data
+                datatype: 'json',
+                jsonReader: {
+                    root: "Rows",
+                    page: "Page",
+                    total: "Total",
+                    records: "Records",
+                    repeatitems: true,
+                    userdata: "UserData",
+                    id: "Id",
+                    cell: "RowCells",
+                    //loadonce: true,
+                },
+                //url access method type
+                mtype: 'GET',
+                //columns names
+                colNames: ['شناسه کالا', 'بخش', 'نام کالا', 'کد کالا','موجودی' , 'حد نصاب موجودی'],
+                //columns model
+                colModel: [
+                    {
+                        name: 'id', index: 'id', align: 'center', width: 70,
+                        editable: false
+                        , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+
+                    },
+
+
+
+                    {
+                        name: 'category', index: 'category', align: 'right', width: 150,
+                        editable: true, edittype: 'text',
+                        search: true, stype: 'select',
+                        searchoptions: { sopt: searchOptions, dataUrl: '@Url.Action("catg_Select","admin")' },
+
+
+                    },
+
+                    {
+                        name: 'name', index: 'name', align: 'right', width: 400,
+                        editable: true, edittype: 'text',
+                        search: true, stype: 'text',
+                        searchoptions: { sopt: ['cn', 'nc'] },
+
+
+                    },
+                     {
+                         name: 'codename', index: 'codename', align: 'center', width: 70,
+                         editable: true, edittype: 'text',
+                         search: true, stype: 'text',
+                         searchoptions: { sopt: ['cn', 'nc'] },
+
+
+                     },
+                      
+                      
+                      {
+                          name: 'Totalentity', index: 'Totalentity', align: 'center', width: 150,
+                          editable: false
+                        , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+                        summaryType: 'sum', summaryTpl: '<b>جمع : {0}</b>',
+
+                      },
+                      {
+                          name: 'inventory', index: 'inventory', align: 'center', width: 150,
+                          editable: false
+                        , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+                        summaryType: 'sum', summaryTpl: '<b>جمع : {0}</b>',
+
+                      },
+                     
+
+                ],
+                //pager for grid
+                pager: $('#pager'),
+                height: 450,
+                //number of rows per page
+                rowNum: 100000000,
+                rowList: [10, 20, 50, 100, 'All'],
+
+                //initial sorting column
+                sortname: 'codename',
+                //initial sorting direction
+                sortorder: 'ASC',
+                //we want to display total records count
+                viewrecords: true,
+                width: '1200',
+
+                //hidegrid: false,
+                direction: "rtl",
+                gridview: true,
+                rownumbers: true,
+                footerrow: true, // the footer will be used for Grand Total
+                userDataOnFooter: true, // show custom data from JSON response to the footer - the Grand Total
+
+                grouping: true,
+                groupingView: {
+                    groupField: ['category'],
+                    groupOrder: ['asc'],
+                    groupText: ['<b>{0} - [تعداد کالا : {1} قلم]   </b>'],
+                    groupDataSorted: true,
+                    groupColumnShow: [false],
+                    groupCollapse: true,
+                    groupSummary: [true],
+                    showSummaryOnHide: true
+                },
+                loadComplete: function () {
+                    //change alternate rows color
+                    $("tr.jqgrow:odd").css("background", "#E0E0E0");
+                    $("tr.jqfoot td").css({
+                        "background": "#2f4f4f",
+                        "color": "#FFF"
+                    });
+                    $(".ui-pg-selbox option[value='All']").val(100000000);
+
+                    $("tr.footrow td").css({
+                        "background": "black",
+                        "color": "#FFF",
+                        "font-family": 'B Titr',
+                        "font-size": '16px',
+                    });
+
+
+
+                    ///
+
+                    var reportSum = jQuery(list).jqGrid('getCol', 'Totalentity', false, 'sum');
+                    var reportSum2 = jQuery(list).jqGrid('getCol', 'inventory', false, 'sum');
+                    var reportcount = jQuery("#list").jqGrid('getGridParam', 'reccount');
+                    jQuery(list).jqGrid('footerData', 'set',
+                    {
+
+
+                        Totalentity: 'جمع کل : ' + reportSum,
+                        inventory: 'جمع کل : ' + reportSum2,
+                        anbar: 'اقلام کل : ' + reportcount,
+                    });
+
+                    ///
+
+
+
+
+                },
+                loadError: function (xhr, st, err) {
+                    jQuery("#rsperror").html("Type: " + st + "; Response: " + xhr.status + " " + xhr.statusText);
+                },
+
+
+            }).navGrid(
+                    '#pager',
+                    //enabling buttons
+                    { add: false, del: false, edit: false, search: false }
+                    //edit option
+                    
+                    //add options
+                   
+                    //delete options
+                    
+                  
+
+    )
+
+        });
+
+        function centerDialog(form, grid) {
+            var dlgDiv = $("#editmod" + grid[0].id);
+            var parentDiv = dlgDiv.parent(); // div#gbox_list
+            var dlgWidth = dlgDiv.width();
+            var parentWidth = parentDiv.width();
+            var dlgHeight = dlgDiv.height();
+            var parentHeight = parentDiv.height();
+            var parentTop = parentDiv.offset().top;
+            var parentLeft = parentDiv.offset().left;
+            dlgDiv[0].style.top = Math.round(parentTop + (parentHeight - dlgHeight) / 2) + "px";
+            dlgDiv[0].style.left = Math.round(parentLeft + (parentWidth - dlgWidth) / 2) + "px";
+        }
+
+
+        //function toolbarSearching() {
+        //    $('#list').filterToolbar({
+        //        groupOp: 'OR',
+        //        defaultSearch: "cn",
+        //        autosearch: true,
+        //        searchOnEnter: true,
+        //        searchOperators: true, // فعال سازي منوي اپراتورها
+        //        stringResult: true // وجود اين سطر سبب مي‌شود تا اپراتورها به سرور ارسال شوند
+        //    });
+        //};
+
+        function singleSearching() {
+            $('#list').searchGrid({
+                closeAfterSearch: true
+            });
+        };
+
+        function advancedSearching() {
+            $('#list').searchGrid({
+                multipleSearch: true,
+                closeAfterSearch: true
+            });
+        };
+
+
+
+        function sumkala() {
+            //alert("hi")
+
+            $.ajax({
+                url: '/products/sumkala',
+                type: 'POST',
+                dataType: "json",
+                data: {},
+                error: function (err) {
+                    alert(err.status + "   " + err.statusText);
+                }
+            }).done(function (msg) {
+
+                $("#sum").html('');
+
+                //$("#topiccolor").html(" <p id='imagegallery' class='bg-success' style=' text-align :center ; cursor :pointer;'>.:: کالیته هایگلاس ترک AGT ::.  -  <span id='baseon'>چیدمان بر اساس شماره کد</span></p>")
+                $.each(msg, function (index, val) {
+                    //alert(val.name)
+                    if (catgid != 2) {
+                        //alert("NO ack")
+                        $("#sum").append(" <div class='col-lg-3 col-md-3 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-9 col-md-9 col-sm-9 col-xs-9'><a href='#'><h5 style='text-align :center ;'>" + val.name + " </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'> " + val.code + " </h5></a></div>      <div class='col-lg-9 col-md-9 col-sm-9 col-xs-9' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار - <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' /></a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                    } else {
+                        //alert("ack")
+                        $("#imagegallerydetaile").append(" <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='font-size:8px;'> <a href='/samples/samples?id01=" + val.id + "'><h5 style='text-align:center; font-size:12px;'>" + val.name + "-" + val.code + " </h5></a>            </div><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' />اسلاید شو</a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                    }
+
+                });
+            });
+
+        }
+
+
+        $("#name").on('change keyup paste', function () {
+            SearchBykalaName();
+        });
+
+        function SearchBykalaName() {
+            //  Fetch the text from our <input> control
+            var searchString = $("#name").val();
+
+            //  Prepare to pass a new search filter to our jqGrid
+            var f = { groupOp: "AND", rules: [] };
+
+            //  Remember to change the following line to reflect the jqGrid column you want to search for your string in
+            //  In this example, I'm searching through the UserName column.
+
+            f.rules.push({ field: "name", op: "cn", data: searchString });
+
+            var grid = $('#list');
+            grid[0].p.search = f.rules.length > 0;
+            $.extend(grid[0].p.postData, { filters: JSON.stringify(f) });
+            grid.trigger("reloadGrid", [{ page: 1 }]);
+        }
+
+
+    </script>
+
+
+
+
+

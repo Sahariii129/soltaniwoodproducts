@@ -1,0 +1,261 @@
+﻿@using SoltaniWeb.Models.Domain
+@{
+    _4820_soltaniwebContext db2 = new _4820_soltaniwebContext();
+    var branches = db2.tbl_branches.ToList();
+
+}
+<link href="~/soltanistatic/style/manage-list.css" rel="stylesheet" />
+<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset">جستجو ترکیبی:</div>
+    <div class="card-body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal" id="collapseSearch1">
+            <div class="form-group">
+                <div class="row">
+                    <div class="TextButtom">
+                        <input class="form-control autosearchinput"  id="productidinsearchform" productid="" value="" type="text" placeholder="نام کالا را وارد نمایید..." />
+                        <button class="  Delete "><i class="fas fa-eraser"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">تاریخ ثبت:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sabtdate" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">انبار:</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="anbarid">
+                            <option value=0>مهم نیست</option>
+                            @foreach (var item in db2.tbl_anbar)
+                            {
+                                <option value=@(item.id)>@item.anbarname</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">نوع سند:</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="havalehtypeid">
+                            <option value=0>مهم نیست</option>
+                            @foreach (var item in db2.tbl_havaletype)
+                            {
+                                <option value=@(item.htype)>@item.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">کاربر:</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="usernameid">
+                            <option value=0>مهم نیست</option>
+                            @foreach (var item in db2.tbl_user.Where(a => a.status == true && (a.Access == 0 || a.Access == 1)))
+                            {
+                                <option value=@(item.id)>@item.username</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">شرح:</label>
+                    <div class="col-md-8">
+                        
+                        <textarea class="form-control"  rows="3" id="desc"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-12 text-left">
+                            <button type="submit" class="btn" id="advancedsearchlistkal" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset" id="searchbyuser_heading">جستجوی بر اساس کالا</div>
+    <div class="card-body" id="searchbyuser_body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <div class="TextButtom">
+                        <input class="form-control autosearchinput" id="productidinsearchform" productid="" value="" type="text" placeholder="نام کالا را وارد نمایید..." />
+                        <button class="  Delete "><i class="fas fa-eraser"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="btn_searchbylistkalaid" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset" id="searchbyuser_heading">جستجو بر اساس شماره سند</div>
+    <div class="card-body" id="searchbyuser_body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">شماره سند:</label>
+
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="searchbylistkalaid" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="btn_searchbylistkalaid" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset">جستجو بر اساس تاریخ </div>
+    <div class="card-body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">تاریخ ثبت:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sabtdateinform" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchlistkalbysabtdate" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                     
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">از تاریخ :</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sodoordatefrom" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">تا تاریخ :</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sodoordateto" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchordersbysodoordaterange" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset">گزارش موجودی کالا</div>
+    <div class="card-body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <partial name="~/Views/Shared/Partiallistkala/_PartialCategoriesSections.cshtml">
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-12 text-left">
+                            <button type="submit" class="btn" id="searchinventorysbysectioncategory" style="background-color:#332b3a;color:#ffca01">موجودی</button>
+                            <button type="submit" class="btn btn-danger" id="productstoorderreports">کسری</button>
+
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.Delete').click(function () {
+        $(this).siblings('input').val('')
+        $(this).siblings('input').attr('productid','')
+        $(this).siblings('input').focus()
+
+    })
+       // autocomplete products name
+   
+
+    $(".autosearchinput").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    dataType: "json",
+                    type: 'Post',
+                    url: '@Url.Action("searchproduct", "admin")',
+                    data: { text: request.term },
+                    success: function (data) {
+                        $(this).removeClass('ui-autocomplete-loading');
+                        // hide loading image
+
+                        response($.map(data, function (item) {
+                            return {
+                                id: item.id,
+
+                                value: item.value,
+                                lable: item.lable
+                                //val: item.split('-')[1]
+                            }
+                        }));
+                    },
+
+
+                    error: function (data) {
+                        $(this).removeClass('ui-autocomplete-loading');
+                    }
+                });
+            },
+
+            minLength: 1,
+            select: function (event, result) {
+                //$("#productid_id").val(result.item.id);
+                $(this).attr('productid', result.item.id);
+
+            },
+            open: function () { },
+            close: function () { },
+            focus: function (event, ui) { },
+
+        });
+</script>

@@ -1,0 +1,33 @@
+﻿
+@using SoltaniWeb.Models.structs
+@model loginstruct
+@*<script src="~/Scripts/jquery-3.1.1.js"></script>*@
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+    <form action="/Account/LogInAction" style="border:none !important;">
+        <div id="alertlogin" class="alert alert-danger alertmessage displayNone">
+
+        </div>
+        <div class="tab-pane fade active show" id="login">
+            <div class="form-group">
+                <input class="form-control" id="username" asp-for="username" type="text" placeholder="نام کاربری خود را وارد نمایید" />
+                <span asp-validation-for="username"></span>
+
+                <input class="form-control" id="password" asp-for="password" type="password" placeholder="رمز عبور خود را وارد نمایید" />
+                <span asp-validation-for="password"></span>
+            </div>
+            <label for="RememberMe" class="containercheckbox">
+                من را به خاطر بسپار!
+                <input type="checkbox" id="RememberMe" asp-for="RememberMe" name="RememberMe">
+                <span class="checkmark"></span>
+            </label>
+            <div class="text-center">
+                <button id="btnLogInNewUser" type="submit" class="btn btn-register">ورود</button>
+                <div class="text-center"><a href="/Account/recoveryaccount" class="btn btn-remember">رمز عبور خود را فراموش کرده ام!</a></div>
+            </div>
+        </div>
+    </form>
+
+
+

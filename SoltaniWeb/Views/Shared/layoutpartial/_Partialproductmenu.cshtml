@@ -1,0 +1,71 @@
+﻿
+@using SoltaniWeb.Models.Domain
+@{
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+
+    var sections = db.tbl_section.Where(a => a.status == true && a.tbl_category.Count() > 0).OrderBy(a => a.ordering);
+
+}
+
+<style>
+
+    .color2 {
+        color: #a71515 !important;
+        font-weight: 900;
+    }
+</style>
+<div id="productmenu" class=" col-md-3 myfont">
+
+    <br />
+
+    <div class="list-group textright hidden-xs hidden-sm">
+
+
+        <a id="user" class="list-group-item btn-success " style=" background-color: #a71515;" href="/admin/adminpanel">
+            <span style="font-size :16px; text-align :center ; margin-top:15px; color :#ffffff;"> @(Context.Session.GetString("fullname") != null ? Context.Session.GetString("fullname") : "مهمان") خوش آمدید </span>
+            <img src="~/Content/img/icon/Login-icon.png" style="width: 10%; height:24px; float :left; margin-top:3px;" />
+        </a>
+
+        @foreach (var item in sections)
+        {
+            <button section_id="@item.id" class="list-group-item btn-success section" style=" background-color: #ffffff;">
+                <span class="color2">  @item.name</span>
+                <span style="float:left; font-family:Tahoma, Arial CommercialScript BT , Tahoma; color:#0513b6; font-size:14px;">@item.name_EN</span>
+               
+            </button>
+            <div class="categorylist" section_id="@item.id" style=" margin-right:15px ;display:none;">
+                @foreach (var item2 in db.tbl_category.Where(a => a.section_id == @item.id && a.status != false))
+                {
+                    <a id='@("category"+item2.id)' class="list-group-item btn-success category" catg_id="@item2.id" href='@("/products/" + item2.actionname +"?key=" + item2.keywords)' style=" color:#0513b6 !important;font-weight:800;">
+                        @item2.categoryname
+                        <img src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item2.image)))" alt="@item2.categoryname" style="width:56px;height:28px; position:absolute; left:10px;" />
+                    </a>
+                }
+
+
+            </div>
+        }
+
+
+
+    </div>
+
+</div>
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+<script>
+
+    $('.section').click(function () {
+        var section_id = $(this).attr('section_id')
+        var obj = $('.categorylist[section_id="' + section_id +'"]')
+        
+        $(obj).toggle(500)
+    })
+
+    $('.category').click(function (e) {
+
+        $('.category').css('background-color', '#ffffff')
+        $(this).css('background-color', '#4cff00')
+
+    })
+
+</script>

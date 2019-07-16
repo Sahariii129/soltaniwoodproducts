@@ -1,0 +1,101 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_person
+@{
+    ViewBag.Title = "جزئیات اشخاص";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <h4 style="color:#6a95cc">جزئیات</h4>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Fname)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Fname)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Lname)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Lname)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.prefix)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.prefix)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.sex)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.sex)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.codemelli)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.codemelli)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.birthday)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.birthday)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Pdescription)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Pdescription)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.job)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.job)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.tell)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.tell)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.cell)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.cell)
+                    </dd>
+
+                </dl>
+            </div>
+            <p>
+                <a style=" cursor :pointer; text-decoration :none; " href="/admin/Edit_person/@Model.id">ویرایش</a> |
+                @Html.ActionLink("بازگشت به پنل مدیریت اشخاص", "manage_carpenters", "admin", new { @style = "cursor :pointer; text-decoration :none; color:#ffffff;" })
+            </p>
+        </div>
+    </div>
+</div>

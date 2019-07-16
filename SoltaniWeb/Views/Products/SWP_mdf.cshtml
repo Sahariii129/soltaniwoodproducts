@@ -1,0 +1,76 @@
+﻿@model IList<SoltaniWeb.Models.Domain.tbl_products>
+
+@{
+    //ViewBag.Title = "ACK";
+    ViewBag.description = " نمونه رنگ های ام دی اف SWP  " + " - " + "فروش در شیراز و استان فارس" + " -  " + "MDF  مشخصات";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.repository.samplerepository samrep = new SoltaniWeb.Models.repository.samplerepository();
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    string username = Context.Session.GetString("username");
+    var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
+}
+<head>
+    <title></title>
+
+
+    <script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
+    <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+
+</head>
+
+
+
+<script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+<div class="container-fluid">
+
+    <div class="col-xs-12  ">
+
+        <div class="row">
+
+            <div id="topiccolor" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top:5px;">
+
+                <p id="imagegallery" class="bg-success" style=" text-align :center ;">.:: کالیته ام دی اف SWP  ::.-  <span id="baseon">چیدمان بر اساس شماره کد</span></p>
+
+            </div>
+
+        </div>
+
+        <div id="imagegallerydetaile" class="row myfont">
+            @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
+        </div>
+    </div>
+
+
+</div>
+
+<br />
+
+
+
+
+
+
+<script>
+    $(function(){
+        $(".categorylist[section_id='" + @Model.FirstOrDefault().category.section_.id + "']").toggle(500)
+         $(".category[catg_id='" + @Model.FirstOrDefault().category.id + "']").css('background-color', '#4cff00')
+
+
+    })
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+

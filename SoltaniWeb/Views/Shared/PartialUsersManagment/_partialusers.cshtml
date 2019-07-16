@@ -1,0 +1,160 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository
+@using SoltaniWeb.Models.utility
+@using SoltaniWeb.Models.Extensions
+@model IEnumerable<tbl_user>
+
+@{
+    abstractinfoofpurchasecart getinfo = new abstractinfoofpurchasecart();
+    int take = ViewBag.pagesize;
+    int skip = ViewBag.skip;
+    var userids = Model.Select(a => new { id = a.id }).ToList();
+    int userid = int.Parse(User.Claims.FirstOrDefault().Value);
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    var access = db.tbl_accesslevels.Where(a => a.userid == userid && a.accessid == 32 && a.accessvalue == true).SingleOrDefault();
+}
+
+<style>
+    table, tr, td {
+        word-break: break-all
+    }
+    .pagination {
+        margin: 20px auto;
+    }
+        .pagination .page-link {
+            border-radius: 0;
+            color: #fff !important;
+            background-color: #6a95cc;
+        }
+        .pagination .prenext {
+            border-radius: 50% !important;
+        }
+</style>
+
+<div class="row">
+    @foreach (var item in Model.Skip(skip).Take(take))
+    {
+
+        <div class="col-md-4 userspanel" userid="@item.id">
+            <partial name="~/Views/Shared/PartialUsersManagment/_partialeachuser.cshtml" model="@item" />
+           
+
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="prenext page-link" id="previous" page="@(ViewBag.pagenumber)" href="#" aria-label="Previous" take="@(ViewBag.pagesize)" totalpage="@(ViewBag.totalpages)">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                @for (int i = 1; i < ViewBag.totalpages + 1; i++)
+            {
+                    <li class="page-item"><a class="paging page-link" id="@(ViewBag.pagesize*(i-1))" href="#" style="background-color:@(ViewBag.pagenumber==i?"#ffca01":"");">@i</a></li>
+            }
+
+                <li class="page-item">
+                    <a class="prenext page-link" id="next" href="#" aria-label="Next" page="@(ViewBag.pagenumber)" take="@(ViewBag.pagesize)" totalpage="@(ViewBag.totalpages)">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+
+    </div>
+
+</div>
+<script>
+
+    $('.userspanel').on('click', '.edituser', function () {
+        var userid = $(this).attr('userid')
+        jQuery.post('/admin/getuserforedit', { userid: userid }, function (result) {
+
+           
+            $(messageokheader).html('ویرایش کاربر')
+            $(messageokbody).html(result)
+            $(messageok).modal()
+
+
+        })
+
+    })
+
+
+
+  
+
+
+
+
+        $('.paging').click(function (e) {
+            e.preventDefault()
+
+
+            var modelobj = @Html.Raw(Json.Serialize(userids))
+            var skip = $(this).attr('id')
+
+            var take = @ViewBag.pagesize
+            var ids =[];
+            $(modelobj).each(function(n,m){
+                ids.push(m.id)
+            })
+
+            $('.loader').show()
+            jQuery.post('/admin/manage_usersajax', {take:take , skip:skip , model:ids}, function (result) {
+                $('.loader').hide()
+                $('#panelbodyforusers').html(result)
+
+
+            })
+
+        })
+
+        $('.prenext').click(function (e) {
+
+
+            e.preventDefault();
+            var modelobj = @Html.Raw(Json.Serialize(userids))
+            var pagenumber = $(this).attr('page')
+            var totalpage = $(this).attr('totalpage')
+
+            var id = $(this).attr('id')
+            var ids =[];
+            $(modelobj).each(function(n,m){
+                ids.push(m.id)
+            })
+
+            if (id == 'previous') {
+                var targetpagenumber = pagenumber - 1;
+                if (targetpagenumber <= 0)
+                    return;
+
+                var take = $(this).attr('take')
+                var skip = take * (targetpagenumber - 1)
+            } else {
+                var targetpagenumber = parseInt(pagenumber) + 1;
+                if (targetpagenumber > totalpage)
+                    return;
+
+                var take = $(this).attr('take')
+                var skip = take * (parseInt(targetpagenumber) - 1)
+
+            }
+            $('.loader').show()
+            jQuery.post('/admin/manage_usersajax', { take: take, skip: skip ,model:ids}, function (result) {
+                $('.loader').hide()
+                $('#panelbodyforusers').html(result)
+
+
+            })
+
+
+        })
+
+
+
+</script>

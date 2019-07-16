@@ -1,0 +1,223 @@
+﻿
+@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.Extensions
+@model tbl_transportationdeliverinfo
+@{
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext(); ;
+    var cartid = (int)ViewBag.cartid;
+    var today = DateTime.Now.ToPersianDate();
+    var deliverinfo = db.tbl_transportationdeliverinfo.Where(a => a.cartid == cartid);
+
+
+}
+
+<style>
+    input {
+        font-size: 12px !important;
+    }
+
+    textarea {
+        font-size: 12px !important;
+    }
+</style>
+@if (deliverinfo.Count() > 0)
+{
+    <div class="form-horizontal">
+        <form action="/admin/deliverinfosave" method="post" id="myform">
+            <input disabled type="hidden" class="form-control" id="id" name="id" value="@deliverinfo.SingleOrDefault().id" />
+            <div class="form-group">
+                <div class="row">
+                    <lable class="col-md-3">سبد  : </lable>
+                    <div class="col-md-3">
+                        <input disabled type="text" class="form-control" id="cartid" name="cartid" value="@cartid" />
+                    </div>
+                    <lable class="col-md-3">زمان تحویل :</lable>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="deliver_date" name="deliver_date" value="@shamsi.ToShamsinull(deliverinfo.SingleOrDefault().deliver_date.Value)" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <lable class="col-md-3">تحویل دهنده  : </lable>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="driver_name" name="driver_name" value="@deliverinfo.SingleOrDefault().driver_name" />
+
+                    </div>
+                    <lable class="col-md-3">موبایل  :</lable>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="driver_cellphone" name="driver_cellphone" value="@deliverinfo.SingleOrDefault().driver_cellphone" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <lable class="col-md-3">توضیحات  : </lable>
+                    <div class="col-md-9">
+                        <textarea class="form-control" id="description" name="description">@deliverinfo.SingleOrDefault().description </textarea>
+
+
+                    </div>
+                    </div>
+                </div>
+            <div class="form-group">
+                <div class="row">
+                    <lable class="col-md-3">تصویر رسید  : </lable>
+                    <div class="col-md-9">
+                        <input id="receipt_img" class="btn-primary" type="file" />
+
+
+                    </div>
+                    </div>
+                </div>
+            <div class="form-group">
+                <div class="">
+                    <button id="savedeliverinfo" class="btn btn-success">ثبت تحویل سفارش</button>
+                    <button id="showimage" class="btn btn-danger" value="@deliverinfo.SingleOrDefault().id">نمایش تصویر رسید</button>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+}
+else
+{
+    <div class="form-horizontal">
+        <form action="/admin/deliverinfosave" method="post" id="myform">
+
+            <div class="form-group">
+                <div class="row">
+                    <lable class="col-md-3">سبد  : </lable>
+                    <div class="col-md-3">
+                        <input disabled type="text" class="form-control" id="cartid" name="cartid" value="@cartid" />
+
+                    </div>
+                    <lable class="col-md-3">زمان تحویل :</lable>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="deliver_date" name="deliver_date" value="" />
+                        </div>
+                    </div>
+                </div>
+            <div class="form-group">
+                <div class="row">
+                    <lable class="col-md-3">تحویل دهنده  : </lable>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="driver_name" name="driver_name" />
+
+                    </div>
+                    <lable class="col-md-3">موبایل  :</lable>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="driver_cellphone" name="driver_cellphone" />
+                        </div>
+                    </div>
+                </div>
+            <div class="form-group">
+                <div class="row">
+                    <lable class="col-md-3">توضیحات  : </lable>
+                    <div class="col-md-9">
+                        <textarea class="form-control" id="description" name="description"> </textarea>
+
+
+                    </div>
+                    </div>
+                </div>
+            <div class="form-group">
+                <div class="row">
+                    <lable class="col-md-3">تصویر رسید  : </lable>
+                    <div class="col-md-9">
+                        <input id="receipt_img" class="btn-primary" type="file" />
+                        <button id="showimage" style="visibility:hidden;" class="btn btn-danger" value="">نمایش تصویر رسید</button>
+
+                    </div>
+                    </div>
+                </div>
+            <div class="form-group">
+                <div class="">
+                    <button id="savedeliverinfo" class="btn btn-success">ثبت تحویل سفارش</button>
+
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+}
+
+
+<script>
+    $(deliver_date).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+
+
+    $('#myform').on('click', '#savedeliverinfo', function (e) {
+        e.preventDefault();
+
+        var mydata = new FormData()
+        mydata.append('id', $('#id').val())
+        mydata.append('cartid', $('#cartid').val())
+        mydata.append('deliver_date', $('#deliver_date').val())
+        mydata.append('driver_name', $('#driver_name').val())
+        mydata.append('driver_cellphone', $('#driver_cellphone').val())
+        mydata.append('description', $('#description').val())
+        mydata.append('receipt_img', receipt_img.files[0])
+
+        $.ajax({
+            type: 'POST',
+            url: '/admin/deliverinfosave',
+            data: mydata,
+            datatype: 'json',
+            processData: false,
+            contentType: false,
+
+
+        }).done(function (msg) {
+
+            if (msg.message == 'errorfiletype') {
+                alert('فرمت فایل بایستی jpg باشد')
+                return
+            }
+
+
+            if (msg.message == 'errorfilesize') {
+                alert('سایز فایل نبایستی بیشتر از 2 مگابایت باشد')
+                return
+            }
+            if (msg.message == 'errorfilesize') {
+                alert('سایز فایل نبایستی بیشتر از 2 مگابایت باشد')
+                return
+            }
+            if (msg.message == 'success') {
+                alert('عملیات با موفقیت انجام شد')
+
+
+                return
+            }
+
+
+
+
+
+            })
+
+
+    })
+
+
+    $(showimage).click(function (e) {
+        e.preventDefault()
+        var deliverid = $(this).val();
+        $.post('/admin/showimagereceipt', { id: deliverid }, function (result) {
+
+            $(messageokheader).html('تصویر رسید')
+            $(messageokbody).html(result)
+            $(messageok).modal();
+
+
+        })
+
+    })
+
+</script>

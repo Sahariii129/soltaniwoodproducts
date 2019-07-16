@@ -1,0 +1,48 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_user
+@using SoltaniWeb.Models.Domain
+
+
+@{
+    ViewBag.Title = "userpanel";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    var accsesstypes = db.tbl_accesstypes.Where(a => a.actionname != null && a.actiontype==1);
+}
+<script src="~/Scripts/jquery-2.1.4.js"></script>
+
+<div class="col-md-3  ">
+
+
+    <br />
+    <div class="list-group textright">
+        <button id="wood" class="list-group-item btn-success" type="button" style=" background-color: #ff0000;" onclick="">
+            <center><span style="font-size :16px; text-align :center ; margin :auto; color :#ffffff;">@(Model.Access==0?"کارتابل مدیر":"کارتابل کاربر") : @(Model.name + " " +Model.Lname)  </span></center>
+
+
+        </button>
+        @foreach (var item in accsesstypes.OrderBy(a=>a.ordernumber))
+        {
+            if (Model.tbl_accesslevels.Where(a => a.access.accesstype == item.accesstype).SingleOrDefault() != null && Model.tbl_accesslevels.Where(a => a.access.accesstype == item.accesstype).SingleOrDefault().accessvalue == true)
+            {
+                <button id="item.accesstype" class="list-group-item btn-success" type="button" style=" background-color: #ffffff;" onclick="location.href='@Url.Action(@item.actionname, "admin")'">
+                    @item.accesscaption
+                </button>
+            }
+        }
+
+
+       
+
+    </div>
+
+</div>
+
+<div class="col-md-9 myfont">
+  
+    
+
+
+  
+
+
+</div>

@@ -1,0 +1,122 @@
+﻿<div class="panel">
+    <div class="panel-heading" id="chatwindowsheading" style="cursor:pointer; background-color:#ac0f0f; color:white; font-weight:800;">
+        <h4>گفتگوی آنلاین</h4>
+    </div>
+    <div class="panel-body">
+
+
+        <div id="alertinchatwindow" class="alert alert-danger" role="alert" supporterid="">لطفا صبر کنید تا یکی از اعضای تیم را به شما متصل کنیم.</div>
+        <div id="chatboxid" class="chatbox">
+          
+        </div>
+
+
+
+        <div class="textform">
+
+
+            <input type="text" id="messagetext" class="form-control" />
+
+        </div>
+
+
+
+        <button id="disconnectchat" type="submit" class="btn btn-danger cancel" >قطع ارتباط</button>
+
+    </div>
+</div>
+<style>
+    .msgtext {
+        margin-top: 15px;
+    }
+
+    .from {
+        color: #ac0f0f;
+        position: absolute;
+        right: 5px;
+        top: 0;
+        font-size: 16px;
+        font-weight: 900;
+    }
+
+    .time {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        font-size: 12px;
+    }
+
+    .chatbox {
+        height: 535px;
+        border: 2px solid #d7c7c7;
+        width: 100%;
+        border-radius: 10px;
+        overflow: scroll;
+    }
+
+    .textform {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 5px;
+        border: 1px solid #d7c7c7;
+        border-radius: 10px;
+        width: 100%;
+    }
+
+
+    .speech-bubble-right {
+        position: relative;
+        background: #41deee;
+        border-radius: .4em;
+        padding: 10px;
+        margin: 10px;
+        min-height: 40px;
+        margin-right: 30px;
+    }
+
+        .speech-bubble-right:after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 0;
+            height: 0;
+            border: 20px solid transparent;
+            border-left-color: #41deee;
+            border-right: 0;
+            margin-top: -20px;
+            margin-right: -20px;
+        }
+
+
+
+
+    .speech-bubble-left {
+        position: relative;
+        background: #eaa01b;
+        border-radius: .4em;
+        padding: 10px;
+        margin: 10px;
+        min-height: 40px;
+        float: left;
+        margin-left: 30px;
+    }
+
+        .speech-bubble-left:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 0;
+            height: 0;
+            border: 20px solid transparent;
+            border-right-color: #eaa01b;
+            border-left: 0;
+            margin-top: -20px;
+            margin-left: -20px;
+        }
+</style>
+<script>
+     
+
+</script>

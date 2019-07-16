@@ -1,0 +1,498 @@
+﻿@using SoltaniWeb.Models.Extensions
+
+@{
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    ViewBag.Title = "گزارش موجودی انبار وب";
+
+    int i = 1;
+    var today = DateTime.Now.ToPersianDate();
+
+}
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+<label class="control-label myfont" style="color:#ffffff;">گروه بندی بر اساس : </label>
+<select id="dynamicGrouping">
+    <option value="category">بخش</option>
+    <option value="anbar">انبار</option>
+    <option value="inventory">حد نصاب</option>
+    <option value="">بدون گروه بندی</option>
+
+
+</select>
+
+<div class="input-group">
+    <span class="input-group-addon" id="basic-addon2">نام کالا</span>
+    <input id="name" name="name" type="text" class="form-control" aria-label="...">
+    <div class="input-group-btn">
+
+        <button class="btn btn-default" type="button" onclick="SearchBykalaName()">Go!</button>
+    </div>
+
+</div>
+<br />
+
+<div class="row">
+    <div class="col-lg-12 col-xs-12">
+
+        <div dir="rtl" align="right">
+            <div id="rsperror"></div>
+            <table class="table table-responsive" id="list" cellpadding="0" cellspacing="0"></table>
+            <div id="pager" style="text-align:center;"></div>
+            <div class="btn-group" role="group" aria-label="...">
+                <a href="../admin/adminpanel" class="btn btn-default">پنل مدیریت</a>
+                <a href="../admin/manage_listkala" class="btn btn-primary">پنل مدیریت انبار وب</a>
+                <a href="../admin/manage_entity" class="btn btn-success">گزارش موجودی انبار وب</a>
+                <a href="../admin/reporttoorder" class="btn btn-danger">گزارش کالاهای کسری</a>
+                <a href="../admin/manage_sections" class="btn btn-default">مدیریت بخش محصولات</a>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body" id="bodymodal">
+
+                ...
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+    <script>
+
+
+
+
+        // قسمت مربوط به jqgrid
+
+        var searchOptions = ['eq', 'ne', 'lt', 'le', 'gt', 'ge', 'bw', 'bn', 'in', 'ni', 'ew', 'en', 'cn', 'nc'];
+        $(document).ready(function () {
+
+            $.jgrid.formatter.integer.thousandsSeparator = ',';
+            $.jgrid.formatter.number.thousandsSeparator = ',';
+            $.jgrid.formatter.currency.thousandsSeparator = ',';
+
+            $('#list').jqGrid({
+                caption: "گزارش موجودی کالاهای انبار تحت وب",
+                //url from wich data should be requested
+                url: '@Url.Action("get_entity", "admin")',
+                //url for edit operation
+                editurl: '@Url.Action("EditProduct", "admin")',
+                //type of data
+                datatype: 'json',
+                jsonReader: {
+                    root: "Rows",
+                    page: "Page",
+                    total: "Total",
+                    records: "Records",
+                    repeatitems: true,
+                    userdata: "UserData",
+                    id: "Id",
+                    cell: "RowCells",
+                    //loadonce: true,
+                },
+                //url access method type
+                mtype: 'GET',
+                //columns names
+                colNames: ['شناسه', 'بخش', 'نام کالا', 'کد کالا', 'انبار', 'فی فروش (ریال)', 'موجودی', 'حد نصاب موجودی', 'آخرین فی خرید','تاریخ آخرین خرید','آخرین فی فروش','تاریخ آخرین فروش'],
+                //columns model
+                colModel: [
+                    {
+                        name: 'id', index: 'id', align: 'center', width: 50,
+                        editable: false
+                        , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+
+                    },
+
+
+
+                    {
+                        name: 'category', index: 'category', align: 'right', width: 200,
+                        editable: true, edittype: 'text',
+                        search: true, stype: 'select',
+                        searchoptions: { sopt: searchOptions, dataUrl: '@Url.Action("catg_Select","admin")' },
+
+
+                    },
+
+                    {
+                        name: 'name', index: 'name', align: 'right', width: 380,
+                        editable: true, edittype: 'text',
+                        search: true, stype: 'text',
+                        searchoptions: { sopt: ['cn', 'nc'] },
+
+
+                    },
+                     {
+                         name: 'codename', index: 'codename', align: 'center', width: 70,
+                         editable: true, edittype: 'text',
+                         search: true, stype: 'text',
+                         searchoptions: { sopt: ['cn', 'nc'] },
+
+
+                     },
+                      {
+                          name: 'anbar', index: 'anbar', align: 'center', width: 80,
+                          editable: true, edittype: 'text',
+                          search: true, stype: 'select',
+                          searchoptions: { sopt: searchOptions, dataUrl: '@Url.Action("anbar_Select", "admin")' },
+                          summaryType: 'count', summaryTpl: '<b>تعداد اقلام: {0}</b>',
+
+                      },
+                       {
+                           name: 'sellcost', index: 'sellcost', align: 'center', width: 150,
+                           editable: false
+                        , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+                           summaryType: 'avg', summaryTpl: '<b>متوسط : {0}</b>',
+                           formatter: 'currency',
+                           formatoptions:
+                           {
+                               decimalSeparator: '.',
+                               thousandsSeparator: ',',
+                               decimalPlaces: 0,
+                               prefix: ''
+                           },
+
+
+                       },
+
+                      {
+                          name: 'Totalentity', index: 'Totalentity', align: 'center', width: 100,
+                          editable: false
+                        , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+                          summaryType: 'sum', summaryTpl: '<b>جمع : {0}</b>',
+
+                      },
+                      {
+                          name: 'inventory', index: 'inventory', align: 'center', width: 130,
+                          editable: false
+                        , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+                          summaryType: 'sum', summaryTpl: '<b>جمع : {0}</b>',
+
+                      },
+                      {
+                          name: 'lastbuyprice', index: 'lastbuyprice', align: 'center', width: 130,
+                          editable: false
+                        , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+                          summaryType: 'avg', summaryTpl: '<b>متوسط : {0}</b>',
+                          formatter: 'currency',
+                          formatoptions:
+                          {
+                              decimalSeparator: '.',
+                              thousandsSeparator: ',',
+                              decimalPlaces: 0,
+                              prefix: ''
+                          },
+
+
+                      },
+                {
+                    name: 'lastdate', index: 'lastdate', align: 'center', width: 120,
+                    editable: true, edittype: 'text',
+                    search: true, stype: 'text',
+                  
+                },
+                  {
+                      name: 'lastsellprice', index: 'lastsellprice', align: 'center', width: 130,
+                      editable: false
+                        , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+                      summaryType: 'avg', summaryTpl: '<b>متوسط : {0}</b>',
+                      formatter: 'currency',
+                      formatoptions:
+                      {
+                          decimalSeparator: '.',
+                          thousandsSeparator: ',',
+                          decimalPlaces: 0,
+                          prefix: ''
+                      },
+
+
+                  },
+                {
+                    name: 'lastdatesell', index: 'lastdatesell', align: 'center', width: 120,
+                    editable: true, edittype: 'text',
+                    search: true, stype: 'text',
+
+                }
+                      //,
+                      //{
+                      //    name: 'kalavalues', index: 'kalavalues', align: 'center', width: 250,
+                      //    editable: false
+                      //  , search: true, stype: 'text', searchoptions: { sopt: searchOptions },
+                      //    summaryType: 'sum', summaryTpl: '<b>جمع : {0}</b>',
+                      //    formatter: 'currency',
+                      //    formatoptions:
+                      //    {
+                      //        decimalSeparator: '.',
+                      //        thousandsSeparator: ',',
+                      //        decimalPlaces: 0,
+                      //        prefix: ''
+                      //    },
+
+
+                      //}
+
+                ],
+                //pager for grid
+                pager: $('#pager'),                                                                   
+                height: 450,
+                //number of rows per page
+                rowNum: 100000000,
+                rowList: [10, 20, 50, 100, 'All'],
+
+                //initial sorting column
+                sortname: 'codename',
+                //initial sorting direction
+                sortorder: 'ASC',
+                //we want to display total records count
+                viewrecords: true,
+                width: 'auto',
+
+                //hidegrid: false,
+                direction: "rtl",
+                gridview: true,
+                rownumbers: true,
+                footerrow: true, // the footer will be used for Grand Total
+                userDataOnFooter: true, // show custom data from JSON response to the footer - the Grand Total
+
+                grouping: true,
+                groupingView: {
+                    groupField: ['category'],
+                    groupOrder: ['asc'],
+                    groupText: ['<b>{0} - [تعداد کالا : {1} قلم]   </b>'],
+                    groupDataSorted: true,
+                    groupColumnShow: [false],
+                    groupCollapse: true,
+                    groupSummary: [true],
+                    showSummaryOnHide: true
+                },
+                loadComplete: function () {
+                    //change alternate rows color
+                    $("tr.jqgrow:odd").css("background", "#E0E0E0");
+                    $("tr.jqfoot td").css({
+                        "background": "#2f4f4f",
+                        "color": "#FFF"
+                    });
+                    $(".ui-pg-selbox option[value='All']").val(100000000);
+
+                    $("tr.footrow td").css({
+                        "background": "black",
+                        "color": "#FFF",
+                        "font-family": 'B Titr',
+                        "font-size": '16px',
+                    });
+
+
+
+                    ///
+                    var reportSum4 = jQuery(list).jqGrid('getCol', 'kalavalues', false, 'sum');
+                    //var reportSum = jQuery(list).jqGrid('getCol', 'Totalentity', false, 'sum');
+                    var reportSum2 = jQuery(list).jqGrid('getCol', 'inventory', false, 'sum');
+
+                    var reportcount = jQuery("#list").jqGrid('getGridParam', 'reccount');
+                    jQuery(list).jqGrid('footerData', 'set',
+                    {
+
+                        kalavalues: reportSum4,
+                        //Totalentity: reportSum,
+                        inventory: reportSum2,
+                        anbar: reportcount,
+                        name: 'جمع کل:'
+
+                    });
+
+                    ///
+
+
+
+
+                },
+                loadError: function (xhr, st, err) {
+                    jQuery("#rsperror").html("Type: " + st + "; Response: " + xhr.status + " " + xhr.statusText);
+                },
+
+
+            }).navGrid(
+                    '#pager',
+                    //enabling buttons
+                    { add: false, del: false, edit: false, search: true },
+                    //edit option
+                    {
+                        width: 500, height: 400, checkOnUpdate: true, checkOnSubmit: true,
+                        beforeShowForm: function (form) {
+                            centerDialog(form, $('#list'));
+                        }
+                    },
+                    //add options
+                    {
+                        width: 500, height: 400, url: '@Url.Action("addnewitem", "admin")',
+                        reloadAfterSubmit: true, checkOnUpdate: true, checkOnSubmit: true,
+                        closeAfteradd: true,
+                        beforeShowForm: function (form) {
+                            centerDialog(form, $('#list'));
+                        }
+                    },
+                    //delete options
+                    {
+                        url: '@Url.Action("DeleteProduct", "admin")', reloadAfterSubmit: false
+                    },
+                    {
+                        // search options
+                        multipleSearch: true,
+                        closeOnEscape: true,
+                        closeAfterSearch: true,
+                        ignoreCase: true
+                    }).jqGrid('navButtonAdd', '#pager', {
+                        caption: "", buttonicon: "ui-icon-print", title: "خروجی پی دی اف",
+                        onClickButton: function () {
+                            $("#list").jqGrid('excelExport', { url: '@Url.Action("get_entity", "admin")' });
+                        }
+                    }).jqGrid('navButtonAdd', '#pager',
+                            {
+                                caption: "", title: "Reorder Columns",
+                                buttonicon: "ui-icon-tag",
+                                onClickButton: function () {
+                                    jQuery("#list").jqGrid('columnChooser');
+                                }
+                            }).jqGrid('gridResize', { minWidth: 400 });
+        });
+        function getHiddenColumnsList() {
+            var colModel = $("#list").jqGrid('getGridParam', 'colModel');
+            var hiddenColumns = new Array();
+
+            if (!colModel)
+                return hiddenColumns;
+
+            for (var i = 0; i < colModel.length; i++) {
+                if (colModel[i].hidden) {
+                    hiddenColumns.push(colModel[i].name);
+                }
+            }
+            return hiddenColumns;
+        }
+
+        function centerDialog(form, grid) {
+            var dlgDiv = $("#editmod" + grid[0].id);
+            var parentDiv = dlgDiv.parent(); // div#gbox_list
+            var dlgWidth = dlgDiv.width();
+            var parentWidth = parentDiv.width();
+            var dlgHeight = dlgDiv.height();
+            var parentHeight = parentDiv.height();
+            var parentTop = parentDiv.offset().top;
+            var parentLeft = parentDiv.offset().left;
+            dlgDiv[0].style.top = Math.round(parentTop + (parentHeight - dlgHeight) / 2) + "px";
+            dlgDiv[0].style.left = Math.round(parentLeft + (parentWidth - dlgWidth) / 2) + "px";
+        }
+
+
+        //function toolbarSearching() {
+        //    $('#list').filterToolbar({
+        //        groupOp: 'OR',
+        //        defaultSearch: "cn",
+        //        autosearch: true,
+        //        searchOnEnter: true,
+        //        searchOperators: true, // فعال سازي منوي اپراتورها
+        //        stringResult: true // وجود اين سطر سبب مي‌شود تا اپراتورها به سرور ارسال شوند
+        //    });
+        //};
+
+        function singleSearching() {
+            $('#list').searchGrid({
+                closeAfterSearch: true
+            });
+        };
+
+        function advancedSearching() {
+            $('#list').searchGrid({
+                multipleSearch: true,
+                closeAfterSearch: true
+            });
+        };
+
+
+
+        function sumkala() {
+            //alert("hi")
+
+            $.ajax({
+                url: '/products/sumkala',
+                type: 'POST',
+                dataType: "json",
+                data: {},
+                error: function (err) {
+                    alert(err.status + "   " + err.statusText);
+                }
+            }).done(function (msg) {
+
+                $("#sum").html('');
+
+                //$("#topiccolor").html(" <p id='imagegallery' class='bg-success' style=' text-align :center ; cursor :pointer;'>.:: کالیته هایگلاس ترک AGT ::.  -  <span id='baseon'>چیدمان بر اساس شماره کد</span></p>")
+                $.each(msg, function (index, val) {
+                    //alert(val.name)
+                    if (catgid != 2) {
+                        //alert("NO ack")
+                        $("#sum").append(" <div class='col-lg-3 col-md-3 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-9 col-md-9 col-sm-9 col-xs-9'><a href='#'><h5 style='text-align :center ;'>" + val.name + " </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'> " + val.code + " </h5></a></div>      <div class='col-lg-9 col-md-9 col-sm-9 col-xs-9' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار - <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' /></a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                    } else {
+                        //alert("ack")
+                        $("#imagegallerydetaile").append(" <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='font-size:8px;'> <a href='/samples/samples?id01=" + val.id + "'><h5 style='text-align:center; font-size:12px;'>" + val.name + "-" + val.code + " </h5></a>            </div><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' />اسلاید شو</a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                    }
+
+                });
+            });
+
+        }
+
+
+        $("#name").on('change keyup paste', function () {
+            SearchBykalaName();
+        });
+
+        function SearchBykalaName() {
+            //  Fetch the text from our <input> control
+            var searchString = $("#name").val();
+
+            //  Prepare to pass a new search filter to our jqGrid
+            var f = { groupOp: "AND", rules: [] };
+
+            //  Remember to change the following line to reflect the jqGrid column you want to search for your string in
+            //  In this example, I'm searching through the UserName column.
+
+            f.rules.push({ field: "name", op: "cn", data: searchString });
+
+            var grid = $('#list');
+            grid[0].p.search = f.rules.length > 0;
+            $.extend(grid[0].p.postData, { filters: JSON.stringify(f) });
+            grid.trigger("reloadGrid", [{ page: 1 }]);
+        }
+
+
+        $("#dynamicGrouping").change(function () {
+            var groupingName = $(this).val();
+            if (groupingName) {
+                $('#list').jqGrid('groupingGroupBy', groupingName, {
+                    groupOrder: ['desc'],
+                    groupColumnShow: [false],
+                    groupCollapse: true
+                });
+            } else {
+                $('#list').jqGrid('groupingRemove');
+            }
+        });
+    </script>
+
+

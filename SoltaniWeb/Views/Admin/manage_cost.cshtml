@@ -1,0 +1,364 @@
+﻿@model IQueryable<SoltaniWeb.Models.Domain.tbl_products>
+
+@using SoltaniWeb.Models.Domain
+@{
+    ViewBag.Title = "مدیریت قیمت محصولات";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+
+}
+
+@*<script src="~/Scripts/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>*@
+<script src="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+<link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/Scripts/sorttable.js"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card myfont mt-4">
+                <div class="card-header text-center" style="background-color:#332b3a;color:#fff"> مدیریت قیمت محصولات</div>
+                <div class="card-body px-5">
+                    <br />
+                    <form role="search" action="~/admin/insertpricetable" method="get" class="form-horizontal" id="myform">
+                        <div class="form-horizontal">
+                            <div class="form-group" style="padding:20px 50px;max-width:1000px;margin:auto">
+                                <div class="row">
+                                    <label for="categoryname" class="col-md-2 control-label">بخش مورد نظر</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" id="categoryname">
+
+                                        <input type="hidden" class="form-control" id="categoryid" name="categoryid">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" form-group">
+                                <div class="text-center">
+                                    <button type="submit" class="btn" style="background-color:#ffca01;color:#fff" id="searchcategory">نمایش محصولات</button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+
+                    <script>
+            $('#myform').on('click', '#searchcategory', function (e) {
+
+                e.preventDefault();
+
+                var _this = $(this);
+                var _form = _this.closest("form");
+                var indata = _form.serializeArray();
+
+
+                jQuery.post(_form.attr("action"), indata, function (data) {
+
+                    $(pricetableproducts).html(data)
+
+
+                })
+
+            })
+
+                    </script>
+                    <div class="card mt-5" style="max-width:1400px;margin:auto;border:none">
+                        <div class="card-header text-center" style="background-color:#6a95cc;color:#fff">فرم تعیین قیمت جدید به صورت گروهی</div>
+                        <div class="card-body">
+                            <br />
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="categoryname1" class="col-md-2 control-label text-left">بخش مورد نظر</label>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control " disabled id="categoryname1">
+
+                                            <input type="hidden" class="form-control" id="categoryid1" name="categoryid">
+                                        </div>
+                                        <label for="productname" class="col-md-2 control-label text-left">کلاس</label>
+                                        <div class="col-md-4">
+
+                                            <select id="grade" class="form-control"></select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="productname" class="col-md-2 control-label text-left"> قیمت فروش جدید</label>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" id="lastcellcost" name="lastcellcost">
+                                        </div>
+                                        <label for="productname" id="lastsellDate" class="col-md-1 control-label "> </label>
+                                        <label for="productname" class="col-md-2 control-label text-left"> قیمت خرید جدید</label>
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" id="lastbuycost" name="lastbuycost">
+                                        </div>
+                                        <label for="productname" class="col-md-1 control-label " id="lastbuyDate"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label for="productname" class="col-md-2 control-label text-left">محصولات</label>
+                                        <div class="col-md-4">
+                                            <select id="productsinthisgrade" class="form-control"></select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="mt-5 text-center">
+                                        <input type="submit" value="ثبت و ذخیره تغییرات" id="updatecostbygrade" class="btn" style="background-color:#ffca01;color:#fff" />
+                                        @* <input id="Btn_Reset" type="button" onclick="ClearEdit()" value="ابطال" class="btn btn-default" />*@
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-footer text-center" style="border-top:none">
+                            <button class="btn btn-danger" id="deleteselect">حذف انتخاب</button>
+                            <a href="/Reports/pricelistbygrade" class="btn btn-success" target="_blank">پرینت</a>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <br />
+            <div id="pricetableproducts">
+
+                @Html.Partial("_pricetable", Model)
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#categoryname").autocomplete({
+
+            source: function (request, response) {
+                $.ajax({
+                    dataType: "json",
+                    type: 'Post',
+                    url: '@Url.Action("searchcategory", "admin")',
+                    data: { text: request.term },
+                    success: function (data) {
+                        //var s = JSON.stringify(data)
+                        //alert(s)
+                        $("#categoryname").removeClass('ui-autocomplete-loading');
+                        // hide loading image
+
+                        response($.map(data, function (item) {
+                            return {
+                                id: item.id,
+
+                                value: item.value,
+
+                                //number: item.number,
+                                //ave_cost: item.ave_cost,
+                                //grade: item.grade,
+                                //fgrade: item.fgrade
+                            }
+                        }));
+                    },
+
+
+                    error: function (data) {
+                        $("#categoryname").removeClass('ui-autocomplete-loading');
+                    }
+                });
+            },
+
+            minLength: 1,
+            select: function (event, result) {
+
+                $("#categoryid").val(result.item.id);
+                var catgid = result.item.id;
+                jQuery.post('/admin/getclass', { catgidstring: catgid }, function (restult2) {
+                    var html = ""
+                    $(restult2).each(function (idx, p) {
+
+                        html += '<option value="' + p.pgrade + '">' + p.pgrade + '</option>'
+
+
+                    })
+                    $(grade).html(html)
+                    $(categoryname1).val($(categoryname).val())
+                    $(categoryid1).val($(categoryid).val())
+                    $(lastcellcost).val('')
+                    $(lastbuycost).val('')
+                    $(lastbuyDate).html('')
+                    $(lastsellDate).html('')
+                    $(productsinthisgrade).html('')
+                })
+            },
+            open: function () { },
+            close: function () { },
+            focus: function (event, ui) { },
+
+        });
+    });
+
+
+
+
+</script>
+
+<script>
+    $(function () {
+        $("#categoryname1").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    dataType: "json",
+                    type: 'Post',
+                    url: '@Url.Action("searchcategory", "admin")',
+                    data: { text: request.term },
+                    success: function (data) {
+                        $("#categoryname1").removeClass('ui-autocomplete-loading');
+                        // hide loading image
+
+                        response($.map(data, function (item) {
+                            return {
+                                id: item.id,
+
+                                value: item.value,
+                                //lable: item.lable
+                                //val: item.split('-')[1]
+                                number: item.number,
+                                ave_cost: item.ave_cost,
+                                grade: item.grade,
+                                fgrade: item.fgrade
+                            }
+                        }));
+                    },
+
+
+                    error: function (data) {
+                        $("#categoryname1").removeClass('ui-autocomplete-loading');
+                    }
+                });
+            },
+
+            minLength: 1,
+            select: function (event, result) {
+                $("#categoryid1").val(result.item.id);
+                $("#number").val(result.item.number);
+                $("#cost").val(result.item.ave_cost);
+                $("#ngrade").val(result.item.grade);
+                $("#grade").val(result.item.fgrade);
+
+            },
+            open: function () { },
+            close: function () { },
+            focus: function (event, ui) { },
+
+        });
+    });
+
+
+</script>
+<script>
+    $(updatecostbygrade).click(function (e) {
+        e.preventDefault();
+        var grade = $('#grade').val()
+
+        var catgid = $(categoryid1).val()
+        var sellcost = $(lastcellcost).val()
+        var buycost = $(lastbuycost).val()
+        jQuery.post('/admin/updatecostbygrade', { grade: grade, catgid: catgid, buycost: buycost, sellcost: sellcost }, function (result) {
+            if (result.messageid == '0') {
+
+                $(messagenotokbody).html(result.messagetext)
+                $(messagenotok).modal()
+            } else {
+
+                $(messageokbody).html(result.messagetext)
+                $(messageok).modal()
+
+                //$(messageokbody).html('عملیات با موفقیت انجام شد');
+                //$(messageok).modal();
+            }
+
+        })
+
+
+
+    })
+
+    $(grade).click(function () {
+        var grade = $(this).val()
+        var catgid = $(categoryid1).val()
+        jQuery.post('/admin/getlastinfocatg', { grade: grade, catgid: catgid }, function (result) {
+
+            jQuery.post('/admin/getproductsofthisgrade', { grade: grade, catgid: catgid }, function (products) {
+                var html = ''
+                $(products).each(function (idx, p) {
+                    html += '<option value="' + p.p_id + '">' + p.pname + '- کد:' + p.pcode + '</option>'
+                })
+                $(productsinthisgrade).html(html)
+            })
+
+
+            if (result == true) {
+                $(lastcellcost).val('')
+                $(lastsellDate).html('')
+                $(lastbuycost).val('')
+                $(lastbuyDate).html('')
+            } else {
+                $(lastcellcost).val(result.lastsellcost)
+                $(lastsellDate).html(result.lastselldate)
+                $(lastbuycost).val(result.lastbuycost)
+                $(lastbuyDate).html(result.lastbuydate)
+            }
+
+        })
+    })
+    $(grade).change(function () {
+        var grade = $(this).val()
+        var catgid = $(categoryid1).val()
+        jQuery.post('/admin/getlastinfocatg', { grade: grade, catgid: catgid }, function (result) {
+
+            jQuery.post('/admin/getproductsofthisgrade', { grade: grade, catgid: catgid }, function (products) {
+                var html = ''
+                $(products).each(function (idx, p) {
+                    html += '<option value="' + p.p_id + '">' + p.pname + '- کد:' + p.pcode + '</option>'
+                })
+                $(productsinthisgrade).html(html)
+            })
+
+
+            if (result == true) {
+                $(lastcellcost).val('')
+                $(lastsellDate).html('')
+                $(lastbuycost).val('')
+                $(lastbuyDate).html('')
+            } else {
+                $(lastcellcost).val(result.lastsellcost)
+                $(lastsellDate).html(result.lastselldate)
+                $(lastbuycost).val(result.lastbuycost)
+                $(lastbuyDate).html(result.lastbuydate)
+            }
+
+        })
+    })
+
+
+    $('#deleteselect').click(function () {
+
+        $(categoryname).val('')
+        $(categoryid).val('')
+        $(categoryname1).val('')
+        $(categoryid1).val('')
+        $(grade).html('')
+
+
+        $(lastcellcost).val('')
+        $(lastbuycost).val('')
+        $(lastbuyDate).html('')
+        $(lastsellDate).html('')
+        $(productsinthisgrade).html('')
+    })
+
+</script>

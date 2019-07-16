@@ -1,0 +1,37 @@
+﻿@using SoltaniWeb.Models.structs
+@model IEnumerable<UserPanelViewModel>
+@{ 
+    var frecord = Model.FirstOrDefault();
+}
+
+
+<div class="collapseProfileBox">
+    <div class="profileBoxHeader mb-3">
+        <div style="position:relative">
+            <img src="@(frecord.image!=null?string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(frecord.image)): "~/soltanistatic/pictures/icon/user.png")" />
+            <div class="absoluteLogout">
+                <p id="LogOut" style="cursor:pointer"><a href="/Account/LogOut"><i class="fas fa-sign-out-alt fa-lg ml-1"></i>خروج</a></p>
+            </div>
+            <div class="absoluteName">
+                <p><span>@Model.FirstOrDefault().fullname</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-0 ">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-12 col-lg-6">
+
+                <p><a href="/admin/@item.actionname"><i class="fas fa-minus fa-lg mx-2"></i>@item.accesscaption</a></p>
+
+            </div>
+
+        }
+
+    </div>
+
+</div>
+
+
+

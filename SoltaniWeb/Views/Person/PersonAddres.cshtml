@@ -1,0 +1,94 @@
+﻿@using SoltaniWeb.Models.structs.PersonVM
+
+<div class="tab-pane fade  show active" id="addDatabase">
+
+    <div class="k-rtl">
+
+        @(Html.Kendo().Grid<PersonAddressViewModel>()
+                              .Name("grid_personAddress")
+                              .Columns(columns =>
+                              {
+
+                                  columns.Bound(p => p.Address).Filterable(filter =>
+                                  {
+                                      filter.Operators(op =>
+                                      {
+                                          op.ForString(str =>
+                                          {
+                                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                                          });
+
+
+                                      });
+                                  }).Width(300).Title("آدرس");
+                                  columns.Bound(p => p.PostalCode).Filterable(filter =>
+                                  {
+                                      filter.Operators(op =>
+                                      {
+                                          op.ForString(str =>
+                                          {
+                                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                                          });
+
+
+                                      });
+                                  }).Width(150).Title("کد پستی");
+                                  columns.Bound(p => p.Phone).Filterable(filter =>
+                                  {
+                                      filter.Operators(op =>
+                                      {
+                                          op.ForString(str =>
+                                          {
+                                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                                          });
+
+
+                                      });
+                                  }).Width(150).Title("تلقن");
+                                  columns.Bound(p => p.Phone2).Filterable(filter =>
+                                  {
+                                      filter.Operators(op =>
+                                      {
+                                          op.ForString(str =>
+                                          {
+                                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                                          });
+
+
+                                      });
+                                  }).Width(150).Title("تلقن");
+                                  columns.Bound(p => p.Phone3).Filterable(filter =>
+                                  {
+                                      filter.Operators(op =>
+                                      {
+                                          op.ForString(str =>
+                                          {
+                                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                                          });
+
+
+                                      });
+                                  }).Width(150).Title("تلقن");
+                              })
+                              .Pageable(pageable => pageable
+                                  .Refresh(true)
+                                  .PageSizes(new int[] { 10, 20})
+                                  .ButtonCount(10))
+                              .Sortable()
+                              // .Events(ev => ev.Change("onChange"))
+                              .Scrollable()
+                              .Resizable(resizable => resizable.Columns(true))
+                              .Filterable()
+                              .DataSource(dataSource => dataSource
+                                  .Ajax()
+                                  .PageSize(10)
+                                  .Model(model => model.Id(p => p.Id))
+                                  .Read(read => read.Action("PersonAddres_Read", "Person", new { personId = ViewBag.personId }))
+                              ))
+    </div>
+ </div>

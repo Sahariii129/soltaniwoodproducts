@@ -1,0 +1,146 @@
+﻿
+@using SoltaniWeb.Models.structs
+
+@model IEnumerable<applicantstructs>
+@{
+    var totalpage = (int)ViewBag.totalpages;
+}
+
+@*<style>
+    /*.firstrowofsubtable{
+        background-color:#cbc4c4;
+    }
+    .result{
+        width : 800px;
+    }*/
+</style>*@
+
+
+
+
+@foreach (var item in Model)
+{
+<tr class="listrow" listid="@item.app_id" totalpage="@totalpage">
+    <td class="phead hidden-xs idnumber">
+        <span listid="@item.app_id" style="color:green;" class="fas fa-plus subgridexpand"></span>
+        @item.app_id
+
+
+
+    </td>
+    <td class="phead    f-name">@item.f_name </td>
+    <td class="phead hidden-xs   l-name ">@item.l_name</td>
+    <td class="phead hidden-xs  codemelli">@item.codemelli</td>
+
+    <td class="phead  cellphone">@item.cellnumber</td>
+    <td class="phead  sex">@item.sex</td>
+    <td class="phead  jobname">@item.Jobname</td>
+    <td class="phead hidden-xs   birthday">@item.birthday</td>
+    <td class="phead  sabtdate">@item.sabtdate</td>
+
+    <td class="phead hidden-xs  Toolscell">
+        @*<button class="btn btn-success" id="showdetails">مشاهده جزئیات</button>*@
+        <a target="_blank" href=@("/Home/Recruitment?codemelli=" + item.codemelli + "&cellnumber=" + item.cellnumber) class="button"><img src="/Content/img/icon/edit.png"/></a>
+    </td>
+</tr>
+
+}
+
+<tr class="Table-Abstract">
+
+    @*<td colspan="7" class="totalpnumberlbl">جمع کل</td>
+        <td class="totalpnumber" id="totalpnumber">@(Model.Sum(a => a.kalanumberm))</td>*@
+
+</tr>
+<script>
+    ///
+
+    
+ 
+       
+
+
+    var objects = $('.prow.kalanumber')
+    $.each(objects, function (ids, item) {
+        var number = $(tdis).html()
+
+        if (number < 0) {
+
+            $(tdis).parent().addClass('out')
+
+        }
+
+    })
+
+
+
+
+    $('.subgridexpand').click(function () {
+        var appid = $(this).attr('listid')
+        if ($(this).hasClass('fa-plus')) {
+            $(this).removeClass('fa-plus')
+            $(this).addClass('fa-minus')
+
+        } else {
+            $(this).removeClass('fa-minus')
+            $(this).addClass('fa-plus')
+            $('[app_details="' + appid + '"]').css('display', 'none')
+
+            return;
+        }
+        var thisobj = $(this).parent().parent()
+        //var html = '<tr class="app_details" app_details="' + appid + '">'
+       
+        jQuery.post('/admin/GetHistoryofAppconnect', { appid: appid }, function (data) {
+            var shtml = ''
+            var toolsband=''
+            $.each(data, function (idx, item) {
+                shtml += '<tr record="'+item.id+'">'
+                shtml += '<td><input type="checkbox" select/></td>'
+                shtml += '<td class="appid">' + item.appid + '</td>'
+                shtml += '<td class="howtoconnect">' + item.howtoconnect + '</td>'
+                shtml += '<td class="user">' + item.user + '</td>'
+                shtml += '<td class="date">' + item.date + '</td>'
+                shtml += '<td class="time">' + item.time + '</td>'
+                shtml += '<td class="result">' + item.result + '</td>'
+                shtml += '</tr>'
+            })
+
+            jQuery.post('/admin/toshowtoolsband', { navigation: false, print: false, search: false, refresh: false }, function (e) {
+                toolsband = e
+            
+            
+            var html = '<tr class="app_details" app_details="' + appid + '">'
+            html += '<td class="phead hidden-xs idnumber">'
+            html += '</td>'
+            html += '<td colspan="9">'
+                html += '<table class="table-responsive table-bordered table-condensed subtable" style="display:table">'
+                
+                html += '<tr class="firstrowofsubtable" style="background-color:#332b3a;color:#fff">'
+                html +='<th><input type="checkbox" selectall  /></th>'
+            html += '<th>شناسه متقاضی</th>'
+            html += '<th>نحوه ارتباط</th>'
+            html += '<th>کاربر</th>'
+            html += '<th>تاریخ</th>'
+            html += '<th>ساعت</th>'
+                html += '<th class="result" style="width : 1000px;">توضیحات</th>'
+                html += '</tr>'
+                
+                html += shtml
+               
+            html += '</table>'
+            html += '<span toolsband="' + appid + '" >' + toolsband +'</span>'
+            html += '</td>'
+            html += '</td>'
+            html += '</tr>'
+
+        $(html).insertAfter(thisobj)
+            })
+        })
+
+    })
+
+
+
+
+</script>

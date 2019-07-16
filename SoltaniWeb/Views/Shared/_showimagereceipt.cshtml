@@ -1,0 +1,8 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.Extensions
+@model tbl_transportationdeliverinfo
+@if (Model.receipt_img != null)
+{
+
+    <img src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.receipt_img)))" class="img-thumbnail" id="userimg" />
+}

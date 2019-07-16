@@ -1,0 +1,33 @@
+﻿@using SoltaniWeb.Models.structs.PersonVM
+
+<div class="tab-pane fade  show active" id="addDatabase">
+
+    <div class="k-rtl">
+
+        @(Html.Kendo().Grid<PersonInformationSettingViewModel>()
+                                      .Name("grid_personAddress")
+                                      .Columns(columns =>
+                                      {
+
+                                  //  columns.Select().Width(50);
+                                          columns.Bound(x => x.Id).Filterable(false).Width(70);
+                                          columns.Bound(p => p.PropertyName).Title("نام اطلاعات").Filterable(false).Width(150);
+                                          columns.Bound(p => p.PropertyValue).Filterable(false).Width(150);
+                                      })
+                                      .Pageable(pageable => pageable
+                                          .Refresh(true)
+                                          .PageSizes(new int[] { 10, 20})
+                                          .ButtonCount(10))
+                                      .Sortable()
+                                      // .Events(ev => ev.Change("onChange"))
+                                      .Scrollable()
+                                      .Resizable(resizable => resizable.Columns(true))
+                                      .Filterable()
+                                      .DataSource(dataSource => dataSource
+                                          .Ajax()
+                                          .PageSize(10)
+                                          .Model(model => model.Id(p => p.Id))
+                                          .Read(read => read.Action("PersonInformation_Read", "Person", new { personId = ViewBag.personId }))
+                                      ))
+    </div>
+</div>

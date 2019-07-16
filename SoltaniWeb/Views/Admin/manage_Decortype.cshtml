@@ -1,0 +1,68 @@
+﻿@model IEnumerable<SoltaniWeb.Models.Domain.tbl_DecorType>
+
+@{
+    ViewBag.Title = "انواع طرح های دکوراسیون";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    int i = 1;
+}
+<script src="~/Scripts/sorttable.js"></script>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between my-4">
+                <h2 style="color:#6a95cc;font-weight:bold">انواع طرح های دکوراسیون</h2>
+                <p>
+                    @Html.ActionLink("افزودن + ", "adddecortype", "admin", new { @style = "cursor :pointer; text-decoration :none;color:#ffca01 !important" })
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class=" col-md-12">
+            <table class="table table-responsive sortable" style="display:table">
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.keywords)
+                    </th>
+
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                            @i
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.keywords)
+                        </td>
+
+                        <td>
+                            <a style=" cursor :pointer; text-decoration :none;" href="/admin/Edit_decortype/@item.id">Edit</a>|
+
+
+                            <a style=" cursor :pointer; text-decoration :none;" data-ajax="true" data-ajax-method="POST" data-ajax-confirm="آیا مطمئن به حذف هستید؟" href="/admin/deletedecortype/@item.id">Delete</a>|
+                        </td>
+                    </tr>
+
+                    i++;
+
+                }
+
+            </table>
+
+        </div>
+    </div>
+</div>
+@Html.ActionLink("بازگشت به پنل مدیریتی", "adminpanel", "admin", new { @style = "cursor :pointer; text-decoration :none;" })

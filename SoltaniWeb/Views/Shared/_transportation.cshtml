@@ -1,0 +1,55 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository
+@model IEnumerable<tbl_transportationcost>
+
+
+<table id="transprotion_table" class="table table-responsive table-bordered" cartid="@(Model.Count()>0? Model.FirstOrDefault().cart_id:0)" distance="@(Model.Count()>0? Model.FirstOrDefault().distance:0)">
+    <tr>
+        <td colspan="6" style="text-align:center; background-color:#11cf1c;">مشخصات چگونگی حمل سفارش شما </td>
+    </tr>
+    <tr>
+        <td>نوع وسیله نقلیه</td>
+        <td>تعداد</td>
+        <td>کرایه هر دستگاه </td>
+        <td>کرایه کل </td>
+        <td class="hidden-xs">مسافت - km </td>
+    </tr>
+    @if (Model.Count() > 0)
+    {
+
+        foreach (var item in Model)
+        {
+            <tr class="mytranscost">
+                <td><span style="color:#ff0000;" id="vehiclename">@item.vehicle_.vehiclename</span></td>
+                <td><span style="color:#ff0000;" id="numbervehicle">@item.number</span></td>
+                <td><span style="color:#ff0000;" id="tcost">@item.tcost</span> </td>
+                <td><span style="color:#ff0000;" id="totaltcost">@item.totaltcost</span> </td>
+                <td class="hidden-xs"><span style="color:#ff0000;" id="distanceintable">@item.distance </span> </td>
+
+            </tr>
+        }
+
+
+        <tr>
+            <td colspan="3">
+                
+                جمع کل کرایه :
+            </td>
+            <td id="totalcostintable">
+
+                @Model.Sum(a => a.totaltcost)
+            </td>
+
+         
+        </tr>
+        <tr>
+
+    <td class="buttontoapply" colspan="5">
+        <input type="button" class="btn btn-success" id="transportationcostupdate" value="به روز رسانی هزینه حمل" />
+
+        <input type="button" class="btn btn-danger" id="transportationcostdel" value="حذف هزینه حمل" />
+
+    </td>
+        </tr>
+    }
+</table>

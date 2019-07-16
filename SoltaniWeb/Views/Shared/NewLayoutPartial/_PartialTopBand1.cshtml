@@ -1,0 +1,40 @@
+﻿
+<div class="TopBand1">
+
+    @if (User.Identity.IsAuthenticated)
+    {
+    <div class="UserMenudiv">
+        <p>
+            <span>
+                <i class="fas fa-bars UserMenu"></i>
+
+            </span>
+            <span>
+                @User.Identity.Name, خوش آمدید
+            </span>
+            |
+            <span>
+                <a href="#" id="LogOut">خروج</a>
+            </span>
+        </p>
+    </div>
+       
+    }
+    else
+    {
+        <div class="ContactBTNholder">
+            <p>
+                <span>
+                    <a href="#" id="LogIn">ورود</a>
+                </span>
+                |
+                <span>
+                    <a href="#" id="Register">ثبت نام</a>
+                </span>
+            </p>
+        </div>
+            }
+
+
+
+    </div>

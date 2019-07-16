@@ -1,0 +1,54 @@
+﻿@{
+    //ViewBag.Title = "کالای چوب سلطانی / صفحه ورود";
+    ViewBag.howtoindex = "noindex";
+    Layout = "~/Views/shared/_layoutbootstarplogin.cshtml";
+}
+@using SoltaniWeb.Models.structs
+@model email
+
+<br />  <br /> <br />
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<div class="col-lg-offset-4 col-lg-4 col-md-offset-4 col-md-6 col-sm-12 col-sx-12" style="padding: 20px;">
+    <div class="panel panel-primary" style="border:none !important;margin:5px;">
+
+
+        <div class="panel-heading">
+            <h4 style=" text-align :center; color:#ffffff;">بخش بازیابی حساب کاربری</h4>
+        </div>
+
+        <div class="panel-body">
+            <br />
+            <form action="/home/emailforrecoveryaccount" style="border:none !important;">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="Email" class="myfont col-md-5" style="margin-bottom:10px;">آدرس ایمیل خود را وارد نمایید :</label>
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(Model => Model.emailaddress, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(Model => Model.emailaddress, "", new { @class = "text-danger" })
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+
+                <button id="btenter" type="submit" class="btn btn-success" style=" margin:3px;">ارسال ایمیل بازیابی حساب کاربری </button>
+
+
+            </form>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+

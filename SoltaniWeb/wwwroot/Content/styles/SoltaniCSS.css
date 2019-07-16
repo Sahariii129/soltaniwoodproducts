@@ -1,0 +1,825 @@
+﻿@font-face {
+    font-family: 'Iranian Sans';
+    src: url('../font/irsans.ttf') format("truetype");
+}
+
+.myfont {
+    font-family: 'Iranian Sans';
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.headerband {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    right: 0px;
+    z-index: 1000;
+    font-family:'Iranian Sans';
+    /*display:block;
+    overflow:auto;*/
+}
+
+.TopBand1 {
+    background-color: #0f184b;
+    height: 35px;
+}
+
+.ContactBTNholder {
+    position: relative;
+    float: left;
+    left: 100px;
+    width: 120px;
+    background-color: white;
+    height: 29px;
+    padding: 1px;
+    margin: 3px;
+    border-radius: 10px;
+}
+
+    .ContactBTNholder p {
+        text-align: center;
+        font-family: 'Iranian Sans';
+        font-size: 14px;
+        color: red;
+    }
+
+        .ContactBTNholder p a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+.TopBand1 .UserMenudiv {
+    position: relative;
+    float: left;
+    left: 100px;
+    /*width: 200px;*/
+    background-color: white;
+    height: 29px;
+    padding: 1px;
+    margin: 3px;
+    border-radius: 10px;
+}
+
+.UserMenudiv p{
+    padding-right:25px;
+}
+
+    .UserMenudiv p span {
+        margin-right:10px;
+    }
+        .UserMenudiv p span i{
+            cursor:pointer;
+        }
+
+
+
+        .TopBand2 {
+            height: 70px;
+            background-color: #ffffff;
+            width:100%;
+        }
+
+.SearchBox {
+    position: relative;
+    float: right;
+    right: 50px;
+    height: 65px;
+    width:735px;
+    
+}
+
+    .SearchBox .imgBrand {
+        position: relative;
+        float: right;
+        width: 170px;
+        height: 65px;
+    }
+
+    .SearchBox img {
+        width: 170px;
+        height: 65px;
+    }
+
+    .SearchBox .Searchinputbox {
+        position: relative;
+        float: right;
+        /*width: 980px;*/
+        width: calc(100% - 170px);
+        height: 65px;
+        /*background-color: green;*/
+    }
+
+.Searchinputbox .inputtextbox {
+    position: relative;
+    float: right;
+    width: calc(100% - 40px);
+    height: 65px;
+    /*background-color: yellow;*/
+}
+
+
+
+.Searchinputbox .BtnSearch {
+    position: relative;
+    float: right;
+    width: 40px;
+    height: 65px;
+    /*background-color:brown;*/
+}
+
+.inputtextbox input {
+    width: 100%;
+    height: 50px;
+    margin:7.5px 10px 7.5px 0px; 
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    font-size: 16px;
+    /*border-color: #0f184b;*/
+    background-color: #eceff1;
+    border: 1px solid #d5dadd;
+    padding-right:10px;
+}
+
+
+
+.BtnSearch button {
+    width: 100%;
+    height: 50px;
+    margin-bottom: 7.5px;
+    margin-top: 7.5px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    background-color: indigo;
+    color: white;
+    font-size: 20px;
+}
+
+.topnav {
+    overflow: hidden;
+    background-color: #333;
+    font-size: 16px;
+    position: relative;
+    top: 0px;
+    width: 100%;
+}
+
+
+
+.topnav img {
+        float: right;
+        width: 90px;
+        height: 45px;
+        text-align: center;
+        margin:1px 5px 1px 5px;
+
+        cursor: pointer;
+       
+    }
+
+    .topnav a {
+        float: right;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+.subnav {
+    float: right;
+    /*overflow: hidden;*/
+}
+
+.subnav2 {
+    float: right;
+    /*overflow: hidden;*/
+}
+
+.subnav .subnavbtn, .subnav2 {
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.subnavbtn2 {
+    border: none;
+    outline: none;
+    color: #0f184b;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.topnav .atag:hover, .subnav:hover .subnavbtn {
+    background-color: red;
+}
+
+.subnavbtn2:hover {
+    background-color: red;
+}
+
+.subnav-content{
+    display: none;
+    position: fixed;
+    right: 0;
+    background-color: white;
+    width: 80%;
+    z-index: 100000;
+    border: 5px solid #333;
+    /*overflow:auto;*/
+    /*direction:rtl;*/
+}
+.newsmenu {
+    width: 50% !important;
+    right: auto !important;
+}
+
+
+.brandname-div {
+    padding: 0px;
+}
+
+.subnav2-content {
+    display: none;
+    position: absolute;
+    /*right: 0;*/
+    background-color: white;
+    width: 130%;
+    z-index: 100001;
+    border: 3px solid #333;
+}
+    .subnav2-content p{
+        text-align:right;
+    }
+    .subnav2-content .brandicon {
+        width: 64px;
+        height: 32px;
+        margin: auto;
+    }
+
+.brandicon-div {
+    padding: 5px !important;
+}
+
+.headerofmenucontent {
+    padding: 5px;
+    background-color: #333;
+    color: white;
+    font-weight: 900;
+}
+
+.headerofsectioncontent {
+    padding: 10px;
+    background-color: #392d2d;
+    border: 2px solid #333;
+    color: white;
+    font-weight: 900;
+}
+
+.subnav-content a {
+    float: right;
+    color: white;
+    text-decoration: none;
+}
+
+.subnav2-content a {
+    float: right;
+    color: #333;
+    text-decoration: none;
+}
+/*.subnav-content a:hover {
+            background-color: #eee;
+            color: black;
+        }*/
+
+/*.subnav:hover .subnav-content {
+    display: block;
+}*/
+.eachbrand {
+    border-bottom: 2px solid #333;
+    height: 50px;
+}
+
+.brandname {
+    text-decoration: none;
+    cursor: pointer;
+}
+/*.subnav2:hover .subnav2-content {
+    display: block;
+}*/
+.topnav .active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.topnav .icon {
+    display: none;
+}
+
+
+
+.topnav.responsive .icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.topnav.responsive .menucontent {
+    position: relative;
+    left: 0px;
+    border: 5px solid red;
+    max-height: 400px;
+    overflow: auto;
+    width: 100%;
+}
+
+.topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: right;
+    position: relative;
+}
+
+.topnav.responsive .subnav {
+    float: none;
+    display: block;
+    text-align: right;
+    position: relative;
+    overflow: auto;
+}
+
+.topnav.responsive .subnav2 {
+    float: none;
+    display: block;
+    text-align: right;
+    position: relative;
+    max-height: 200px;
+    overflow: auto;
+}
+
+.topnav.responsive .subnav .subnav-content {
+    position: relative;
+    width: 100%;
+}
+
+.topnav.responsive .subnav .subnav2-content {
+    position: relative;
+    width: 100%;
+}
+
+.topnav.responsive .soltanibrand {
+    display: none;
+}
+
+.MyBody {
+    font-family: 'Iranian Sans' !important;
+    position: relative;
+    min-height: 800px;
+    top:155px;
+    /*border: 5px solid blue;*/
+}
+    .MyBody .MainBody {
+        position: relative;
+        color: #333;
+        min-height: 800px;
+        background-color: white;
+        /*border: 5px solid green;*/
+    }
+    .MyBody .footer {
+        position: relative;
+        color: white;
+        /*border: 5px solid red;*/
+        background-color: #2f2323;
+        /*min-height: 250px;*/
+    }
+
+.slideshowpart{
+    position:relative;
+    /*border: 5px solid red;*/
+    min-height:1000px;
+    /*float:right;
+    width:100%;*/
+}
+.otherpart {
+    position: relative;
+    /*border: 5px solid red;*/
+    /*float: right;
+    width:100%;*/
+}
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100000; /* Sit on top */
+    padding-top: 35px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /*Fallback color*/
+    background-color: rgba(0,0,0,0.4); /*Black w/ opacity*/
+    font-family: 'Iranian Sans';
+}
+
+/* Modal Content */
+.Mymodal-content {
+    background-color: #fefefe;
+    /*margin: auto;*/
+    border: 1px solid #888;
+    width: 33%;
+    float: left;
+    margin: 2px;
+    position: relative;
+}
+
+.modal .MyModalHeader {
+    background-color: #333;
+    width: 100%;
+    height: 45px;
+    text-align: center;
+    color: white;
+    padding: 5px;
+    position: relative;
+    float:right;
+}
+
+.modal .MyModalBody {
+    background-color: white;
+    width: 100%;
+    min-height: 45px;
+   float:right;
+    color: rgb(0,0,0);
+    padding: 5px;
+    position: relative;
+}
+/* The Close Button */
+.Mymodal-content .close {
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.MyForm {
+    padding: 5px;
+    width: 100%;
+    font-family: 'Iranian Sans';
+}
+
+
+
+.MyModalBody form {
+    position: relative;
+}
+    .MyForm .NewLineInForm {
+        width: 100%;
+        /*height:35px;*/
+        margin-bottom:5px;
+        margin-top:5px;
+        float:right;
+        position:relative;
+    }
+
+.MyModalBody form .Buttonsholder {
+    position: relative;
+   
+    width: 100%;
+    /*background-color: indigo;*/
+    float:right;
+    padding-right:20px;
+       
+}
+
+.MyModalBody form .fieldsholder {
+    position: relative;
+    width: 100%;
+    /*background-color: #ede921;*/
+    float:right;
+}
+/*.fieldsholder input{
+    direction:ltr;
+}*/
+
+.iconholder {
+    background-color: #d5dadd;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 2px solid rgba(0,0,0,0.4);
+    width: 35px;
+    height: 35px;
+    float: right;
+}
+        .iconholder .fas {
+            position: relative;
+            right: 7.5px;
+            top: 7.5px;
+        }
+.MyForm .controls {
+    position: relative;
+    width: calc(100% - 35px);
+    float:right;
+}
+.MyForm .NewLineInForm .controls .MyControl {
+    width: 100%;
+    /*background-color: white;*/
+    height: 35px;
+    border: 1px solid #d5dadd;
+    float: right;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding-right: 10px;
+}
+      
+       
+.MyForm input:focus {
+    background-color: #d2f7a4 !important;
+}
+
+.MyForm .MyLable{
+    float:right;
+    
+}
+
+.Mycheckbox {
+    padding: 5px;
+    display: block;
+    float: right;
+    background: #00bfd6 !important;
+    border: 1px solid #1fa4b3 !important;
+    cursor: pointer;
+    margin-right: 25px !important;
+    position:relative;
+}
+
+.field-validation-error{
+    color:red;
+}
+
+.alertmessage {
+    display: none;
+}
+
+.userMenu .headerdiv {
+    background-color: #333;
+    color: white;
+    height: 40px;
+    padding:5px;
+}
+.headerdiv p {
+    text-align: center;
+}
+
+.userMenu .bodydiv {
+    background-color: indigo;
+    color: rgb(0,0,0);
+}
+.MyModalBody .imageholder {
+    height: 180px;
+    background-color: #d5dadd;
+    padding: 5px;
+    position: relative;
+}
+
+.pimage{
+    text-align:center;
+    font-size:14px;
+
+}
+.imageholder img{
+    width:120px;
+    height:160px;
+   margin:auto;
+}
+.imgbrowse {
+    background-color: green;
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.imageholder span input {
+    z-index: 999;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    top: -2px;
+    right: 0px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -ms-filter: "alpha(opacity=0)";
+    cursor: pointer;
+    _cursor: hand;
+    margin: 0;
+    padding: 0;
+    height:185px;
+}
+
+
+
+
+
+@media screen and (max-width: 1200px) {
+    .headerband {
+        position: fixed;
+        top: 0px;
+        width: 100%;
+        right: 0px;
+        z-index: 1000;
+        max-height: 600px;
+        overflow: auto;
+    }
+
+    .ContactBTNholder {
+        position: relative;
+        float: right;
+        right: 10px;
+        width: 120px;
+        background-color: white;
+        height: 29px;
+        padding: 1px;
+        margin: 3px;
+        border-radius: 10px;
+    }
+
+    .TopBand2 {
+        height: 70px;
+        background-color: #ffffff;
+    }
+
+
+    .topnav a {
+        display: none;
+    }
+
+    .topnav .subnav {
+        display: none;
+    }
+
+    .topnav a.icon {
+        float: left;
+        display: block;
+    }
+
+    .topnav.responsive {
+        position: relative;
+        font-size: 12px;
+        max-height: 2000px;
+        overflow: auto;
+    }
+
+    .newsmenu{
+        width:100% !important;
+    }
+
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 10000000000; /* Sit on top */
+        padding-top: 35px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /*Fallback color*/
+        background-color: rgba(0,0,0,0.4); /*Black w/ opacity*/
+        font-family: 'Iranian Sans';
+    }
+    /* Modal Content */
+    .Mymodal-content {
+        background-color: #fefefe;
+        margin: auto;
+        border: 1px solid #888;
+        width: 100%;
+    }
+
+
+    .MyBody {
+        font-family: 'Iranian Sans' !important;
+        position: relative;
+        min-height: 700px;
+        border: 5px solid blue;
+    }
+        .MyBody .MainBody {
+            position: relative;
+            color: #333;
+            background-color: white;
+            border: 5px solid green;
+        }
+        .MyBody .footer {
+            /*padding-top: 150px;*/
+            position: relative;
+            color: white;
+            /*bottom: 0px !important;*/
+            border: 5px solid red;
+            background-color: #2f2323;
+        }
+
+    .slideshowpart {
+        position: relative;
+        /*border: 5px solid red;*/
+        min-height: 500px;
+        /*float:right;
+    width:100%;*/
+    }
+
+    .otherpart {
+        position: relative;
+        /*border: 5px solid red;*/
+        /*float: right;
+    width:100%;*/
+    }
+
+
+}
+@media screen and (max-width: 750px){
+
+    .SearchBox.mobile {
+        
+        width: 100% !important;
+        right:0px;
+      
+    }
+
+        .SearchBox .imgBrand {
+           
+            display:none;
+        }
+
+      
+
+        .SearchBox .Searchinputbox {
+            position: relative;
+            float: right;
+            /*width: 980px;*/
+            width: 100%;
+            height: 65px;
+            /*background-color: green;*/
+        }
+
+    .Searchinputbox .inputtextbox {
+        position: relative;
+        float: right;
+        width: calc(100% - 40px);
+        height: 65px;
+        /*background-color: yellow;*/
+    }
+
+
+
+    .Searchinputbox .BtnSearch {
+        position: relative;
+        float: right;
+        width: 40px;
+        height: 65px;
+        /*background-color:brown;*/
+    }
+
+    .inputtextbox input {
+        width: 100%;
+        height: 50px;
+        margin: 7.5px 10px 7.5px 0px;
+        border-bottom-right-radius: 10px;
+        border-top-right-radius: 10px;
+        font-size: 12px;
+        /*border-color: #0f184b;*/
+        background-color: #eceff1;
+        border: 1px solid #d5dadd;
+        padding-right: 10px;
+    }
+
+
+
+    .BtnSearch button {
+        width: 95%;
+        height: 50px;
+        margin-bottom: 7.5px;
+        margin-top: 7.5px;
+        border-bottom-left-radius: 10px;
+        border-top-left-radius: 10px;
+        background-color: indigo;
+        color: white;
+        font-size: 20px;
+    }
+}
+

@@ -1,0 +1,48 @@
+﻿
+@using SoltaniWeb.Models.structs
+
+@model IEnumerable<ItemListKala>
+@{
+    var totalpage = (int)ViewBag.totalpages;
+}
+
+
+@foreach (var item in Model)
+{
+    <tr class="listrow" listid="@item.id" totalpage="@totalpage">
+        <td class="prow hidden-xs  idnumber">@item.id</td>
+
+        <td class="prow  Date">@item.sodoordate</td>
+        <td class="prow hidden-xs  Time">@item.time</td>
+        <td class="prow hidden-xs  htype">@item.htype</td>
+        <td class="prow anbarname">@item.anbarname</td>
+
+        <td class="prow  name">@(item.category + "  " + item.name)</td>
+        <td class="prow hidden-xs  code">@item.code</td>
+        <td class="prow  kalanumber">@item.kalanumberm</td>
+        <td class="prow hidden-xs  cost">@item.cost</td>
+        <td class="prow hidden-xs  totalcostkala">@item.totalcostkala</td>
+        <td class="prow hidden-xs  kaladescription">@item.kaladescription</td>
+        <td class="prow hidden-xs  user">@item.user</td>
+    </tr>
+}
+
+<tr class="Table-Abstract">
+
+    <td colspan="7" class="totalpnumberlbl">جمع کل</td>
+    <td class="totalpnumber" id="totalpnumber">@(Model.Sum(a => a.kalanumberm))</td>
+
+</tr>
+<script>
+    var objects = $('.prow.kalanumber')
+    $.each(objects, function (ids, item) {
+        var number = $(this).html()
+
+        if (number < 0) {
+
+            $(this).parent().addClass('out')
+
+        }
+
+    })
+</script>

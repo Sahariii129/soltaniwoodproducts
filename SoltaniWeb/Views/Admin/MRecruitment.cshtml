@@ -1,0 +1,866 @@
+﻿@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.structs
+
+@model IEnumerable<applicantstructs>
+
+@{
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    ViewBag.Title = "مدیریت بخش استخدام";
+
+    int i = 1;
+    var today = DateTime.Now.ToPersianDate();
+
+}
+<script src="~/Scripts/jquery-2.1.4.js"></script>
+<link href="~/Content/styles/styleTable.css" rel="stylesheet" />
+
+<style>
+
+
+
+    .out {
+        background-color: #761818;
+        color: #ffffff;
+    }
+
+    .selected {
+        background-color: #141f98;
+        color: #ffffff;
+    }
+
+    .table-header {
+        background-color: #c7bebe;
+        color: #000000;
+        width: 100%;
+    }
+
+    .panelbox {
+        position: relative;
+    }
+
+    .myform2 {
+        display: none;
+        z-index: 1000;
+        position: absolute;
+        width: 600px;
+    }
+
+    .myform3 {
+        display: none;
+        z-index: 1001;
+        position: absolute;
+        width: 600px;
+    }
+
+
+    .column {
+        float: right;
+        width: 50px;
+        padding: 5px;
+    }
+
+    .myrow {
+        width: 180px !important;
+    }
+        /* Clearfix (clear floats) */
+        .myrow::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+    .imgbtn {
+        cursor: pointer;
+    }
+
+    .loading-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 10;
+    }
+
+    .loader {
+        display: none;
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    #panelbodyfororders {
+        height: 700px;
+        overflow: scroll;
+    }
+
+    .toolband {
+        position: absolute;
+        bottom: 30px;
+        left: 30px;
+        height: 40px;
+        width: 98%;
+        padding: 5px;
+        /*display: none;*/
+    }
+
+        .toolband button {
+            float: left;
+            font-weight: 600;
+            color: #000000;
+        }
+
+    .hidden {
+        display: none;
+    }
+
+    .psearch {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 90%;
+        z-index: 100;
+        max-width: 400px;
+        margin-right: 3px;
+        margin-top: 3px;
+    }
+</style>
+
+
+<div class="col-md-12" id="ordermanagement">
+
+    <div id="mainpart" class="col-md-12">
+
+        <div class="panel myfont">
+            <div class="panel-heading panel-danger" style="background-color:#06497a; color:#ffffff;">
+                <button id="btn_searhpanelshow" type="button" class="btn btn-default" aria-label="Left Align">
+                    <span class="glyphicon glyphicon-search" style="color:red;" aria-hidden="true"></span>
+                </button>
+                مدیریت بخش استخدام
+                <span id="searchbasedon" style="font-weight:800">
+                </span>
+
+            </div>
+            <div class="panel-body panelbox" id="mypanel_id">
+                <div id="psearch_id" class="psearch" style="display:none;">
+                    <div class="panel myfont">
+                        <div class="panel-heading" id="searchpanel " style="background-color:#045606; color:#ffffff;cursor:pointer;">
+                            پانل جستجو
+                            <button type="button" class="close  closesearch">
+                                <span style="color:red;" aria-hidden="true">&times;</span>
+
+                            </button>
+                        </div>
+                        <div id="searchdiv" class="panel-body" style="background-color:#000000;">
+                            <partial name="~/Views/Shared/PartialforRecruitment/_searchboxRecruitment.cshtml">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div id="mymodalform" class="myform2">
+
+                </div>
+                <div id="mymodalformtoedit" class="myform3">
+
+                </div>
+                <div id="panelbodyfororders">
+
+                    <partial name="~/Views/Shared/PartialforRecruitment/_Table.cshtml" model="@Model" />
+                </div>
+
+                <div class=" loader">
+                    <center>
+                        <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+                    </center>
+                </div>
+
+
+
+            </div>
+     
+        </div>
+    </div>
+</div>
+
+
+@*<script src="~/Scripts/jquery-2.1.4.js"></script>*@
+<script>
+    var selectedsubgridlist = [];
+
+    $(panelbodyfororders).on('click', '#Btn_search', function () {
+        $(btn_searhpanelshow).click();
+        return false;
+
+
+    })
+    $(btn_searhpanelshow).click(function () {
+
+
+        $(psearch_id).slideToggle(200);
+
+    })
+    $('.closesearch').click(function () {
+        $(psearch_id).slideToggle(200);
+    })
+
+    $(panelbodyfororders).click(function () {
+        $(psearch_id).hide(200)
+    })
+
+
+
+    $('#searchdiv').on('click', '#searchbyusername', function () {
+        var username = $('#username').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchcartbyusername', { username: username, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+    // search based on from branch
+    $('#searchdiv').on('click', '#searchbyfrombranch', function () {
+        var frombranch_id = $('#frombranch').val()
+
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchordersbyfrombranch', { frombranch_id: frombranch_id, take: take }, function (result) {
+
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+    //
+    // search based on listkalaid
+    $('#searchdiv').on('click', '#btn_searchbylistkalaid', function () {
+        var listkalaid = $('#searchbylistkalaid').val()
+
+        var take = parseInt($(pagesize_id).val())
+
+        $('.loader').show()
+        jQuery.post('/admin/searchbylistkalaid', { id: listkalaid, take: take }, function (result) {
+
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+
+
+
+    // تاریخ ثبت
+
+    $('#searchdiv').on('click', '#searchApplicantsbysabtdate', function () {
+        var sabtdate = $('#sabtdate').val()
+         var take = parseInt($(pagesize_id).val())
+
+        $('.loader').show()
+        jQuery.post('/admin/searchApplicantsbysabtdate', { sabtdate: sabtdate,take:take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+            $('#pagesize_id').val(take)
+        })
+
+    })
+
+    // شناسه متقاضی
+
+    $('#searchdiv').on('click', '#btn_searchbyappid', function () {
+        var app_id = $('#searchbyappid').val()
+        var take = parseInt($(pagesize_id).val())
+
+        $('.loader').show()
+        jQuery.post('/admin/searchApplicantsappid', { app_id: app_id , take:take}, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+            $('#pagesize_id').val(take)
+        })
+
+    })
+    // شغل مورد درخواست
+
+    $('#searchdiv').on('click', '#Btn_searchappbyjob', function () {
+        var jobid = $('#jobid').val()
+        var take = parseInt($(pagesize_id).val())
+
+        $('.loader').show()
+        jQuery.post('/admin/searchApplicantsbyjob', { jobid: jobid, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+            $('#pagesize_id').val(take)
+        })
+
+    })
+    // وضعیت برقراری ارتباط
+
+    $('#searchdiv').on('click', '#Btn_searchappbyconnectionsataus', function () {
+        var connectionsataus = $('#connectionsataus').val()
+        var take = parseInt($(pagesize_id).val())
+
+        $('.loader').show()
+        jQuery.post('/admin/searchappbyconnectionsataus', { connectionsataus: connectionsataus, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+            $('#pagesize_id').val(take)
+        })
+
+    })
+    //
+   
+    // بر اساس بازه زمانی
+    $('#searchdiv').on('click', '#searchappbysabtdaterange', function () {
+        var sabtdatefrom = $('#sabtdatefrom').val()
+        var sabtdateto = $('#sabtdateto').val()
+        var take = parseInt($(pagesize_id).val())
+   
+
+        $('.loader').show()
+
+        jQuery.post('/admin/searchappsbysabtdaterange', { sabtdatefrom: sabtdatefrom, sabtdateto: sabtdateto, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+            $('#pagesize_id').val(take)
+
+        })
+
+    })
+    // search inventory based searchinventorysbysectioncategory
+    $('#searchdiv').on('click', '#searchinventorysbysectioncategory', function () {
+        var section_id = $('#section_id').val()
+        var category_id = $('#category_id').val()
+        var take = parseInt($(pagesize_id).val())
+
+        $('.loader').show()
+        jQuery.post('/admin/searchinventorysbysectioncategory', { section_id: section_id, category_id: category_id, take: take }, function (result) {
+            $('.loader').hide()
+            $('#panelbodyfororders').html(result)
+            $('#pagesize_id').val(take)
+
+
+        })
+
+    })
+
+
+
+
+
+
+
+
+
+    // search orders based on Done
+    $('#searchdiv').on('click', '#searchordersbydone', function () {
+        var orderdone = $(orderDone).val()
+        var take = $(numberinpage).val()
+        var frombranch_id = $('#frombranch').val()
+
+        $('.loader').show()
+
+        jQuery.post('/admin/searchordersbydone', { orderdone:orderdone, frombranch_id: frombranch_id, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+    //
+
+    $('#panelbodyfororders').on('click', '.details', function () {
+
+        var id = $(this).val()
+
+        $('#p' + id).toggle(100)
+    })
+    $('#panelbodyfororders').on('click', '.transportaiondetails', function () {
+
+        var id = $(this).val()
+        $('#t' + id).toggle(100)
+    })
+    $('#panelbodyfororders').on('click', '.transportaioncost', function () {
+
+        var id = $(this).val()
+        $('#tcost' + id).toggle(100)
+    })
+
+
+
+    $(sabtdate).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    $(sabtdatefrom).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    $(sabtdateto).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+
+
+
+    $('#ordermanagement').on('click', '.sheading', function () {
+
+
+
+        var q = $(this).next()
+
+
+            q.toggle(200)
+
+
+
+
+    })
+
+
+  
+
+    // to edit selected order
+    $('body').off().on('click', '.btn_orderedit', function (e) {
+        var orderid = $(this).val()
+        jQuery.post('/admin/showorderformforedit', { orderid: orderid }, function (e) {
+
+            $('#mymodalformtoedit').html(e)
+
+            $('#mymodalformtoedit').finish().show(100).css({ "width": 90 + '%', "max-width": "1200px" })
+
+            dragElement2(document.getElementById("mymodalformtoedit"));
+
+        })
+
+    })
+    // to minimize addorderform
+    $('body').on('click','.minimize', function () {
+        var mode = $(this).attr('mode')
+        var orderid=$(this).attr('orderid')
+        var html = ''
+        if (mode=='Add') {
+        $('.myformcontent[mode="Add"]').hide(100);
+        html += '<button class="btn btn-success minimizedformbtn" mode="Add">حواله جدید</button>'
+        } else if (mode = 'Edit') {
+            $('.myformcontent[mode="Edit"]').hide(100);
+            html += '<button class="btn btn-primary minimizedformbtn" orderid="'+orderid +'" mode="Edit">ویرایش حواله '+orderid+'</button>'
+
+        }
+        $('.toolband').append(html)
+        //$('.toolband').toggle(100);
+
+    })
+    // to maximize minimized form
+
+    $('.panelbox').delegate('.minimizedformbtn', 'click', function () {
+        $(this).hide(100)
+        var mode =$(this).attr('mode')
+        if (mode == 'Add') {
+
+            $('.myformcontent[mode="Add"]').show(100);
+            dragElement(document.getElementById("mymodalform"));
+
+        } else if (mode = 'Edit') {
+            var orderid = $(this).attr('orderid')
+            jQuery.post('/admin/showorderformforedit', { orderid: orderid }, function (e) {
+
+                $('#mymodalformtoedit').html(e)
+
+                $('#mymodalformtoedit').finish().show(100).css({ "width": 90 + '%', "max-width": "1200px" })
+
+                dragElement2(document.getElementById("mymodalformtoedit"));
+
+            })
+         //$('.myformcontent[mode="Edit"]').show(100);
+        }
+        //$('.toolband').toggle(100);
+
+    })
+    // to close form
+    $('body').on('click', '.closeform', function () {
+        
+                $('#mymodalform').html('')
+        
+
+    })
+   // to save new order
+
+
+
+    // to make a mymodalform movable
+
+    function dragElement2(elmnt) {
+
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById("myheadingpaneltoedit")) {
+            /* if present, the header is where you move the DIV from:*/
+            document.getElementById("myheadingpaneltoedit").onmousedown = dragMouseDown;
+
+
+        }
+        else {
+
+            /* otherwise, move the DIV from anywhere inside the DIV:*/
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            /* stop moving when mouse button is released:*/
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+
+    }
+    function dragElement(elmnt) {
+
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById("myheadingpanel")) {
+            /* if present, the header is where you move the DIV from:*/
+            document.getElementById("myheadingpanel").onmousedown = dragMouseDown;
+
+
+        }
+        else {
+
+            /* otherwise, move the DIV from anywhere inside the DIV:*/
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            /* stop moving when mouse button is released:*/
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+
+    }
+    var zadd = parseInt($('.myform2').css('z-index'))
+    var zedit = parseInt($('.myform3').css('z-index'))
+    // to bring front
+    $('.myform2').click(function () {
+        dragElement(document.getElementById("mymodalform"));
+
+        zadd = zedit+1
+        $(this).css({ 'z-index': zadd })
+
+    })
+    $('.myform3').click(function () {
+        dragElement2(document.getElementById("mymodalformtoedit"));
+        zedit = zadd + 1
+        $(this).css({ 'z-index': zedit })
+
+    })
+
+
+    // show additem form modal
+    //$('#toolsband_id').on('click', '#Btn_Add', function () {
+
+
+    //    jQuery.post('/admin/ShowAddItemFormModal', {}, function (result) {
+
+    //        $('#mymodalform').html(result)
+    //        $(add_tools).hide()
+    //        $('#mymodalform').finish().show(100)
+    //        dragElement(document.getElementById("mymodalform"));
+
+
+
+    //    })
+
+
+
+    //})
+
+
+
+
+    // show EditItem form modal
+
+    $('#toolsband_id').on('click', '#Btn_Edit', function () {
+
+        if (listrowidselected == 0) {
+
+            alert('هیچ رکوردی انتخاب نشده است')
+        } else {
+            jQuery.post('/admin/ShowEditItemFormModal', { id: listrowidselected }, function (result) {
+
+
+                $('#mymodalformtoedit').html(result)
+
+                $(anbaridinform).val($(anbaridinform).attr("anbarvalue"))
+                $(htype).val($(htype).attr("htypevalue"))
+
+                $('#mymodalformtoedit').finish().show(100)
+
+                dragElement2(document.getElementById("mymodalformtoedit"));
+
+
+
+            })
+
+        }
+    })
+
+    // to delete item
+
+    $('#toolsband_id').on('click', '#Btn_Remove', function () {
+
+        if (listrowidselected == 0) {
+
+            alert('هیچ رکوردی انتخاب نشده است')
+        } else {
+            if (confirm('آیا مطمئن هستید؟')) {
+
+
+            jQuery.post('/admin/Removeitemfromlistkala', { id: listrowidselected }, function (result) {
+
+                $('.listrow[listid="' + result + '"]').remove()
+                alert('رکورد مورد نظر با موفقیت حذف گردید')
+
+
+
+            })
+            }
+        }
+    })
+
+
+
+
+    // -- define your function
+
+
+    function reset() {
+        $('#mymodalform :input').val('');
+
+
+    }
+
+
+    // show add form for adding history connect of app
+    $('#panelbodyfororders').on('click', '.Btn_Add', function (e) {
+      
+        alert('1')
+        var html = $(this).parent().parent().parent().parent().parent().parent().parent()
+        var appid = html.find('[toolsband]').attr('toolsband')
+        if (appid.length == 0) {
+            return;
+        }
+
+
+
+
+
+        jQuery.post('/admin/ShowFormForHistoryApp', { appid: appid }, function (result) {
+            $('#mymodalform').html(result)
+            //$(add_tools).hide()
+            $('#mymodalform').finish().show(100)
+            dragElement(document.getElementById("mymodalform"));
+        })
+    })
+    $('#mymodalform').on('click', '#save', function (e) {
+        $('#mypanel_id .alert').hide()
+        var id = $(mymodalform_id).attr('historyid')
+        var app_id = $(this).attr('appid')
+        var sabtdate = $(sabtdateinform).val()
+        var howtoconnect = $(howtoconnectinform).val()
+        var result = $(resultinform).val()
+
+
+
+        var data = { id: id, app_id: app_id, sabtdate: sabtdate, howtoconnect: howtoconnect, result: result,time:'' , userid:'78'}
+        var dataasjson = JSON.stringify(data)
+      
+        $.ajax({
+
+            url: '/admin/Saveiteminhistoryappconnect',
+            type: 'POST',
+            data: dataasjson,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data, textStatus, jqXHR) {
+                if (data.status == 'ADDMODE') {
+                    var shtml = '';
+                    shtml += '<tr record="' + data.id + '">'
+                    shtml += '<td><input type="checkbox" select/></td>'
+                    shtml += '<td class="appid">' + data.app_id + '</td>'
+                    shtml += '<td class="howtoconnect">' + data.howtoconnect + '</td>'
+                    shtml += '<td class="user">' + data.user + '</td>'
+                    shtml += '<td class="date">' + data.sabtdate + '</td>'
+                    shtml += '<td class="time">' + data.time + '</td>'
+                    shtml += '<td class="result">' + data.result + '</td>'
+                    shtml += '</tr>'
+                    var objtolocate = $('[app_details="' + data.app_id + '"]').find('.firstrowofsubtable')
+                    $(shtml).insertAfter(objtolocate)
+                    reset()
+                    $('#mymodalform').html('')
+
+                } else if (data.status == 'EDITMODE') {
+                    var shtml = '';
+                    //shtml += '<tr record="' + data.id + '">'
+                    shtml += '<td><input type="checkbox" select/></td>'
+                    shtml += '<td class="appid">' + data.app_id + '</td>'
+                    shtml += '<td class="howtoconnect">' + data.howtoconnect + '</td>'
+                    shtml += '<td class="user">' + data.user + '</td>'
+                    shtml += '<td class="date">' + data.sabtdate + '</td>'
+                    shtml += '<td class="time">' + data.time + '</td>'
+                    shtml += '<td class="result">' + data.result + '</td>'
+                    //shtml += '</tr>'
+                    var objtolocate = $('[record="' + data.id + '"]')
+                    objtolocate.html(shtml)
+                     reset()
+                    $('#mymodalform').html('')
+                    $('[select]').prop('checked','')
+
+                } else if (data.status == 'error') {
+                    $('#mypanel_id .alert').show()
+                    $('.alert').html(data.message)
+                } else {
+                    $('#mypanel_id .alert').show()
+                    $('.alert').html(data.message)
+                }
+
+            }
+
+        })
+
+
+    })
+
+    $('#panelbodyfororders').on('click', 'input[select]', function () {
+        var record = $(this).parent().parent().attr('record')
+
+        if ($(this).prop('checked') == true) {
+
+            selectedsubgridlist.push(record)
+
+        } else
+        {
+            var index = $.inArray(record, selectedsubgridlist);
+            if (index != -1) {
+                selectedsubgridlist.splice(index, 1);
+            }
+        }
+
+
+    })
+
+
+    $('#panelbodyfororders').on('click', '.Btn_Edit', function (e) {
+
+        var html = $(this).parent().parent().parent().parent().parent().parent().parent()
+        var appid = html.find('[toolsband]').attr('toolsband')
+
+        if (selectedsubgridlist.length == 0) {
+            alert('رکوردی انتخاب نشده است')
+        } else if (selectedsubgridlist.length > 1) {
+            alert('بیش از یک رکورد انتخاب نشده است')
+
+        } else {
+
+            jQuery.post('/admin/ShowFormForHistoryApptoEdit', { id: selectedsubgridlist[0] }, function (result) {
+                $('#mymodalform').html(result)
+                //$(add_tools).hide()
+                $('#mymodalform').finish().show(100)
+                dragElement(document.getElementById("mymodalform"));
+                selectedsubgridlist = [];
+            })
+
+        }
+
+
+    })
+
+    $('#panelbodyfororders').on('click', '.Btn_Remove', function (e) {
+
+        if (selectedsubgridlist.length == 0) {
+            alert('رکوردی انتخاب نشده است')
+        } else {
+
+            jQuery.post('/admin/removehistoryofapp', { selectedidlist: selectedsubgridlist }, function (e) {
+                $.each(selectedsubgridlist, function (idx, item) {
+                    $('[record="'+ item+'"]').remove()
+                               })
+
+            selectedsubgridlist = [];
+                       })
+        }
+
+    })
+
+</script>
+
+

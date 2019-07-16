@@ -1,0 +1,77 @@
+﻿@using SoltaniWeb.Models.Domain
+@{
+
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+
+    SoltaniWeb.Models.repository.newsrepository newsrep = new SoltaniWeb.Models.repository.newsrepository();
+    var setting = db.tbl_setting;
+    var slideshowtime = setting.Where(a => a.settingname == "slideshowtime").SingleOrDefault().settingvalue;
+    var newsslidetimeshow = setting.Where(a => a.settingname == "newsslidetimeshow").SingleOrDefault().settingvalue;
+}
+
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="item active ">
+
+            <div class="caption newspanel">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 newsheader">
+                    <a style=" text-decoration :none;  color:#ffffff;" href="~/news/newsdetails?id=@newsrep.getslides(1, 0).SingleOrDefault().id&key=@newsrep.getslides(1, 0).SingleOrDefault().keywords">@newsrep.getslides(1, 0).SingleOrDefault().title</a>
+                    <div style=" float:left;">@shamsi.GetStringDate(newsrep.getslides(1, 0).SingleOrDefault().issudate)</div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 newsabstract myfont" style="font-size:14px;">
+                    <a href="~/news/newsdetails?id=@newsrep.getslides(1, 0).SingleOrDefault().id&key=@newsrep.getslides(1, 0).SingleOrDefault().keywords">@Html.Raw(newsrep.getslides(1, 0).SingleOrDefault().abstractnews.Length > 90 ? @newsrep.getslides(1, 0).SingleOrDefault().abstractnews.Substring(0, 90) + "... (کلیک نمایید)" : @newsrep.getslides(1, 0).SingleOrDefault().abstractnews)  </a>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+        @foreach (var item in newsrep.getslides(15, 1))
+        {
+            <div class="item ">
+
+                <div class="caption newspanel">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 newsheader">
+                        <a href="~/news/newsdetails?id=@item.id&key=@item.keywords" style=" text-decoration :none; color:#ffffff;">@item.title</a>
+                        <div style="float :left ;">@shamsi.GetStringDate(item.issudate)</div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 newsabstract myfont" style="font-size:14px;">
+                        <a href="~/news/newsdetails?id=@item.id&key=@item.keywords">@Html.Raw(item.abstractnews.Length > 90 ? item.abstractnews.Substring(0, 90) + "... (کلیک نمایید)" : item.abstractnews)</a>
+
+
+                    </div>
+
+                </div>
+            </div>
+        }
+
+    </div>
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        @{
+            int j = 1;
+
+        }
+        @foreach (var item in newsrep.getslides(15, 1))
+        {
+            <li data-target="#myCarousel" data-slide-to="@j"></li>
+
+            j++;
+
+        }
+
+
+    </ol>
+</div>
+
+<script>
+        newsslidetimeshow =@newsslidetimeshow
+            $('#myCarousel').carousel({
+                interval: newsslidetimeshow
+            })
+</script>

@@ -1,0 +1,25 @@
+﻿
+.pricetable thead {
+    display: block;
+    overflow: auto;
+   /*background-color :#808080;
+   color:white;*/
+}
+
+.pricetable tfoot {
+    display: block;
+    overflow: auto;
+}
+
+
+
+.pricetable th, td {
+    padding: .5em 1em;
+    text-align: center;
+    vertical-align: top;
+}
+.pricetable tbody {
+    display: block;
+   
+    overflow: auto;
+}

@@ -1,0 +1,114 @@
+﻿@using SoltaniWeb.Models.Domain
+@model IEnumerable<tbl_products>
+           @{
+               int i = 0;
+               int j = 0;
+           }
+
+<div class="card">
+    <div class="card-header text-center" style="background-color:#6a95cc;color:#fff"> جدول قیمت محصولات</div>
+    <div class="card-body p-0">
+        <table class="table table-responsive table-bordered table-hover sortable pricetable">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">ردیف</th>
+                    <th style="width: 100px;">کلاس</th>
+                    <th style="width: 150px;">نام کالا</th>
+                    <th style="width: 150px;">ابعاد</th>
+                    <th style="width: 150px;">کد</th>
+                    <th style="background-color:#9abce7;width: 150px;color:#132666">آخرین قیمت فروش</th>
+                    <th style="background-color:#9abce7;width: 150px;color:#132666;">آخرین تاریخ فروش</th>
+                    <th style="background-color:#eec2c2;width: 150px;color:#132666;">آخرین قیمت خرید</th>
+                    <th style="background-color:#eec2c2;width: 150px;color:#132666;">آخرین تاریخ خرید</th>
+                    <th style="width: 150px;">تصویر</th>
+                    <th style="width: 150px;">عملیات</th>
+
+                </tr>
+
+                @if (Model.Count() != 0)
+                {
+                    <tr> <td style="text-align:center;" colspan="11">  @Model.First().category.categoryname </td> </tr>
+                }
+
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.GroupBy(a => a.grade==null?a.grade:a.grade.ToUpper()).Select(g1 => new { grade = g1.Key, productslist = g1.OrderBy(l => l.lastcellcost).OrderBy(l => l.codename) }))
+                {
+                    j = j + 1;
+                    <tr>
+                        <td style="background-color:#c0b7b7; width: 60px;"> @j    </td>
+
+                        <td style="background-color:#eae4e4;text-align:right;width: 1400px;" colspan="10"><a class="gradeheading" grade="@(item.grade==null?"nograde": item.grade)" href="#" style="cursor:pointer; text-decoration:none;">کلاس : @(item.grade == null ? "nograde" : item.grade)</a>    </td>
+
+                    </tr>
+                    foreach (var item2 in @item.productslist)
+                    {
+                        i = i + 1;
+                        <tr class="@(item.grade==null?"nograde":item.grade)" style="display:none;">
+                            <td style="width: 70px;">  @i </td>
+                            <td style="width: 110px;"> @(item.grade == null ? "کلاسی تعیین نشده است" : item.grade) </td>
+                            <td style="width: 160px;">  @item2.name </td>
+                            <td style="width: 160px;"> @item2.dimension  </td>
+                            <td style="width: 160px;">  @item2.codename </td>
+                            <td style="background-color:#7af707;width: 160px;">
+                                @string.Format("{0:#,##0.##}", item2.lastcellcost) ریال
+                            </td>
+                            <td style="background-color:#7af707;width: 160px;">@shamsi.ToShamsi(item2.updatesellcost).ToString("yyyy/MM/dd")</td>
+                            <td style="background-color:#ea3c18;width: 160px;">
+                                @string.Format("{0:#,##0.##}", item2.lastbuycost) ریال
+                            </td>
+                            <td style="background-color:#ea3c18;width: 150px;">@shamsi.ToShamsi(item2.updatebuycost).ToString("yyyy/MM/dd")</td>
+
+
+
+
+                            <td style="width: 160px;">  <img src="~/Content/img/products/@item2.imageproducts" style="width:40px; height:40px;" alt="@item2.category.categoryname  @item2.name" /></td>
+                            <td style="width: 160px;"><a href="/admin/editproducts?idproduct=@item2.idproduct"><img src="~/Content/img/icon/edit.png" style="height:24px; width:auto;" /></a></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+
+<script>
+
+    $('.gradeheading').click(function (event) {
+        event.preventDefault();
+        var grade = $(this).attr('grade')
+        $('.' + grade).toggle(200)
+    })
+</script>
+
+
+<style>
+   .pricetable {
+        border-collapse: collapse;
+    }
+
+  .pricetable  thead {
+        display: block;
+        overflow: auto;
+        color: #fff;
+        background: #332b3a;
+    }
+
+ .pricetable   tbody {
+        display: block;
+        height: 500px;
+        background: #ededec;
+        overflow: auto;
+    }
+
+ .pricetable   th, td {
+        padding: .5em 1em;
+        text-align: center;
+        vertical-align: top;
+        border-left: 1px solid #fff;
+    }
+</style>

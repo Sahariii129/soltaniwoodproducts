@@ -1,0 +1,50 @@
+﻿@using SoltaniWeb.Models.Domain
+@model tbl_purchasekart
+@{
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+
+}
+
+<table class="table table-responsive table-bordered" style="font-size:12px;">
+    <thead>
+        <tr style="background-color:green;color:#ffffff;">
+            <td colspan="2">مشخصات محل تحویل سفارش</td>
+        </tr>
+    </thead>
+
+    @foreach (var item in db.tbl_transportaiondetails.Where(a => a.cartid == Model.id))
+    {
+        <tr>
+            <td>نام محل</td>
+            <td>@item.location_name</td>
+        </tr>
+    <tr>
+        <td>آدرس</td>
+        <td>@item.location_address</td>
+    </tr>
+    <tr>
+        <td> شخص پیگیری کننده</td>
+        <td>@item.person_peygiri</td>
+    </tr>
+    <tr>
+        <td> شماره تماس</td>
+        <td>@item.tell</td>
+    </tr>
+    <tr>
+        <td> طول جغرافیایی</td>
+        <td>@item.lat</td>
+    </tr>
+    <tr>
+        <td> عرض جغرافیایی</td>
+        <td>@item.lng</td>
+    </tr>
+    <tr>
+        <td> مسافت</td>
+        <td>@(item.distance + " km")</td>
+    </tr>
+    }
+
+</table>
+
+
+

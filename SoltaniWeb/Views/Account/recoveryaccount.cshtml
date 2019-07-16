@@ -1,0 +1,74 @@
+﻿@using SoltaniWeb.Models.structs
+@model email
+@{
+    //ViewBag.Title = "کالای چوب سلطانی / صفحه ورود";
+    ViewBag.howtoindex = "noindex";
+
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+
+}
+<link href="~/soltanistatic/style/register.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 contactTitle">بازیابی حساب کاربری</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-10 col-lg-4">
+            <div class="card  my-5">
+                <div class="card-header" style="background-color:#332b3a; color:#fff">
+                    ارسال ایمیل بازیابی حساب کاربری
+                </div>
+                <div class="card-body text-center py-5 px-4">
+                    <form method="post" style="border:none !important;">
+                        <div class="alert alert-danger alertmessage">
+                        </div>
+                        <div class="MyForm mb-3">
+                            <div class="NewLineInForm input-group mb-1">
+                                <div class="iconholder  input-group-prepend">
+                                    <i class="fas fa-at"></i>
+                                </div>
+                                <input asp-for="emailaddress" type="email" class="MyControl form-control" value="" placeholder="ایمیل خود را وارد نمایید. " autocomplete="off" />
+                               
+                            </div>
+                            <div class="py-2"><span asp-validation-for="emailaddress" style="color:red"></span></div>
+                        </div>
+                        <button id="btenter" type="submit" class="btn" style=" margin:3px;background-color:#332b3a;color:#ffca01">ارسال</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    var i = document.querySelectorAll('#btenter');
+    i.item(0).addEventListener("click", function (e) {
+        e.preventDefault()
+        var emailname = $('.MyForm #emailaddress').val()
+        var data = { emailaddress: emailname }
+        if ($("form").valid()) {
+            $.post('/Account/emailforrecoveryaccount', data, function (result) {
+                if (result.jsonstatus == 'Success') {
+                    $('.alertmessage').removeClass('alert-danger')
+                    $('.alertmessage').addClass('alert-success')
+                    $('.alertmessage').html(result.jsonmessage)
+                    $('.alertmessage').css('display', 'block')
+                } else {
+
+                    $('.alertmessage').html(result.jsonmessage)
+                    $('.alertmessage').css('display', 'block')
+                }
+            })
+        } else {
+            return;
+        }
+
+    })
+
+
+</script>

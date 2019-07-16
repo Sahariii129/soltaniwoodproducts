@@ -1,0 +1,128 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_products
+
+@{
+    ViewBag.Title = "addproduct";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+
+<h2 style=" color :#ffffff;">ثبت کالای جدید</h2>
+
+
+@using (Html.BeginForm("addproduct", "admin", FormMethod.Post, new { enctype = "multipart/form-data" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+      
+        <div class=" hidden">
+
+            <input type="hidden" name="categoryid" class="form-control" id="usr" value="@TempData["categoryid"]">
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.name, htmlAttributes: new { @class = "control-label col-md-2 lb1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.dimension, htmlAttributes: new { @class = "control-label col-md-2 lb1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.dimension, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.dimension, "", new { @class = "text-danger" })
+            </div>
+        </div>
+       
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.codename, htmlAttributes: new { @class = "control-label col-md-2 lb1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.codename, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.codename, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+       
+        <div class="form-group">
+            @Html.LabelFor(model => model.description, htmlAttributes: new { @class = "control-label col-md-2 lb1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.grade, htmlAttributes: new { @class = "control-label col-md-2 lb1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.grade, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.grade, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.keywords, htmlAttributes: new { @class = "control-label col-md-2 lb1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.keywords, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.keywords, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.inventory, htmlAttributes: new { @class = "control-label col-md-2 lb1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.inventory, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.inventory, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.lastbuycost, htmlAttributes: new { @class = "control-label col-md-2 lb1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.lastbuycost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.lastbuycost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.lastcellcost, htmlAttributes: new { @class = "control-label col-md-2 lb1" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.lastcellcost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.lastcellcost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+          
+           <label class="col-md-offset-2">تصویر</label>
+            <div class="col-md-10">
+                <input type="file" name="image" class="form-control"/>
+            </div>
+        </div>
+       
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="ثبت" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<center><span style=" color :#ffffff;">@ViewBag.Message</span></center>
+
+
+<div class="btn-group" role="group" aria-label="...">
+    <a href="../admin/adminpanel" class="btn btn-default">پنل مدیریت</a>
+    <a href="../admin/manage_listkala" class="btn btn-primary">پنل مدیریت انبار وب</a>
+    <a href="../admin/manage_entity" class="btn btn-success">گزارش موجودی انبار وب</a>
+    <a href="../admin/reporttoorder" class="btn btn-danger">گزارش کالاهای کسری</a>
+    <a href="../admin/manage_products" class="btn btn-default">مدیریت بخش محصولات</a>
+    <a href="detailsproducts_catg?id=@TempData["categoryid"]" class="btn btn-success">بازگشت به لیست</a>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

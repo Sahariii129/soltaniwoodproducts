@@ -1,0 +1,69 @@
+﻿@model IEnumerable<SoltaniWeb.Models.Domain.tbl_newsimagefiles>
+
+@{
+    ViewBag.Title = "manage_imagefiles";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    int i = 1;
+}
+
+<h2 style=" color :#ffffff;">مدیریت بخش تصاویر خبری </h2>
+
+<div id="imagegallerydetaile" class="row">
+
+    @* دکمه افزودن *@
+
+    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 ">
+
+
+        <a style="text-decoration:none;" href="/admin/addsimagefile"><img src="~/Content/img/icon/add-icon.png" alt="" style="width:100%; height:168px;" class="img-thumbnail" /></a>
+
+    </div>
+
+    @foreach (var item in Model)
+    {
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 ">
+
+
+            <img src="~/Content/img/newsimages/@item.filename" alt="@item.filename" style="width:100%; height:130px;" class="img-thumbnail" />
+
+            <div class=" row" style="border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; ">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <center> <a href="#"><span style="text-align :center ; font-size:12px;">@i ) @item.description </span></a></center>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <center> <a href="#"><span style="text-align :center ; font-size:12px;"> @item.filename </span></a></center>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <center> <a href="#"><span style="text-align :center ; font-size:12px;">ID: @item.id  -||||- @shamsi.ToShamsi(item.date).ToString("yyyy/MM/dd")  </span></a> </center>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                    <center> <a href="/admin/editnewsimagesfile/@item.id"><img src="~/Content/img/icon/edit.png" style="height:24px; width:auto;" /></a></center>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                    <center><a data-ajax="true" data-ajax-method="POST" data-ajax-confirm="آیا مطمئن به حذف هستید؟" href="/admin/deletenewsimagefile/@item.id"><img src="~/Content/img/icon/delete.png" style="height:24px; width:auto;" /></a></center>
+                </div>
+                
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                    <center><a data-ajax="true" data-ajax-method="POST" href="/admin/selectimage?newsid=@TempData["newsid"]&newsimageid=@item.id"><img src="~/Content/img/icon/select.png" style="height:24px; width:auto;" /></a></center>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                    <center><a href="/admin/detailsimagesfile/@item.id"><img src="~/Content/img/icon/details.png" style="height:24px; width:auto;" /></a></center>
+                </div>
+
+            </div>
+            <div class="col-lg-12" style=" height:10px;">
+
+            </div>
+        </div>
+        i++;
+    }
+
+
+
+
+</div>
+
+
+@Html.ActionLink("بازگشت به پنل مدیریتی", "adminpanel", "admin")

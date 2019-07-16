@@ -1,0 +1,39 @@
+﻿@using SoltaniWeb.Models.repository
+@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.Extensions
+ 
+@model IEnumerable<appcontactlistview>
+
+
+
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color:#0cd80a;">
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-title" id="titlemodal">اطلاعات تماس :@ViewBag.fullname</div>
+        </div>
+        <div class="modal-body" style="height:250px;" id="bodymodal">
+            <table class="table table-responsive table-bordered table-condensed table-hover " id="tbl_contacts">
+                <thead>
+                    <td> مشخصه   </td>
+                    <td> مقدار   </td>
+
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tr id="@("delcontact" + item.id)">
+                        <td> @item.actionaccesstype  </td>
+                        <td> @item.contact_value   </td>
+
+                    </tr>
+
+                }
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+

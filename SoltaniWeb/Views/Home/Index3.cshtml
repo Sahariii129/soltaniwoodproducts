@@ -1,0 +1,551 @@
+﻿@using SoltaniWeb.Models.Domain
+@{
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+
+    int userinchat = 0;
+
+    if (Context.Session.GetInt32("userid") != null)
+    {
+        userinchat = Context.Session.GetInt32("userid").Value;
+        string firstname = db.tbl_user.Find(userinchat).name;
+    }
+
+}
+
+<!DOCTYPE html>
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>@ViewBag.title</title>
+    <meta name="description" content="@ViewBag.description" />
+    <meta name="robots" content="@ViewBag.howtoindex" />
+    <meta property="og:title" content="@ViewBag.title" />
+    <meta property="og:description" content="@ViewBag.description" />
+    <meta property="og:site_name" content="کالای چوب سلطانی" />
+
+    <meta property="og:image" content="~/Content/img/logo/mylogotelegram.png" />
+
+
+
+
+
+    <link rel="icon" href="~/Content/img/logo/mylogo.png">
+    <!-- Bootstrap -->
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-rtl.min.css" rel="stylesheet" />
+
+
+    <link href="~/Scripts/jQuery-Datepicker-Plugin-For-Persian-Date-persianDatepicker/jQuery-Datepicker-Plugin-For-Persian-Date-persianDatepicker/css/persianDatepicker-default.css" rel="stylesheet" />
+
+    <link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" />
+    <link href="~/jquery.jqGrid/ui.jqgrid.css" rel="stylesheet" />
+
+
+    <link href="~/Content/styles/Style3.css" rel="stylesheet" />
+    <link href="~/Scripts/Basic-Responsive/Basic-Responsive/dist/css/slider.min.css" rel="stylesheet" />
+    <link href="~/animate.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
+
+</head>
+<body>
+
+    <div class="topnav myfont" id="myTopnav">
+        <img id="img" src="~/Content/img/logo/SWP_new.png" />
+        <a href="#home" class="active">خانه<i class="fa fa-fw fa-home"></i> </a>
+        <div class="subnav">
+            <button class="subnavbtn">محصولات <i class="fa fa-caret-down"></i></button>
+            <div class="subnav-content">
+                <a href="#company">هایگلاس</a>
+                <a href="#team">ام دی اف 16 میل</a>
+                <a href="#careers">نئوپان</a>
+            </div>
+        </div>
+
+
+        <a href="#news">اخبار و تازه ها </i></a>
+        <a href="#contact">تماس با ما <i class="fa fa-fw fa-envelope"></i></a>
+        <a href="#about">About</a>
+        <a href="#" class="icon" id="openmenu" open="2">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+    <div>
+        <p>Alireza Aghasoltan</p>
+
+    </div>
+</body>
+
+
+<footer>
+
+</footer>
+
+
+
+
+<script src="~/Scripts/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+<script src="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+<link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+
+
+
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<script src="~/Scripts/Basic-Responsive/Basic-Responsive/dist/js/slider.min.js"></script>
+
+@*<script src="~/Scripts/jQuery-Datepicker-Plugin-For-Persian-Date-persianDatepicker/jQuery-Datepicker-Plugin-For-Persian-Date-persianDatepicker/js/jquery-1.10.1.min.js"></script>*@
+@*<script src="~/Scripts/jQuery-Datepicker-Plugin-For-Persian-Date-persianDatepicker/jQuery-Datepicker-Plugin-For-Persian-Date-persianDatepicker/js/persianDatepicker.min.js"></script>*@
+
+
+<script src="~/Scripts/noty/packaged/jquery.noty.packaged.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/utility.js"></script>
+
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<!-- <script src="js/bootstrap.min.js"></script>-->
+
+<script src="~/Scripts/i18n/grid.locale-fa.js"></script>
+<script src="~/Scripts/jquery.jqGrid.min.js"></script>
+
+@*<script src="~/Scripts/PersianDatePicker.js"></script>*@
+<script src="~/Scripts/jquery.price_format.2.0.js"></script>
+
+
+
+@*<script src="~/Scripts/jquery.signalR-2.2.3.js"></script>
+    <script src="~/signalR/hubs"></script>*@
+<script src='https://cdn.rawgit.com/admsev/jquery-play-sound/master/jquery.playSound.js'></script>
+<script src="~/Scripts/jquery.captcha.basic.js"></script>
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+
+
+
+
+@*@RenderSection("script", false)*@
+
+
+<script>
+    // chat
+    
+
+    $(chatwindowsheading).click(function () {
+        $(myFormtochat).slideToggle(500)
+
+
+    })
+    $('#closewindows').click(function () {
+
+        $('#myFormtojoinchat').slideToggle(500)
+    })
+
+    $('#jointochatheading').click(function () {
+
+        $('#myFormtojoinchat').slideToggle(500)
+    })
+
+
+
+
+    // اتصال به چت هاب
+
+    var connectionid = ""
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+
+    // to start connection 1
+    connection.start().catch(err => console.error(err.toString())).then(function () {
+        connection.invoke('getConnectionId')
+            .then(function (connectionId) {
+                // Send the connectionId to controller
+                console.log("connectionID: " + connectionId);
+                connectionid = connectionId
+
+
+
+            });
+
+
+    })
+     // فشردن دکمه گفتگوی آنلاین
+    $('#onlinechat').click(function () {
+            var uname
+            var userid =@userinchat
+          if(userid != 0) {
+
+
+              $.post('/admin/userinfo', { id: userid }, function (e) {
+                  if (e.isuser == true) {
+
+                      connection.invoke("registeronlineuser", e.username, e.email, connectionid, userid)
+                      $(myFormtochat).slideToggle(500)
+                      $(unameinchat).val(e.fname)
+
+                  }
+
+              })
+
+
+
+
+          } else {
+
+
+              $.post('/admin/checkconnectionid', { connectionid: connectionid }, function (e) {
+
+                  if (e ==true) {
+
+               $(myFormtochat).slideToggle(500)
+                  } else {
+                      $(myFormtojoinchat).slideToggle(500)
+                  }
+
+              })
+
+           }
+
+
+
+    })
+
+       // فشردن دکمه اتصال
+
+        $(onlinechatconnect).click(function () {
+
+            var uname = $(unameinchat).val()
+            var email = $(emailuserinchat).val()
+            var userid =@userinchat
+                $(myFormtochat).slideToggle(500)
+            $(myFormtojoinchat).slideToggle(500)
+            $(chatboxid).html('')
+
+            connection.invoke("registeronlineuser", uname, email, connectionid, userid)
+
+
+
+    })
+
+    // فشردن دکمه قطع
+    $(disconnectchat).click(function () {
+        $(chatboxid).html('')
+
+        connection.invoke("signoutonlineuser",connectionid)
+
+
+    })
+
+
+    // ثایپ متن پیام
+    $("#messagetext").keypress(function (e) {
+        var msg = $(this).val()
+
+        var uname = $(unameinchat).val()
+
+
+        var supporter_id = $('#alertinchatwindow').attr('supporterid')
+        if (e.which == 13) {
+            $(this).val('')
+            $(this).focus()
+
+            connection.invoke("sendmessagetoserver",msg, connectionid, uname, supporter_id, supporter_id)
+        }
+
+
+    })
+
+    // دریافت متن از سرور و نمایش در بالا
+
+    connection.on("addmessage", function (uname, msg, msgid, time, senderidsupporter, onlineuser_id) {
+
+
+        var html = ''
+        if ($(unameinchat).val() == uname) {
+
+            html += '<div class="col-sm-6 speech-bubble-right msgbox" msgid= "' + msgid + ' >'
+        } else {
+            html += '<div class="col-sm-6 speech-bubble-left msgbox" msgid= "' + msgid + ' >'
+        }
+        html += '<p class=" from">' + uname + '</p>'
+        html += '<p class="msgtext">' + msg + '</p>'
+        html += ' <p class="time">' + time + '</p>'
+        html += '</div>'
+
+        $(chatboxid).append(html)
+
+        var $target = $('#chatboxid');
+        $target.animate({ scrollTop: 1000000000 }, 1000);
+    })
+
+    connection.on("sayhello", function (msg, id) {
+
+            //var html = ''
+        //html += 'سلام ' + uname + ' جان. لطفا صبر کنید تا یکی از اعضای تیم را به شما متصل کنیم.'
+        $('#alertinchatwindow').html(msg)
+        $('#alertinchatwindow').attr('supporterid', id)
+    })
+
+    connection.on("resetchat", function () {
+
+        $(unameinchat).val('')
+        $(emailuserinchat).val('')
+        $(myFormtochat).slideToggle(500)
+    })
+
+
+
+
+</script>
+
+
+
+
+<script type="text/javascript">
+
+
+
+
+    $("#imagegallery").click(function () {
+        $("#imagegallerydetaile").slideToggle(500);
+
+    });
+    $("#imagegallery1").click(function () {
+        $("#imagegallerydetaile1").slideToggle(500);
+
+    });
+    $("#imagegallery2").click(function () {
+        $("#imagegallerydetaile2").slideToggle(500);
+
+    });
+    $("#imagegallery3").click(function () {
+        $("#imagegallerydetaile3").slideToggle(500);
+
+    });
+    $("#imagegallery4").click(function () {
+        $("#imagegallerydetaile4").slideToggle(500);
+
+    });
+    $("#imagegallery0").click(function () {
+        $("#imagegallerydetaile").hide(500);
+        $("#imagegallerydetaile1").hide(500);
+        $("#imagegallerydetaile2").hide(500);
+        $("#imagegallerydetaile3").hide(500);
+        $("#imagegallerydetaile4").hide(500);
+
+    });
+    $("#imagegallery000").click(function () {
+        $("#imagegallerydetaile00").hide(500);
+        $("#imagegallerydetaile001").hide(500);
+        $("#imagegallerydetaile002").hide(500);
+        $("#imagegallerydetaile003").hide(500);
+        $("#imagegallerydetaile004").hide(500);
+
+    });
+
+    $("#imagegallery00").click(function () {
+        $("#imagegallerydetaile00").slideToggle(500);
+
+    });
+    $("#imagegallery001").click(function () {
+        $("#imagegallerydetaile001").slideToggle(500);
+
+    });
+    $("#imagegallery002").click(function () {
+        $("#imagegallerydetaile002").slideToggle(500);
+
+    });
+    $("#imagegallery003").click(function () {
+        $("#imagegallerydetaile003").slideToggle(500);
+
+    });
+    $("#imagegallery004").click(function () {
+        $("#imagegallerydetaile004").slideToggle(500);
+
+    });
+
+
+
+
+    $("#videos").click(function () {
+        $("#videosdetaile").slideToggle(500);
+
+    });
+
+
+    $("img.img-thumbnail").mouseover(function () {
+        $(this).css("background-color", "red")
+
+    });
+
+    $("img.img-thumbnail").mouseleave(function () {
+        $(this).css("background-color", "white")
+
+    });
+
+
+
+
+    $('#back-top').click(function () {
+        $('body,html').animate({
+            scrollTop: 0
+        }, 700);
+        return false;
+    });
+
+    var amountScrolled = 300;
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > amountScrolled) {
+            $('a.back-to-top').fadeIn('slow');
+        } else {
+            $('a.back-to-top').fadeOut('slow');
+        }
+    });
+
+
+
+
+
+
+
+
+
+</script>
+
+
+<script>
+    function sortingdefault(catgid) {
+        //alert("hi")
+
+        $.ajax({
+            url: '/products/sortingdefault',
+            type: 'POST',
+            dataType: "json",
+            data: { id: catgid },
+            error: function (err) {
+                alert(err.status + "   " + err.statusText);
+            }
+        }).done(function (msg) {
+
+            $("#imagegallerydetaile").html('');
+            $("#baseon").html("<span id='baseon'>چیدمان بر اساس شماره کد</span>")
+            //$("#topiccolor").html(" <p id='imagegallery' class='bg-success' style=' text-align :center ; cursor :pointer;'>.:: کالیته هایگلاس ترک AGT ::.  -  <span id='baseon'>چیدمان بر اساس شماره کد</span></p>")
+            $.each(msg, function (index, val) {
+                //alert(val.name)
+                if (catgid != 2) {
+                    //alert("NO ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-3 col-md-3 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-9 col-md-9 col-sm-9 col-xs-9'><a href='#'><h5 style='text-align :center ;'>" + val.name + " </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'> " + val.code + " </h5></a></div>      <div class='col-lg-9 col-md-9 col-sm-9 col-xs-9' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار - <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' /></a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                } else {
+                    //alert("ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px; ' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='font-size:8px;'> <a href='/samples/samples?id01=" + val.id + "'><h5 style='text-align:center; font-size:12px;'>" + val.name + "-" + val.code + " </h5></a>            </div><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' />اسلاید شو</a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                }
+
+            });
+        });
+
+    }
+
+
+
+    function sortingbyalpha(catgid) {
+
+
+        $.ajax({
+            url: '/products/sortingbyalpha',
+            type: 'POST',
+            dataType: "json",
+            data: { id: catgid },
+            error: function (err) {
+                alert(err.status + "   " + err.statusText);
+            }
+        }).done(function (msg) {
+
+            $("#imagegallerydetaile").html('');
+            $("#baseon").html("<span id='baseon'>چیدمان بر اساس حروف الفبا</span>")
+            //$("#topiccolor").html(" <p id='imagegallery' class='bg-success' style=' text-align :center ; cursor :pointer;'>.:: کالیته هایگلاس ترک AGT ::.  -  <span id='baseon'>چیدمان بر اساس حروف الفبا</span></p>")
+
+            $.each(msg, function (index, val) {
+                //alert(val.name)
+                if (catgid != 2) {
+                    //alert("NO ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-3 col-md-3 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px;' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-9 col-md-9 col-sm-9 col-xs-9'><a href='#'><h5 style='text-align :center ;'>" + val.name + " </h5></a></div><div class='col-lg-3 col-md-3 col-sm-3 col-xs-3'><a href='#'><h5 style='text-align :center ;'> " + val.code + " </h5></a></div> <div class='col-lg-9 col-md-9 col-sm-9 col-xs-9' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار - <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-3 col-md-3 col-sm-3 col-xs-3' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' /></a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                } else {
+                    //alert("ack")
+                    $("#imagegallerydetaile").append(" <div class='col-lg-2 col-md-4 col-sm-6 col-xs-12 '><a href='../samples/samples?id01=" + val.id + "'><img src='/Content/img/products/" + val.image + "' alt='" + val.name + "' style='width:100%; height :250px;' class='img-thumbnail' /></a><div class=' row' style='border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; '><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='font-size:8px;'> <a href='/samples/samples?id01=" + val.id + "'><h5 style='text-align:center; font-size:12px;'>" + val.name + "-" + val.code + " </h5></a>            </div><div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'><a href='../samples/samples?id01=" + val.id + "'><h5 style='text-align :center ; '> <span style=' margin-left:10px;' class='glyphicon glyphicon-list' aria-hidden='true'></span> نمونه کار <span id='samplescount' class='badge'></span> </h5></a></div> <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12' style='background-color:#ffffff; border-top:1px dashed #808080;'>  <center><a href='../samples/slideshowsamples?id01=" + val.id + "'><img src='/Content/img/icon/Play-icon.png' style=' width :28px; height:28px; padding-top:5px;' />اسلاید شو</a></center></div> </div><div class='col-lg-12' style='height:10px;'></div></div>");
+                }
+
+
+
+            });
+        });
+    }
+
+
+
+
+
+
+    $(function () {
+        $(textsearch).focus();
+
+
+    })
+
+    $(function () {
+        $(".dropdown-menu > li > a.trigger").on("click", function (e) {
+            var current = $(this).next();
+            var grandparent = $(this).parent().parent();
+            if ($(this).hasClass('left-caret') || $(this).hasClass('right-caret'))
+                $(this).toggleClass('right-caret left-caret');
+            //grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+            grandparent.find(".sub-menu:visible").not(current).hide();
+            current.toggle();
+            e.stopPropagation();
+        });
+        $(".dropdown-menu > li > a:not(.trigger)").on("click", function () {
+            var root = $(this).closest('.dropdown');
+            root.find('.left-caret').toggleClass('right-caret left-caret');
+            root.find('.sub-menu:visible').hide();
+        });
+    });
+    //
+
+
+
+
+</script>
+
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-86209806-1', 'auto');
+    ga('send', 'pageview');
+
+
+
+
+
+
+
+</script>
+
+
+<script>
+
+
+</script>

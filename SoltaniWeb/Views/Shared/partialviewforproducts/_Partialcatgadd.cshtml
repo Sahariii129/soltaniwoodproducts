@@ -1,0 +1,158 @@
+﻿@using SoltaniWeb.Models.Domain
+@model tbl_category
+@{
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    var sectionlist = db.tbl_section.OrderBy(a => a.ordering);
+
+}
+
+<div class="form-horizontal">
+    <input type="hidden" id="catgid" value="" />
+
+    <div class="form-group row">
+        <label class="control-label col-md-3">نام بخش: </label>
+        <div class="col-md-9">
+            <select class="form-control" id="addsection_id">
+                @foreach (var item in sectionlist)
+                {
+                    <option value="@item.id" selected="@(item.id== ViewBag.sectionid)" >@item.name</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-md-3">نام برند: </label>
+        <div class="col-md-9">
+            <input type="text" class="form-control" id="addcategoryname" value="" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-md-3">نام اختصاری :</label>
+        <div class="col-md-3">
+            <input type="text" class="form-control" id="addshortname" value="" />
+        </div>
+        <label class="control-label col-md-3">نام اکشن :</label>
+        <div class="col-md-3">
+            <input type="text" class="form-control" id="addactionname" value="" placeholder="به انگلیسی وارد شود" />
+        </div>
+    </div>
+
+
+
+    <div class="form-group row">
+        <label class="control-label col-md-3">وزن :</label>
+        <div class="col-md-3">
+            <input type="text" class="form-control" id="addweight_catg" value="" placeholder="Kg" />
+        </div>
+        <label class="control-label col-md-3">وضعیت نمایش :</label>
+        <div class="col-md-3">
+            <select id="addstatus_catg" class="form-control">
+                <option value="true" >نمایش </option>
+                <option value="false" >عدم نمایش </option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="control-label col-md-3">نمایش قیمت :</label>
+        <div class="col-md-3">
+            <select id="addshowprice" class="form-control">
+                <option value="true" >نمایش </option>
+                <option value="false">عدم نمایش </option>
+            </select>
+        </div>
+        <label class="control-label col-md-3"> فروش اینترنتی :</label>
+        <div class="col-md-3">
+            <select id="addpurchaseonline" class="form-control">
+                <option value="true" >فعال </option>
+                <option value="false" >غیر فعال </option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-md-3">کلمات کلیدی:</label>
+        <div class="col-md-9">
+
+            <textarea rows="1" id="addcatg_keywords" class="form-control"></textarea>
+        </div>
+
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-md-3">توضیحات:</label>
+        <div class="col-md-9">
+
+            <textarea rows="1" id="adddescription" class="form-control"></textarea>
+        </div>
+
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-md-3">توضیحات HTML:</label>
+        <div class="col-md-9">
+
+            <textarea rows="3" id="addfulldescription" class="form-control" style="text-align:left;"></textarea>
+        </div>
+
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-md-3">تصویر :</label>
+        <div class="col-md-3">
+            <input type="file" id="addimage" />
+
+            <div class="loader">
+                <center>
+
+                    <img class="loading-image" src="~/Content/img/icon/130.gif" alt="loading..">
+                </center>
+            </div>
+            
+        </div>
+        <div class="col-sm-6">
+            @if (Model.image != null)
+            {
+
+                <img id="addimgpre" height="150" width="150" style="border:3px solid blue; border-radius:10px; float:left;" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.image)))" />
+            }
+            else
+            {
+                <img id="addimgpre" height="150" width="150" style="border:3px solid blue; border-radius:10px; float:left;" src="" />
+
+            }
+        </div>
+
+
+
+
+
+    </div>
+    <div class="form-group row">
+        <div class="col-md-12">
+            <center id="addinfobox">
+            </center>
+
+        </div>
+
+
+
+    </div>
+    <div class="text-left">
+        <button class="btn btn-success" id="btn_addcatg">ثبت</button>
+    </div>
+</div>
+
+<script>
+    // نمایش پریویو تصویر
+    $('#addimage').change(function () {
+
+        var reader = new FileReader();
+        reader.readAsDataURL(addimage.files[0])
+        reader.onloadend = function (e) {
+
+            addimgpre.src = e.target.result
+
+        }
+    })
+
+
+
+</script>
+

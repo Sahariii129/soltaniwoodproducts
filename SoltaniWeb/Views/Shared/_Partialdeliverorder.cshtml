@@ -1,0 +1,77 @@
+﻿@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.structs
+
+@model deliverorderinfo
+@{
+    var today = DateTime.Now.ToPersianDate();
+}
+
+@*<div class="panel">
+        <div class="panel-heading"></div>
+        <div class="panel-mo"></div>
+    </div>*@
+<div class="form-horizontal form_deliver">
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-4">کاربر</label>
+            <div class="col-sm-8">
+
+                <input type="text" class="form-control" id="done_userid" userid="@(Model!=null ?(Model.userid ?? int.Parse(User.Claims.FirstOrDefault().Value)) : int.Parse(User.Claims.FirstOrDefault().Value))" value="@(Model!=null ?(Model.userid!=null? Model.username :   User.Identity.Name ):  User.Identity.Name)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-4">تاریخ</label>
+            <div class="col-sm-8">
+
+                <input type="text" class="form-control deliverdate" id="deliverdateinfrom" value="@(Model != null ? Model.deliverdate : DateTime.Now.ToPersianDate() )" />
+                <input type="hidden" id="orderidindeliverform" value="@(Model!=null ? Model.orderid : 0)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-4">وضعیت تحویل</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="doneinform">
+                    @if (Model != null)
+                    {
+                    <option value="true" selected="@(Model.done=="True")">تحویل مشتری  </option>
+                    <option value=false selected="@(Model.done=="False")">عدم تحویل </option>
+                    }
+                    else
+                    {
+
+
+
+                    <option value=true>تحویل مشتری  </option>
+                    <option value=false>عدم تحویل </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-4">توضیحات</label>
+            <div class="col-sm-8">
+                <textarea rows="3" class="form-control" id="orderdescdeliver">@(Model!=null? Model.deliverorderdesc : "")</textarea>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-success savedeliverinfo" id="savedeliverorderinfo">ثبت</button>
+
+
+
+</div>
+<script>
+    $('.deliverdate').click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+
+
+
+
+</script>

@@ -1,0 +1,32 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_user
+
+@{
+    ViewBag.Title = "userpanel";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+
+<div class=" col-lg-3 col-md-3 col-sm-6 col-xs-12  ">
+
+
+    <br />
+    <div class="list-group textright">
+        <button id="wood" class="list-group-item btn-success" type="button" style=" background-color: #ff0000;" onclick="location.href='@Url.Action("index", "HOME", new { key = "هایگلاس-ام-دی-اف-نئوپان-فرآوردههای-چوبی-تخته-روسی-کالای-چوب-سلطانی-MDF-نوار-پی-وی-سی-تکنوپل-پارس-لمینت-Highgloss-AGT-AGE-Iran-ایران-شیراز-فارس" })'">
+            <center><span style="font-size :16px; text-align :center ; margin :auto; color :#ffffff;">کارتابل : @Model.name @Model.Lname  </span></center>
+
+            
+        </button>
+        <button id="AGT" class="list-group-item btn-success" type="button" style=" background-color: #ffffff;" onclick=" ">
+           ویرایش پروفایل
+            <img src="~/Content/img/user/@Model.image" style="width: 20%;float :left; margin-top:3px;" />
+        </button>
+        <button id="AGE" class="list-group-item btn-success" type="button" style=" background-color: #ffffff;" onclick=" ">
+           ویرایش نمونه کارهای خود
+           
+        </button>
+      
+
+
+
+            </div>
+
+</div>

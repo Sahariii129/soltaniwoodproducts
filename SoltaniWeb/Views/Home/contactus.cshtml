@@ -1,0 +1,73 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_contactus
+
+
+@{
+    //ViewBag.Title = "contactus";
+    ViewBag.description = "جهت ارتباط با کالای چوب سلطانی  به این صفحه مراجعه فرمایید ";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+<link href="/soltanistatic/style/contact.css" rel="stylesheet" />
+
+<script>
+   
+</script>
+<div class="container-fluid contact" data-aos="fade-up">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 contactTitle">تماس با ما</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row branch">
+        <div class="col-12 col-lg-4 pb-5 pb-lg-0 mx-auto">
+            <div class="">
+                <img class="img-fluid" src="~/soltanistatic/pictures/Basij.jpg" alt="">
+            </div>
+                <div class=" mt-5 mb-4"><h5 class="bold blue">شعبه یک</h5></div>
+                <h6>آدرس: <span>ایران، شیراز، میدان بسیج (فلکه فرودگاه قدیم) خ شهید حراف، روبه روی کوچه 2</span></h6>
+                <h6>تلفن ثابت: <span>38219110-071</span> , <span>38310032-071</span></h6>
+                <h6>تلفکس: <span>07138310032</span></h6>
+            </div>
+        <div class="col-12 col-lg-4 pb-5 pb-lg-0 mx-auto">
+            <div class="">
+                 <img class="img-fluid" src="~/soltanistatic/pictures/Shahrak.jpg" alt="">
+            </div>
+            <div class=" mt-5 mb-4"><h5 class="bold blue">شعبه دو</h5></div>
+            <h6>آدرس: <span>ایران، شیراز، شهرک صنعتی، میدان اول، بلوار کارگر جنوبی 3</span></h6>
+            <h6>تلفن ثابت: <span>37742578-071</span> , <span>3774206-071</span> , <span>37740073-071</span> , <span>37743587-071</span> , <span>37744452-071</span></h6>
+            <h6>تلفکس: <span>07137743587</span></h6>
+        </div>
+    </div>
+    <div class="social">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h6 class="socialText">از طریق راه های زیر با ما درارتباط باشید</h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="d-flex align-items-center justify-content-between">
+                    <a href="http://t.me/soltaniwoodproducts" title="Telegram"><i class="fab fa-telegram-plane fa-lg"></i></a>
+                    <a href="http://www.aparat.com/soltaniwoodproducts/%DA%A9%D8%A7%D9%84%D8%A7%DB%8C_%DA%86%D9%88%D8%A8_%D8%B3%D9%84%D8%B7%D8%A7%D9%86%DB%8C" title="Aparat"><img src="~/Content/img/icon/aparat.png" /></a>
+                    <a href="https://instagram.com/soltaniwoodproducts" title="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
+                </div>
+                <div><a class="email" href="mailto:info@soltaniwoodproducts.com" title="Email">info@soltaniwoodproducts.com</a></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="form-group">
+                    <input id="name" name="name" class="form-control" type="text" placeholder="نام کاربری به انگلیسی وارد شود" />
+                    <input id="email" name="email" class="form-control" type="text" placeholder="ایمیل خود را وارد نمایید" />
+                    <textarea col="4" id="text1" name="text" class="form-control" type="text" placeholder="پیام خود را بنویسید ..." /></textarea>
+                </div>
+                <div class="text-center">
+                    <span><button class="btn btn-success" type="submit" value="ارسال">ارسال</button></span>
+                    <span><button class="btn btn-danger" id="btn1" type="button" value="ریست">ریست</button></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

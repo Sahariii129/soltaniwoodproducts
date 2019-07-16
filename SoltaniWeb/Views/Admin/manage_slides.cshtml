@@ -1,0 +1,445 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.structs
+
+@model IQueryable<tbl_slides>
+@{
+    ViewBag.Title = "manage_slides";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.sliderepository slidesrep = new SoltaniWeb.Models.repository.sliderepository(db);
+}
+
+<style>
+    .loading-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 10;
+    }
+
+    .loader {
+        display: none;
+    }
+</style>
+<div class="container-fluid">
+
+    <div class="card myfont my-4">
+        <div class="card-header text-center" style="background-color:#332b3a;color:#fff">
+            <h6 class="mb-0">بارگذاری تصویر</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 form-horizontal">
+                    <div class="form-group">
+                        <div class="row py-2">
+                            <label class="control-label col-2 text-left">عنوان اسلاید </label>
+                            <div class="col-10">
+                                <input class="form-control A " type="text" id="nameslide" placeholder="عنوان اسلاید را بنویسید" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row py-2">
+                            <label class="control-label col-sm-2 text-left">توضیحات </label>
+                            <div class="col-sm-10">
+                                <input class="form-control A " type="text" id="discription" placeholder="توضیحات و کلید واژه های مربوط به اسلاید" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row py-2">
+                            <label class="control-label col-sm-2 text-left">تصویر </label>
+                            <div class="col-sm-10">
+                                <input class=" A" type="file" id="imagefile" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-lg mt-3" style="background-color:#ffca01;color:#fff" id="btn_save">ذخیره</button>
+                            <div class="loader">
+                                <img class="loading-image" src="~/Content/img/icon/130.gif" alt="loading..">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-12">
+                    <img id="imgpreview" class="img-thumbnail" style="width :100%;height :360px;" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    string currentfirstimg = Model.Where(a => a.first == true).SingleOrDefault().nameimage;
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <div class="card myfont ">
+                <div class="card-header text-center" style="background-color:#332b3a;color:#fff">
+                    <h6 class="mb-0">انتخاب اسلاید اول</h6>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between">
+                                <label class="control-label">عنوان اسلاید:  </label>
+                                <select id="seledtfirstslide" class="form-control">
+                                    @foreach (var item in Model)
+                                    {
+                                        <option value="@item.slideID" id="@item.slideID" @(item.first==true ? "selected" : "" )>@item.nameslide @(item.first == true ? "(اسلاید اول جاری)" : "")</option>
+                                    }
+                                </select>
+                            </div>
+                            <div><button class="btn" id="btn1" style="background-color:#ffca01;color:#fff">اعمال تغییر</button></div>
+                        </div>
+                    </div>
+                    <img id="firstimg" class=" img-thumbnail" style="width :100%;height :360px; margin-top:10px;" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(slidesrep.firstslide().imge)))" />
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="card myfont ">
+                <div class="card-header text-center" style="background-color:#332b3a;color:#fff">
+                    <h6 class="mb-0">نمایش اسلاید</h6>
+                </div>
+                <div class="card-body">
+                    @Html.Partial("_partialimageslider", new imageslider() { height = 420 })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12 myfont" id="slidelist">
+            <div class="row">
+                @foreach (var item in (Model.OrderByDescending(a => a.show)).OrderByDescending(a => a.rank))
+            {
+                    <div class="col-md-2 col-12" style="margin-bottom:10px;" id="@("slide"+ item.slideID)">
+                        @if (item.thumbnail_image != null)
+                {
+                            <img style="width:100%; height:100px;" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.thumbnail_image)))" />
+
+                        }
+                        else
+                        {
+                            <img style="width:100%; height:100px;" src="~/Content/img/slide/@item.nameimage" />
+                        }
+                        <div id="@("showicon" + item.slideID)" style="position:absolute; top:10px;right:10px; padding-left:10px; padding-right:10px; border-radius:3px;">
+                            @if (item.show == true)
+                            {
+
+                                <img width="30" height="30" src="~/Content/img/icon/Ok-icon.png" />
+
+                            }
+                        </div>
+
+                        <div id="@("ordericon" + item.slideID)" style="position:absolute; top:10px;right:45px; padding-left:10px; padding-right:10px; border-radius:3px;"><span class="badge badge-pill" style="background-color:#332b3a;color:#ffca01;font-size:12px">@item.rank</span> </div>
+                        <div id="@("first" + item.slideID)" style="position:absolute; top:10px;left:10px; padding-left:10px; padding-right:10px; border-radius:3px;">
+                            @if (item.first == true)
+                            {
+                                <span class="badge" style="background-color:#ff0000;">First Slide</span>
+
+                            }
+                        </div>
+                        <div class="card mb-3">
+                            <div id="@("nameslide01" + item.slideID)" class="card-header text-center" style="background-color:#6a95cc;color:#fff">@(item.nameslide.ToString().Length > 20 ? item.nameslide.ToString().Substring(0, 20) : item.nameslide)</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6 text-center showdiv">
+                                        <center><button id="@("btn" + item.slideID)" class="btnshow" value="@item.slideID"><img src="~/Content/img/icon/edit.png" style="height:24px; width:auto;" /></button></center>
+                                    </div>
+                                    <div class="col-6 text-center delclass">
+                                        <center><button id="@("btndel" + item.slideID)" class="btndel" value="@item.slideID"><img src="~/Content/img/icon/delete.png" style="height:24px; width:auto;" /></button></center>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    // modal
+
+                }
+
+            </div>
+        </div>
+
+        <div class="modal fade myfont" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" id="mymodal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color:#6a95cc;color:#fff">
+                        <h4 class="modal-title" id="myModalLabel">تغییر مشخصات تصویر </h4>
+                        <button type="button" class="close ml-0" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <input id="slideid" class="form-control" style="display:none" />
+                        <div class="form-group myfont" style="margin-bottom:10px;">
+                            <div class="form-group myfont">
+                                <div class="row">
+                                    <label class="control-label col-sm-3">نام اسلاید </label>
+                                    <div class="col-sm-9" id="nameslideinmodal">
+                                        <input id="nameslide0" class="form-control" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group myfont">
+                            <div class="row">
+                                <label class="control-label col-sm-3">نمایش </label>
+                                <div class="col-sm-9">
+                                    <select id="show" name="show" class="form-control">
+                                        <option value=true>نمایش </option>
+                                        <option value=false>عدم نمایش </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group myfont">
+                            <div class="row">
+                                <label class="control-label col-sm-3">اولویت </label>
+                                <div class="col-sm-9" id="rankinmodal">
+                                    <input id="rank" class="form-control" value="" />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="text-center">
+                            <button type="button" class="btn btn-warning " data-dismiss="modal" id="btnsaveinmodal">save</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+    $(slidelist).delegate('.btndel', 'click', function () {
+
+
+        if (confirm("آیا اطمینان به حذف دارید؟") == true) {
+            jQuery.post('/admin/deleteslide', { slideid: $(this).val() }, function (result) {
+
+                $("#slide" + result).remove();
+
+            })
+        }
+
+
+
+    })
+
+    $(slidelist).on('click', '.btnshow', function () {
+
+        //alert('hi')
+
+        jQuery.post('/admin/getslideinfo', { slideid: $(this).val() }, function (result) {
+
+            var htmlname = '';
+            var htmlrank = '';
+            var htmlshow = '';
+            $(result).each(function (idx, p) {
+                $(slideid).val(p.id)
+                htmlname += ' <input id="nameslide0" class="form-control" value="' + p.name + '" />';
+                if (p.rank != null) {
+                    htmlrank += ' <input id="rank" class="form-control" value="' + p.rank + '" />';
+                } else {
+                    htmlrank += ' <input id="rank" class="form-control" value="" />';
+
+                }
+                if (p.show == true) {
+                    htmlshow += '<option value=true selected>نمایش </option>'
+                    htmlshow += '<option value=false >عدم نمایش</option>'
+                } else {
+                    htmlshow += '<option value=true >نمایش </option>'
+                    htmlshow += '<option value=false selected>عدم نمایش</option>'
+                }
+
+            })
+
+            $(nameslideinmodal).html(htmlname)
+            $(rankinmodal).html(htmlrank)
+            $(show).html(htmlshow)
+
+            $(mymodal).modal();
+
+
+
+        })
+
+
+    })
+
+
+
+    $(btnsaveinmodal).click(function () {
+        var mydata = new FormData();
+        mydata.append('slideid', $(slideid).val())
+
+        mydata.append('nameslide', $(nameslide0).val())
+        mydata.append('rank', $(rank).val())
+        mydata.append('show', $(show).val())
+        //alert($(nameslide).val())
+        $.ajax({
+            type: 'POST',
+            url: '/admin/changeslide',
+            data: mydata,
+            datatype: 'json',
+            processData: false,
+            contentType: false,
+
+        }).done(function (msg) {
+            $.each(msg, function (idx, p) {
+                var idname = "nameslide01" + p.id;
+
+                var htmlname = p.name
+
+                $("#nameslide01" + p.id).html(htmlname)
+                if (p.show == true) {
+
+                    var htmlshowicon = '<img width="30" height="30" src="/Content/img/icon/Ok-icon.png"/>'
+
+                    $("#showicon" + p.id).html(htmlshowicon)
+
+
+                } else {
+                    $("#showicon" + p.id).html('')
+                }
+                if (p.rank != null) {
+                    var htmlorder = '<span class="badge badge-pill" style="background-color:#332b3a;color:#ffca01;font-size:12px">' + p.rank + '</span>'
+
+                    $("#ordericon" + p.id).html(htmlorder)
+                } else {
+                    $("#ordericon" + p.id).html('')
+
+                }
+
+            })
+
+        })
+    })
+    $(btn1).click(function () {
+
+        jQuery.post('/admin/applychangein1stimg', { slideid: $(seledtfirstslide).val() }, function (result) {
+
+
+            var html = '';
+
+            $(result).each(function (idx, p) {
+
+                html += ' <option style="font-size:14px;" value="' + p.id + '"'
+                if (p.id == $(seledtfirstslide).val()) {
+                    html += 'selected'
+                }
+                html += ' >' + p.name
+                if (p.id == $(seledtfirstslide).val()) {
+                    html += '(اسلاید اول جاری)'
+                }
+                html += '</option>'
+
+            })
+
+            $(seledtfirstslide).html(html)
+
+        })
+
+
+
+    })
+
+    $(seledtfirstslide).change(function () {
+        jQuery.post('/admin/selectfirstslide', { slideid: $(seledtfirstslide).val() }, function (result) {
+
+            firstimg.src = '/Content/img/slide/' + result
+
+
+        }
+        )
+    })
+    function readURL(input) {
+
+
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#imgpreview').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(document.getElementById("imagefile").files[0]);
+
+    }
+
+
+    $('body').on('change', '#imagefile', function () {
+
+        readURL($(this));
+
+    })
+
+    $(btn_save).click(function () {
+
+        var mydata = new FormData()
+        mydata.append('nameslide', $(nameslide).val())
+        mydata.append('discription', $(discription).val())
+        mydata.append('img', document.getElementById("imagefile").files[0])
+        //alert($(nameslide).val())
+        $('.loader').show()
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/uploadslideimage',
+            data: mydata,
+            datatype: 'json',
+            processData: false,
+            contentType: false,
+        }).done(function (msg) {
+            values = JSON.parse(msg)
+
+            //  $(rrr).html(msg
+            $('.A').val('')
+            imgpreview.src = ""
+            var htmlfirstslide = '';
+            var htmllastslide = '';
+
+
+            $.each(values, function (idx, p) {
+                htmlfirstslide += '<option value="' + p.id + '" id="' + p.id + '">' + p.name + '</option>'
+                htmllastslide += '<div class="col-md-2 col-12" style="margin-bottom:10px;" id="' + "slide" + p.id + '">'
+                htmllastslide += ' <img style="width:100%; height:100px;" src="data:image/jpeg;base64,' + p.timage + '" />'
+                htmllastslide += '<div id="' + "showicon" + p.id + '" style="position:absolute; top:10px;right:10px; padding-left:10px; padding-right:10px; border-radius:3px;"></div>'
+                htmllastslide += '<div id="' + "ordericon" + p.id + '" style="position:absolute; top:10px;right:45px; padding-left:10px; padding-right:10px; border-radius:3px;"><span class="badge" style="background-color:#ff0000;"></span> </div>'
+                htmllastslide += ' <div id="' + "first" + p.id + '" style="position:absolute; top:10px;left:10px; padding-left:10px; padding-right:10px; border-radius:3px;">   </div> '
+                htmllastslide += '<div class="card mb-3">'
+                htmllastslide += ' <div id="' + "nameslide" + p.id + '" class="card-header text-center" style="background-color:#6a95cc;color:#fff">' + p.name + '</div> '
+                htmllastslide += '<div class="card-body">'
+                htmllastslide += '<div class="row">'
+                htmllastslide += ' <div class="col-6 text-center showdiv">'
+                htmllastslide += '<center> <button  id="' + "btn" + p.id + '" class="btnshow" value="' + p.id + '"><img src="/Content/img/icon/edit.png" style="height:24px; width:auto;" /></button></center>'
+                htmllastslide += '</div>'
+                htmllastslide += '<div class="col-6 text-center delclass">'
+                htmllastslide += '<center><button id="' + "btndel" + p.id + '" class="btndel" value="' + p.id + '"><img src="/Content/img/icon/delete.png" style="height:24px; width:auto;" /></button></center>'
+                htmllastslide += '</div>'
+                htmllastslide += '</div>'
+                htmllastslide += '</div>'
+
+            })
+            $('.loader').hide();
+            $(messageokbody).html('تصویر با موفقیت بارگذاری گردید.')
+            $(messageok).modal();
+
+            $(seledtfirstslide).append(htmlfirstslide)
+            $(slidelist).append(htmllastslide)
+
+        })
+
+    })
+
+</script>

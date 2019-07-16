@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+
+<div class="container-fluid">
+    <div id="modal" class="card" role="wizard">
+        <div class="card-header bg-primary text-white" style="text-align: center;">ارسال پیامک</div>
+        <div class="card-body">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                <a class="nav-link active" data-toggle="tab" href="#lstPerson" role="tab">لیست مشتری ها</a>
+                <li>
+
+                <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#addPersonToGroup" role="tab">اضافه کردن مشتری به گره</a>
+                <li>
+
+                <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#addGroup" role="tab">اضافه کردن گروه جدید</a>
+                <li>
+            </ul>
+            <div class="tab-content mt-2">
+                <div class="tab-pane fade show active" id="lstPerson" role="tabpanel">
+                    <div class="tab-pane fade show active" id="divPersonGroups" role="tabpanel">
+                        @Html.Partial("_PersonGroup")
+                    </div>
+                
+                </div>
+                <div class="tab-pane fade" id="addPersonToGroup" role="tabpanel">
+                    <div class="row btn-next-tab" style="text-align: right;">
+
+                        <button class="btn btn-info" id="btnaddPersonToGroup">اضافه کردن ب گروه</button>
+                    </div>
+                    <h4></h4>
+                    <div class="row col-md-12" id="lstGroup" >
+                        
+                        @Html.Partial("_Groups")
+                    </div>
+                    <h4></h4>
+                    <div class="tab-pane fade show active" id="lstPersonInGroup" role="tabpanel">
+                        @Html.Partial("_Person")
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="addGroup" role="tabpanel">
+                    <h5>در این قسمت می توانید گروه خود را اضافه نمایید.</h5>
+                    <div class="form-group" style="text-align: right;">
+
+                        <label for="titelMessageNew">عنوان گروه:</label>
+                        <input type="text" class="form-control" id="groupName" placeholder="عنوان گروه را وارد کنید" name="groupName">
+
+                    </div>
+                    <div class="form-group" style="text-align: right;">
+                        <label for="textMessageNew">توضیحات گروه:</label>
+                        <input type="text" class="form-control" id="groupDescription" placeholder="توضیحات گروه را وارد کنید" name="groupDescription">
+                    </div>
+
+                    <button id="btnSave" class="btn btn-primary">ذخیره</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var selectedDropDownValue = 0;
+    var checkedValuesTemp = [];
+    var checkedValuesTempNotMap = [];
+    function AddFilter()
+    {
+        return { groupId: selectedDropDownValue};
+    }
+    function searchGrid()
+    {
+        var gridListFilter = { filters: [] };
+        var gridDataSource = $("#gridPerson").data("kendoGrid").dataSource;
+        gridDataSource.read();
+    }
+
+
+    function onChange(arg) {
+
+
+            checkedValuesTemp = this.selectedKeyNames();
+
+
+
+    }
+    function change() {
+        var color = $("#dropdownListGroup").data("kendoDropDownList");
+        selectedDropDownValue = color.value();
+        searchGrid();
+    };
+    function delPersonGroup(groupId,personId) {
+        $.post('@Url.Action("PersonGroup_Destroy")',
+            { groupId: groupId, personId: personId},
+            function(data) {
+                if (data.IsSuccessed) {
+                    $("#divPersonGroups").load('@Url.Action("ListPersonGroups", "Admin")');
+                }
+                alert(data.Message);
+                checkedValuesTemp = null;
+            }).fail(function() {
+
+            alert('خطا  در بروز عملیات');
+        });
+    }
+    $("#btnaddPersonToGroup").click( function() {
+
+        if (checkedValuesTemp.length == 0 || (selectedDropDownValue == 0 || selectedDropDownValue == "")) {
+            alert("انتخاب گروه و مشتری های اجباری می باشد");
+            return false;
+        }
+        $.post('@Url.Action("AddPersonToGroup")',
+            { groupId: selectedDropDownValue , personId: checkedValuesTemp},
+            function(data) {
+                if (data.IsSuccessed) {
+                    $("#lstPersonInGroup").load('@Url.Action("ListPersons", "Admin")');
+                    $("#divPersonGroups").load('@Url.Action("ListPersonGroups", "Admin")');
+                }
+                alert(data.Message);
+                checkedValuesTemp = null;
+            }).fail(function() {
+
+            alert('خطا  در بروز عملیات');
+        });
+    });
+    $("#btnSave").click( function() {
+
+        var title = $('#groupName').val();
+        var context = $('#groupDescription').val();
+        if (title == "") {
+
+            alert("عنوان گروه را وارد کنید");
+            return false;
+        }
+        $.post('@Url.Action("CreateGroup")',
+            { title: title, context: context},
+            function(data) {
+                if (data.IsSuccessed) {
+                    $("#lstGroup").load('@Url.Action("ListGroups", "Admin")');
+                }
+                alert(data.Message);
+                $('#groupName').val("");
+                $('#groupDescription').val("");
+            }).fail(function() {
+
+            alert('خطا  در بروز عملیات');
+        });
+    });
+</script>

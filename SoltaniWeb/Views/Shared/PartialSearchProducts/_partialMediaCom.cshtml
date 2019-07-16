@@ -1,0 +1,15 @@
+﻿@using SoltaniWeb.Models.Domain
+@model tbl_products;
+<div class="media" productid="@Model.idproduct">
+    <img src="@(Model.thumbnail_image==null ? "~/Content/img/icon/img-na.png" : (string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.thumbnail_image))))" />
+    <div class="media-body d-flex justify-content-between align-items-start">
+        <div>
+            <p class="pr-1 mb-0">@(Model.category.categoryname)</p>
+            <p class="pr-1 mb-0 ">@(Model.name + " "  ) <span class="code"> @Model.codename</span></p>
+        </div>
+       
+       <button type="button" class="close">
+            <span style="color:#132666;" aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>

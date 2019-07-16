@@ -1,0 +1,18 @@
+﻿<div class="k-rtl">
+    @(Html.Kendo().DropDownList()
+          .OptionLabel("انتخاب گروه...")
+          .Name("dropdownListGroup")
+          .HtmlAttributes(new { style = "width:100%" })
+          .DataTextField("GroupName")
+          .DataValueField("Id")
+          .Filter(FilterType.StartsWith)
+          .DataSource(source =>
+          {
+              source.Read(read =>
+              {
+                  read.Action("Groups_Read", "Admin");
+              });
+          })
+          .Events(e => e.Change("change"))
+          )
+</div>

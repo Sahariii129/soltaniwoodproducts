@@ -1,0 +1,139 @@
+﻿@using SoltaniWeb.Models.Domain
+@{
+    _4820_soltaniwebContext db2 = new _4820_soltaniwebContext();
+    var jobs = db2.tbl_job.ToList();
+
+}
+@*<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset !important">تنطیمات اولیه جستجو:</div>
+    <div class="card-body">
+    </div>
+</div>*@
+
+<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset" id="searchbyuser_heading">جستجو بر اساس شناسه متقاضی</div>
+    <div class="card-body" id="searchbyuser_body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">شناسه متقاضی:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="searchbyappid" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="btn_searchbyappid" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset">جستجو بر اساس تاریخ ثبت</div>
+    <div class="card-body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">تاریخ ثبت:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sabtdate" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchApplicantsbysabtdate" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">از تاریخ :</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sabtdatefrom" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">تا تاریخ :</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sabtdateto" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchappbysabtdaterange" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset">جستجو بر اساس شغل مورد درخواست</div>
+    <div class="card-body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">شغل مورد درخواست: </label>
+                    <div class="col-md-8">
+                        <select id="jobid" class="form-control">
+
+                            <option value="0">مهم نیست </option>
+                            @foreach (var item in jobs)
+                            {
+                            <option value=@item.jobid>@item.jobtitle </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="Btn_searchappbyjob" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header sheading" style="position:relative;color:#332b3a;cursor:pointer;border:unset">وضعیت برقراری ارتباط</div>
+    <div class="card-body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">وضعیت ارتباط: </label>
+                    <div class="col-md-8">
+                        <select id="connectionsataus" class="form-control">
+
+                            <option value="0">مهم نیست </option>
+                            <option value="1">برقراری ارتباط </option>
+                            <option value="2">عرم برقراری ارتباط </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="Btn_searchappbyconnectionsataus" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+﻿@model SoltaniWeb.Models.transAction
+@{
+    ViewBag.Title = " برگ نخست ";
+
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+
+
+<div class="container">
+    <div class="row" style="margin-top: 50px;">
+        <div class="col-lg-6 center-block" style="float: none;">
+            <div class="panel panel-primary">
+                <div class="panel-heading">اتصال به درگاه پرداخت</div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("PaymentAction", "Pay", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "PayForm" }))
+                    {
+                        <div class="form-group">
+                            <div class="col-sm-11">
+                                @Html.LabelFor(model => model.amount, null, new { @class = "" })
+                                @Html.TextAreaFor(model => model.amount, new { @class = "form-control" })
+                            </div>
+                            <div class="col-sm-1">
+                                @Html.ValidationMessageFor(model => model.amount, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" class="btn btn-default bg-gold pull-left" value="ثبت" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/respond.js"></script>
+<script src="~/Scripts/respond.matchmedia.addListener.js"></script>
+<script src="~/Scripts/respond.matchmedia.addListener.min.js"></script>
+<script src="~/Scripts/respond.min.js"></script>
+
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+<script>
+    $(PayForm).submit();
+
+</script>

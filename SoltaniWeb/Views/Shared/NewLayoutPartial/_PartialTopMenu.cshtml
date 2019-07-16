@@ -1,0 +1,187 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.Services.Interfaces
+@inject IProductsServices _ProductsService
+@{
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    var sectionshasstatus = db.tbl_section.Where(a => a.status.HasValue == true);
+    var sections = sectionshasstatus.Where(a => a.status.Value == true && a.tbl_category.Count() > 0).OrderBy(a => a.ordering);
+    var catg = db.tbl_category.ToList();
+    var news = db.tbl_news.Where(a => a.newtypeid == 1).OrderByDescending(a => a.id).Take(10);
+
+}
+
+
+<div class="topnav myfont" id="myTopnav">
+    <img id="img" src="~/Content/img/logo/SWP_new.png" />
+    <div class="menucontent">
+
+        <a href="/" class="atag"> <i class="fa fa-fw fa-home"></i>  خانه </a>
+        <div class="subnav">
+            <button class="subnavbtn ">اخبار و تازه ها <i class="fa fa-caret-down"></i></button>
+            <div class="subnav-content newsmenu">
+                @foreach (var item in db.tbl_newstype)
+                {
+                    <div class="subnav2">
+                        <button class="subnavbtn2" sectionid="@item.id">@item.newstype <i class="fa fa-caret-down"></i></button>
+                        <div class="subnav2-content" sectionid="@item.id">
+                            @foreach (var item2 in db.tbl_news.Where(a => a.newtypeid == item.id).OrderByDescending(a => a.id).Take(9))
+                            {
+                                <div class="col-md-6">
+                                    <p>
+
+                                        <a href="/news/newsdetails?id=@item2.id"><span class="glyphicon glyphicon-hand-left" style="margin-left:5px;" aria-hidden="true"> </span>@(item2.title.Length > 50 ? item2.title.Substring(0, 50) + " ..." : item2.title)</a>
+                                    </p>
+
+                                </div>
+                            }
+                            <div class="col-md-6">
+                                <p>
+                                    <a href="/news/newsdetails?id=1"> <span class="glyphicon glyphicon-hand-left" style="margin-left:5px;" aria-hidden="true"></span> <span style="color:red;"> آرشیو ...</span></a>
+                                </p>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div class="subnav">
+            <button class="subnavbtn">محصولات <i class="fa fa-caret-down"></i></button>
+            <div class="subnav-content product">
+                <div class="headerofsectioncontent">
+                    <center>
+                        <span>
+                            محصولات قابل عرضه در کالای چوب سلطانی :
+                        </span>
+                    </center>
+                </div>
+                <div class="subnav2">
+                    <div class="col-md-3 soltanibrand">
+                        <br />
+                        <br />
+                        <img src="~/Content/img/logo/SWP_new1.png" style="width:250px; height:150px;" />
+                    </div>
+                    <div class="col-md-9">
+                        @foreach (var item in sections)
+                        {
+                            <div class="col-md-4">
+                                <p style="text-align:right;">
+                                    <button class="subnavbtn2" sectionid="@item.id">
+                                        <span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :2px;">  </span>
+                                        @item.name
+
+                                        <i class="fa fa-caret-down"></i>
+                                    </button>
+
+                                </p>
+
+                                <div class="subnav2-content" sectionid="@item.id">
+                                    <div class="headerofmenucontent">
+
+                                        <p>
+
+                                            <span style="text-align:right;">
+                                                @item.name
+                                            </span>
+                                            <span style="text-align:left;float:left;font-family:Arial;">
+                                                @item.name_EN
+                                            </span>
+
+                                        </p>
+
+
+
+                                    </div>
+                                    @foreach (var item2 in item.tbl_category)
+                                    {
+                                        if (_ProductsService.GetStatuseOFCategory(item2.id))
+                                        {
+                                            <div class="col-md-12 eachbrand">
+                                                <div class="col-md-3 brandicon-div">
+
+                                                    <img class="brandicon" src=@(item2.image!=null?string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item2.image)):"") />
+                                                </div>
+                                                <div class="col-md-9 brandname-div">
+                                                    @if (item2.actionname == null)
+                                                    {
+                                                        <a class="brandname" href="/GetProducts/@item2.id?key=@item2.keywords">@item2.categoryname</a>
+
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <a class="brandname" href="/products/@item2.actionname?key=@item2.keywords">@item2.categoryname</a>
+                                                    }
+                                                </div>
+
+
+                                            </div>
+                                        }
+
+
+                                    }
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="subnav">
+            <button class="subnavbtn ">
+                <i class="far fa-handshake"></i>
+
+               گالری تصاویر  <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="subnav-content newsmenu">
+
+                <div class="subnav2">
+                    <a href="~/samples/samples_catg?key=نمونه-کار-ها-به-تفکیک-نوع-دکور" style="color:black;" class="subnavbtn2"> <span class="glyphicon glyphicon-hand-left" style="margin-left:5px;" aria-hidden="true"></span>تصاویر نمونه کارها به تفکیک نوع کار</a>
+
+                </div>
+                <div class="subnav2">
+                    <a href="~/samples/samples_madeby?key=نمونه-کار-ها-به-تفکیک-طراح-کابینت-ساز-مجری" style="color:black;" class="subnavbtn2"> <span class="glyphicon glyphicon-hand-left" style="margin-left:5px;" aria-hidden="true"></span>تصاویر نمونه کارها به تفکیک طراح و مجری </a>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <a href="/home/aboutus" class="atag"> <i class="far fa-address-card"></i>  درباره ما </a>
+        <a href="/home/contactus" class="atag"> <i class="fas fa-id-card"></i>  تماس با ما </a>
+
+        <div class="subnav">
+            <button class="subnavbtn ">
+                <i class="far fa-handshake"></i>
+
+                همکاری با ما <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="subnav-content newsmenu">
+
+                <div class="subnav2">
+                    <a href="/home/registerforjob" style="color:black;" class="subnavbtn2"> <span class="glyphicon glyphicon-hand-left" style="margin-left:5px;" aria-hidden="true"></span>ثبت نام متقاضی کار </a>
+
+                </div>
+                <div class="subnav2">
+                    <a href="/home/editapplicantinfo" style="color:black;" class="subnavbtn2"> <span class="glyphicon glyphicon-hand-left" style="margin-left:5px;" aria-hidden="true"></span>مشاهده و تکمیل اطلاعات متقاضی ثبت نام شده </a>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+<a href="#" class="icon" id="openmenu" open="2">
+    <i class="fa fa-bars"></i>
+</a>
+</div>

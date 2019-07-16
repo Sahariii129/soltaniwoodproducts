@@ -1,0 +1,268 @@
+﻿@using SoltaniWeb.Models.Domain
+
+@using SoltaniWeb.Models.Extensions
+@using Newtonsoft.Json;
+@using SoltaniWeb.Models.utility
+
+@{
+    ViewBag.Title = "مدیریت سبدهای خربد";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    var today = DateTime.Now.ToPersianDate();
+
+
+
+}
+
+<style>
+    .loading-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 10;
+    }
+
+    .loader {
+        display: none;
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+
+
+
+<div class="col-md-12" id="cartmanagement">
+    <div class="col-md-3">
+
+        <div class="panel myfont">
+            <div class="panel-heading sheading" id="searchpanel" style="background-color:#06497a; color:#ffffff;cursor:pointer;">پانل جستجو سبدهای خرید</div>
+            <div id="searchdiv" class="panel-body hidden-xs hidden-sm">
+                @Html.Partial("_searchboxcarts")
+
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-9">
+
+        <div class="panel myfont">
+            <div class="panel-heading panel-danger" style="background-color:#06497a; color:#ffffff; cursor:pointer;">
+                مدیریت سبدهای خرید
+                <span id="searchbasedon" style="font-weight:800">
+
+
+
+
+                </span>
+
+
+
+            </div>
+            <div class="panel-body ">
+                <div id="panelbodyforcarts" style="min-height:300px;">
+
+                </div>
+
+                <div class=" loader">
+                    <center>
+                        <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+                    </center>
+                </div>
+
+            </div>
+            <div class="panel-footer">
+                <div class="input-group col-md-3">
+                    <span class="input-group-addon" id="basic-addon2">تعداد سبد</span>
+                    <select id="numberinpage" class="form-control">
+                        <option value="6">6</option>
+                        <option value="12">12</option>
+                        <option value="18">18</option>
+                        <option value="24">24</option>
+                        <option value="30">30</option>
+                    </select>
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-2.1.4.js"></script>
+<script>
+    $(panelbodyforcarts).on('click', '.vertificationofdeliver', function () {
+
+
+        jQuery.post('/admin/addvertificationofdeliver', { cartid: $(this).val() }, function (result) {
+            $(messageokheader).html('فرم ثبت تحویل سفارش')
+            $(messageokbody).html(result)
+        $(messageok).modal();
+
+
+
+        })
+    })
+    $(function () {
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/filtercartsbyispaid', { status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforcarts').html(result)
+
+        })
+    })
+
+
+
+    $('#searchdiv').on('click', '#searchbyusername', function () {
+        var username = $('#username').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchcartbyusername', { username: username, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforcarts').html(result)
+
+        })
+
+    })
+
+    //
+    $('#searchdiv').on('click', '#searchbyfinalstatus', function () {
+        var finalstatus = $('#finalstatus').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchbyfinalstatus', { finalstatus: finalstatus, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforcarts').html(result)
+
+        })
+
+    })
+    //
+    $('#searchdiv').on('click', '#searchbypaydate', function () {
+        var paydate = $('#paydate').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchbypaydate', { paydate: paydate, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforcarts').html(result)
+
+        })
+
+    })
+    //
+    $('#searchdiv').on('click', '#searchbypaydaterange', function () {
+        var paydatefrom = $('#paydatefrom').val()
+        var paydateto = $('#paydateto').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+
+        jQuery.post('/admin/searchbypaydaterange', { paydatefrom: paydatefrom, paydateto: paydateto, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforcarts').html(result)
+
+        })
+
+    })
+    //
+    $('#searchdiv').on('click', '#searchbyDemandtransportation', function () {
+
+        var Demandtransportation = $('#Demandtransportation').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchbyDemandtransportation', { Demandtransportation: Demandtransportation, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforcarts').html(result)
+
+        })
+
+    })
+    //
+
+    $('#panelbodyforcarts').on('click', '.details', function () {
+
+        var id = $(this).val()
+
+        $('#p' + id).toggle(100)
+    })
+    $('#panelbodyforcarts').on('click', '.transportaiondetails', function () {
+
+        var id = $(this).val()
+        $('#t' + id).toggle(100)
+    })
+    $('#panelbodyforcarts').on('click', '.transportaioncost', function () {
+
+        var id = $(this).val()
+        $('#tcost' + id).toggle(100)
+    })
+
+  
+
+    $(paydate).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    $(paydatefrom).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    $(paydateto).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+
+    $('#cartmanagement').on('click', '.panel-heading', function () {
+
+
+
+        var q = $(this).next()
+
+        if (q.hasClass('hidden-xs hidden-sm')) {
+
+
+            q.removeClass('hidden-xs hidden-sm')
+        } else {
+
+            q.toggle(200)
+        }
+
+
+    })
+
+
+
+
+
+
+
+</script>
+

@@ -1,0 +1,106 @@
+﻿@using SoltaniWeb.Models.structs
+
+@model Toolsbar
+
+
+<style>
+    .Table-footer {
+        background-color: #6a95cc;
+        color: #fff;
+        width: 100%;
+    }
+    .Table-footer tr {
+        font-size: 14px;
+        cursor: pointer;
+    }
+  
+    .pageindex {
+        width: 60px !important;
+        height: 24px !important;
+        margin: auto;
+    }
+
+    .pagesize {
+        width: 72px !important;
+        height: 24px !important;
+        margin: auto;
+    }
+
+    .Table-footer tr td .fas {
+        padding: 5px;
+        border: 2px solid #fff;
+    }
+
+    .Table-footer tr td :hover {
+        color: #ffca01;
+        border-color:#ffca01;
+    }
+    .toolsicon{
+        width:25px;
+    }
+    .seperator{
+        width:100px;
+    }
+    .toolsiconlarge {
+        width: 100px;
+    }
+</style>
+
+
+
+<table class="table table-bordered table-condensed Table-footer mb-0">
+    <tr>
+        <td class="toolsicon" hidden=@(Model.Add==false)>
+            <span class="fas fa-plus Btn_Add"  id="Btn_Add"></span>
+        </td>
+        <td class="toolsicon" hidden=@(Model.Edit==false)>
+            <span class="fas fa-pencil-alt Btn_Edit" id="Btn_Edit"></span>
+        </td>
+        <td class="toolsicon"  hidden=@(Model.Delete==false)>
+            <span class="fas fa-times Btn_Remove" id="Btn_Remove"></span>
+        </td>
+        <td class="toolsicon"  hidden=@(Model.Refresh==false)>
+            <span class="fas fa-sync-alt Btn_Refresh" id="Btn_Refresh"></span>
+        </td>
+        <td class="toolsicon"  hidden=@(Model.Search==false) >
+            <span class="fas fa-search Btn_search" id="Btn_search"></span>
+        </td>
+        <td class="toolsicon"  hidden=@(Model.print==false)>
+            <span class="fas fa-print Btn_print" id="Btn_print"></span>
+        </td>
+        <td class="seperator"></td>
+        <td class="toolsicon" hidden=@(Model.Navigation==false)>
+            <span id="GotoLast" class="fas fa-step-forward"></span>
+        </td>
+        <td class="toolsicon" hidden=@(Model.Navigation==false)>
+            <span id="next" class="fas fa-forward next"></span>
+        </td>
+        <td class="hidden-xs toolsicon" hidden=@(Model.Navigation==false)>
+            صفحه
+        </td>
+        <td class="hidden-xs toolsicon" hidden=@(Model.Navigation==false)>
+            <input type="text" id="pageindex" class="form-control pageindex" value="1" />
+        </td>
+        <td class="hidden-xs toolsiconlarge" hidden=@(Model.Navigation==false)>
+            از
+            <span id="totalpageindex" class="page">@ViewBag.totalpages</span>
+           
+        </td>
+        <td class="toolsicon" hidden=@(Model.Navigation==false)>
+            <span id="previous" class="fas fa-backward"></span>
+        </td>
+        <td class="toolsicon" hidden=@(Model.Navigation==false)>
+            <span id="GotoFirst" class="fas fa-step-backward"></span>
+        </td>
+        <td class="hidden-xs toolsicon" hidden=@(Model.Navigation==false)>
+
+            <select class="form-control pagesize" style="font-size:10px;" id="pagesize_id">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </td>
+        <td></td>
+    </tr>
+</table>

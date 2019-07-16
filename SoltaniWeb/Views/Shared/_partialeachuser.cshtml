@@ -1,0 +1,128 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.Extensions
+@model tbl_user
+@{
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext(); ;
+
+}
+
+
+
+<div class="card mb-3">
+    <div class="card-header" style="background-color:#f8eec9; color:#132666; font-size:12px; cursor:pointer;">
+        @( "نام کاربری : " + Model.username)
+
+        <span style="float:left;font-size:12px;">@(Model.status == true ? "فعال" : "غیر فعال")</span>
+
+    </div>
+    <div class="card-body" style="background-color:#fff; color:#332b3a;border:2px solid #f8eec9;font-weight:800;" hidden>
+        @if (Model.img != null)
+        {
+
+            <img class="img-fluid" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.img)))" />
+        }
+
+
+        <table class="table table-responsive table-bordered" style="font-size:12px;display:none">
+            <tr>
+                <td>نام کاربری :</td>
+                <td>@Model.username </td>
+            </tr>
+
+            <tr>
+                <td>نام و نام خانوادگی :</td>
+                <td> @(Model.name + "  " + Model.Lname)</td>
+            </tr>
+            <tr>
+                <td>موبایل :</td>
+                <td>@(Model.cellphone) </td>
+            </tr>
+            <tr>
+                <td>ایمیل :</td>
+                <td>
+
+                    <p>
+                        @(Model.email)
+
+                    </p>
+
+                </td>
+            </tr>
+            <tr>
+                <td>سطح کاربر :</td>
+                <td>@(Model.Access == 0 ? "مدیر" : (Model.Access == 1 ? "کاربر کادر" : "کاربر عادی")) </td>
+            </tr>
+            <tr>
+                <td>تاریخ ثبت نام :</td>
+                <td>@(Model.signupdate != null ? Model.signupdate.Value.ToPersianDate() : "") </td>
+            </tr>
+            <tr>
+                <td>تعداد سبد بسته :</td>
+                <td>@(db.tbl_purchasekart.Where(a => a.userid == Model.id && a.purchasedateend.HasValue == true).Count() )</td>
+            </tr>
+            <tr>
+                <td>سبد باز :</td>
+                <td>@(db.tbl_purchasekart.Where(a => a.userid == Model.id && a.purchasedateend.HasValue == false).Count() > 0 ? "دارد" : "ندارد") </td>
+            </tr>
+            <tr>
+                <td>زمان شروع سبد :</td>
+                <td>
+                    @{
+                        int dtspan = 0;
+                        var opencart = db.tbl_purchasekart.Where(a => a.userid == Model.id && a.purchasedateend.HasValue == false);
+                        if (opencart.Count() > 0)
+                        {
+                            dtspan = (DateTime.Now - opencart.SingleOrDefault().purchasedatestart).Days;
+                        }
+                    }
+
+                    @(dtspan != 0 ? dtspan.ToString() + "  روز قبل" : "")
+
+                </td>
+            </tr>
+        </table>
+
+        <hr />
+
+
+
+
+
+    </div>
+    <div class="card-footer" style="background-color:#fff;color:#332b3a;">
+        <div class="d-flex text-center justify-content-between mb-2">
+            <div>
+                <img src="~/Content/img/icon/sms-4-icon.png" style="cursor:pointer" class="sendsms pl-1" userid="@Model.id" />
+                <img src="~/Content/img/icon/edit.png" width="32" height="32" style="cursor:pointer" class="edituser" userid="@Model.id" />
+            </div>
+            <div class="text-left"><button class="btn btn-success updateaccess A" userid="@Model.id" style="cursor:pointer; text-decoration:none;">Update Access fields</button></div>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+            <button class="btn btn-warning Allaccess A" userid="@Model.id" style="cursor:pointer; text-decoration:none;">All Access</button>
+            <button class="btn btn-danger GiveAccessMenuToUser A" userid="@Model.id" style="cursor:pointer; text-decoration:none;">GiveAccessMenuToUser</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // modal sms
+    $('.sendsms').click(function () {
+        var userid = $(this).attr('userid')
+
+        jQuery.post('/admin/getuser', { userid: userid }, function (result) {
+
+
+
+            $(messageokbody).html(result)
+            $(messageokheader).html('ارسال پیامک')
+            $(messageok).modal()
+
+
+
+        })
+
+    })
+
+
+
+</script>

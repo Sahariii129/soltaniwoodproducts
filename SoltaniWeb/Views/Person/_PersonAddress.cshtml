@@ -1,0 +1,36 @@
+﻿@model List<SoltaniWeb.Models.structs.PersonVM.PersonAddressViewModel>
+
+<div class="container table-responsive">
+    <h2>آدرس ها</h2>
+    <table id="tblPersonAddress" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          
+            <th>آدرس</th>
+            <th>کد پستی</th>
+            <th>تلفن</th>
+            <th>تلفن 2</th>
+            <th>تلفن 3</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach (var perAddress in Model)
+            {
+            <tr>
+              
+                <td id="@perAddress.Id">
+                    @perAddress.Address
+                </td>
+                <td> @perAddress.PostalCode</td>
+                <td>@perAddress.Phone</td>
+                <td>@perAddress.Phone2</td>
+                <td>@perAddress.Phone3</td>
+                <td><a class="btn btn-info" onclick="EditPersonAddres(@perAddress.PersonId, @perAddress.Id, '@perAddress.Address', '@perAddress.PostalCode', '@perAddress.Phone', '@perAddress.Phone2', '@perAddress.Phone3')"><span id="pnrstate-@perAddress.Id"><i class="fas fa-user-edit"></i></span></a></td>
+                <td><a class="btn btn-info" onclick="DeletPersonAddres(@perAddress.PersonId, @perAddress.Id)"><span id="pnrstate-@perAddress.Id"><i class="fas fa-trash-alt"></i></span></a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

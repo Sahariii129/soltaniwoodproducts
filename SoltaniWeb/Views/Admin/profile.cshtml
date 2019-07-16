@@ -1,0 +1,284 @@
+﻿@using SoltaniWeb.Models.Domain
+@model tbl_user
+@{
+    ViewBag.Title = "profile";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+<link href="~/soltanistatic/style/profile.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-5 myfont mt-4">
+            <div class="card">
+                <div class="card-header py-4 py-lg-3 text-center" style="background-color:#332b3a;color:#fff">
+                    پروفایل
+                </div>
+                <div class="card-body text-center">
+                    <div class="row ">
+                        <div class="col-lg-3" id="image22">
+                            @if (Model.img != null)
+                    {
+
+                                <img src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.img)))" class="img-thumbnail" id="userimg" />
+                    }
+
+                        </div>
+                        <div class="col-lg-9 ">
+                            <table class="table table-responsive" style="display:table !important">
+                                <tr>
+                                    <td>نام و نام خانوادگی: </td>
+                                    <td id="fullname">
+                                        @(Model.name + " " + Model.Lname)
+
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+
+                                    <td>نام کاربری: </td>
+                                    <td>@(Model.username)</td>
+
+                                </tr>
+                                <tr>
+
+                                    <td>پست الکترونیک: </td>
+                                    <td class="hidden-xs">@(Model.email)</td>
+
+                                </tr>
+                                <tr class="d-none">
+
+
+                                    <td colspan="2">@(Model.email)</td>
+
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                    <button class="btn my-3" id="edituser" style="background-color:#ffca01;color:#fff">ویرایش</button>
+                    <div class="row mt-4">
+                        <div class="col-lg-12" style="margin-top:5px;">
+
+                            <table class="table table-responsive table-bordered myfont" style="display:table !important">
+
+                                <tr>
+                                    <td colspan="2">
+                                        <center>
+
+                                            <span style="text-align:center;">سایر اطلاعات</span>
+                                        </center>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>نام پدر :  </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? Model.tbl_usermoreinfo.FirstOrDefault().fathername : "")</td>
+                                </tr>
+                                <tr>
+
+                                    <td>کد ملی :  </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? Model.tbl_usermoreinfo.FirstOrDefault().codemelli : "")</td>
+                                </tr>
+                                <tr>
+                                    <td>جنسیت :   </td>
+                                    <td>
+                                        @if (Model.tbl_usermoreinfo.Count() > 0)
+                                {
+
+                                    if (Model.tbl_usermoreinfo.FirstOrDefault().sex == 1)
+                                    {
+                                                @("مذکر")
+
+                                    }
+                                    else if (Model.tbl_usermoreinfo.FirstOrDefault().sex == 2)
+                                    {
+                                                @("مونث")
+                                    }
+                                    else
+                                    {
+                                                @("")
+                                    }
+
+
+                                }
+
+
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>شغل :  </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? Model.tbl_usermoreinfo.FirstOrDefault().job : "")</td>
+                                </tr>
+                                <tr>
+                                    <td>تاریخ تولد: </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? shamsi.ToShamsinull(Model.tbl_usermoreinfo.FirstOrDefault().birthday) : "")</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>تلفن منزل :  </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? Model.tbl_usermoreinfo.FirstOrDefault().home_tell : "")</td>
+                                </tr>
+                                <tr>
+                                    <td>تلفن محل کار :  </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? Model.tbl_usermoreinfo.FirstOrDefault().work_tell : "")</td>
+                                </tr>
+                                <tr>
+                                    <td>تلفن همراه 1  :  </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? Model.tbl_usermoreinfo.FirstOrDefault().cellphone1 : "")</td>
+                                </tr>
+                                <tr>
+                                    <td>تلفن همراه 2  :  </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? Model.tbl_usermoreinfo.FirstOrDefault().cellphone2 : "")</td>
+                                </tr>
+                                <tr>
+                                    <td>آدرس منزل:  </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? Model.tbl_usermoreinfo.FirstOrDefault().home_address : "")</td>
+                                </tr>
+                                <tr>
+                                    <td>آدرس محل کار :  </td>
+                                    <td>@(Model.tbl_usermoreinfo.Count() > 0 ? Model.tbl_usermoreinfo.FirstOrDefault().work_address : "")</td>
+                                </tr>
+
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center pt-0 pb-3" style="border-top:unset">
+                    <input type="button" name="update" value="تکمیل و به روز رسانی" class="btn" style="background-color:#ffca01;color:#fff" onclick="location.href='@Url.Action("updateprofile", "admin", new { userid = @Model.id })'" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal myfont fade" id="editmodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between" style="background-color:#6a95cc;color:#fff">
+                <div>ویرایش اطلاعات کاربر</div>
+                <button type="button" class="close ml-0" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" id="messageokbody">
+                <form action="/admin/editcurrentuser" method="post" class="form-horizontal" id="myform">
+
+                    <div class="form-horizontal">
+                        @Html.HiddenFor(model => model.id)
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="control-label col-sm-3 ">نام </label>
+                                <div class="col-sm-9">
+                                    @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="control-label col-sm-3 ">نام خانوادگی </label>
+                                <div class="col-sm-9">
+                                    @Html.EditorFor(model => model.Lname, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Lname, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <label class="control-label col-sm-3 ">تصویر </label>
+                                <div class="col-sm-9">
+                                    <input class="A" type="file" id="img_1" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center my-3">
+                            <input type="submit" id="saveuser" value="ثبت و ذخیره" class="btn btn-success" style="margin:5px" data-dismiss="modal" />
+                        </div>
+                    </div>
+                </form>
+
+
+
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(edituser).click(function () {
+
+        $(editmodal).modal()
+    })
+
+    $('#myform').on('click', '#saveuser', function (e) {
+        e.preventDefault();
+
+        var mydata = new FormData()
+        mydata.append('id', $('#id').val())
+        mydata.append('fname', $('#name').val())
+        mydata.append('lname', $('#Lname').val())
+        mydata.append('image', img_1.files[0])
+
+        //var indata = _form.serializeArray();
+        //indata.append('img', img_1.files[0])
+
+        var indata = { fname: $('#name').val(), lname: $('#Lname').val(), image: img_1.files[0] }
+        $.ajax({
+            type: 'POST',
+            url: '/admin/editcurrentuser',
+            data: mydata,
+            datatype: 'json',
+            processData: false,
+            contentType: false,
+
+
+        }).done(function (msg) {
+
+            if (msg.message == 'errorfiletype') {
+                alert('فرمت فایل بایستی jpg باشد')
+                return
+            }
+
+
+            if (msg.message == 'errorfilesize') {
+                alert('سایز فایل نبایستی بیشتر از 2 مگابایت باشد')
+                return
+            }
+
+            values = JSON.parse(msg)
+
+            var html = ''
+            var fullname = ''
+            $.each(values, function (idx, p) {
+                if (p.message == 'ok') {
+
+                    fullname = fullname + p.fname + ' ' + p.lname
+                    html += ' <img  src="data:image/jpeg;base64,' + p.image + '"  class="img-thumbnail" id="userimg" />'
+                    $('#fullname').html(fullname)
+                }
+
+            })
+
+
+
+
+
+
+
+
+            $(image22).html(html)
+
+
+
+        })
+
+
+    })
+
+
+
+</script>

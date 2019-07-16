@@ -1,0 +1,88 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository
+@model tbl_products
+@{
+    entityproducutsreposit entityrep = new entityproducutsreposit();
+    int userid = int.Parse(User.Claims.FirstOrDefault().Value);
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext(); ;
+}
+
+    @if (Model.thumbnail_image != null)
+    {
+        <a href=""><img src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.thumbnail_image)))" alt="@Model.name" style="width:100%; height:100px; position:relative;" class="img-thumbnail" /></a>
+
+    }
+    else
+    {
+        <a href=""><img src="" alt="@Model.name" style="width:100%; height:100px; position:relative;" class="img-thumbnail" /></a>
+    }
+    @if (Model.status == true)
+    {
+        <div id=@("sample" + Model.idproduct) style="position:absolute; top:10px;right:20px; padding-left:10px; padding-right:10px; border-radius:3px; font-size:14px; font-family:'Iranian Sans';">
+            <img src="~/Content/img/icon/Ok-icon.png" style="width:24px; height:24px;" />
+        </div>
+    }
+    else
+    {
+        <div id=@("sample" + Model.idproduct) style="position:absolute; top:10px;right:20px; padding-left:10px; padding-right:10px; border-radius:3px; font-size:14px; font-family:'Iranian Sans';"><img src="~/Content/img/icon/no-icon.png" style="width:24px; height:24px;" /> </div>
+
+    }
+    <div id='@("select" + Model.idproduct)' class="checkbox1" style="position:absolute; top:10px;left:20px; padding-left:10px; padding-right:10px; border-radius:3px; font-size:14px; font-family:'Iranian Sans';">
+        <input type="checkbox" id="@(Model.idproduct)" value="false" />
+    </div>
+
+
+    <div class=" row" style="border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; ">
+        <div class="col-12">
+            <a href="#"><h5 style="text-align :center ; font-size:10px;"> @Model.name [@Model.idproduct]</h5></a>
+        </div>
+        <div class="col-12">
+            <a href="#"><h5 style="text-align :center ; font-size:10px;">ابعاد: @Model.dimension </h5></a>
+        </div>
+        <div class="col-12">
+            <a href="#"><h5 style="text-align :center ; font-size:10px;"> کد:@Model.codename </h5></a>
+        </div>
+        <div class="col-6" style=" border:2px dotted red">
+            <a href="#"><h5 style="text-align :center ; font-size:10px;"> موجودی : @entityrep.getentityitem(Model.idproduct)  </h5></a>
+        </div>
+        <div class="col-6" style=" border:2px dotted red">
+            <a style="cursor:pointer;" data-toggle="modal" data-target="#@(Model.idproduct + 'L')"><h5 style="text-align :center ; font-size:10px;"> حد نصاب : @Model.inventory </h5></a>
+        </div>
+        @if (db.tbl_accesslevels.Where(a => a.userid == userid && a.accessid == 20 && a.accessvalue == true).SingleOrDefault() != null)
+        {
+            <div class="col-3" style="border:2px dotted red; padding :2px;">
+
+                <center> <a class="editproduct" productid="@Model.idproduct" href="/admin/editproducts?idproduct=@Model.idproduct"><img src="~/Content/img/icon/edit.png" style="height:24px; width:auto;" /></a></center>
+
+            </div>
+        }
+        @if (db.tbl_accesslevels.Where(a => a.userid == userid && a.accessid == 21 && a.accessvalue == true).SingleOrDefault() != null)
+        {
+            <div class="col-3" style="border:2px dotted red; padding :2px;">
+
+                <center><a href="#" value="@Model.idproduct" idproduct="@Model.idproduct" class="delcontact"><img style=" height:24px;width:auto;" src="~/Content/img/icon/delete.png" alt="Alternate Text" /></a></center>
+
+            </div>
+
+        }
+
+
+        <div class="col-3" style="border:2px dotted red; padding :2px;">
+            <center><a href="/admin/detailsproducts?idproduct=@Model.idproduct"><img src="~/Content/img/icon/details.png" style="height:24px; width:auto;" /></a></center>
+        </div>
+
+        @if (db.tbl_accesslevels.Where(a => a.userid == userid && a.accessid == 16 && a.accessvalue == true).SingleOrDefault() != null)
+        {
+            <div class="col-3" style="border:2px dotted red; padding :2px;">
+                <center><a href="#" value="@Model.idproduct"  class="switchstatusproduct"><img src="~/Content/img/icon/switch.png" alt="تغییر وضعیت نمایش" style="height:24px; width:auto;" /></a></center>
+
+
+            </div>
+        }
+    </div>
+    <div class="col-lg-12" style=" height:10px;">
+
+    </div>
+
+
+

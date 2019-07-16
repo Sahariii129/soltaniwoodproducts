@@ -1,0 +1,106 @@
+﻿@model IList<tbl_products>
+@{
+    ViewBag.Title = Model.FirstOrDefault().category.categoryname;
+    ViewBag.description = "نمونه رنگ های " + Model.FirstOrDefault().category.categoryname + " - " + "فروش در شیراز و استان فارس";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.repository.samplerepository samrep = new SoltaniWeb.Models.repository.samplerepository();
+    int i = 0;
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    string username = Context.Session.GetString("username");
+    var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
+}
+<script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
+<link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/soltanistatic/style/products.css" />
+<style>
+    .loading-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 10;
+    }
+
+    .loader {
+        display: none;
+        width: 200px;
+        height: 200px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    .fixBrand {
+        position: fixed;
+        top: 36%;
+        left: -150px;
+        transition:all .5s linear;
+        width:130px;
+        height:auto;
+        background-color:#fff;
+        padding:20px 0;
+        text-align:center;
+    }
+        .fixBrand:before {
+            position: absolute;
+            top: 0;
+            right: -20px;
+            width: 20px;
+            height: 100%;
+            background-color: #ffca01;
+            content:"";
+        }
+        .fixBrand img {
+            height: auto;
+            width: 100px;
+        }
+</style>
+<div class=" loader">
+    <center>
+        <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+    </center>
+</div>
+
+
+
+<div class="container-fluid products" data-aos="fade-up">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 productsTitle">@( Model.FirstOrDefault().category.categoryname) <span style="color:#132666"></span></h5>
+            </div>
+            @if (Model.FirstOrDefault().category.fulldescription != null)
+            {
+                <div style="box-shadow:0 3px 10px #aab3c2; padding:30px">
+                    @Html.Raw(Model.FirstOrDefault().category.fulldescription)
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row" id="imagegallerydetaile">
+        @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model)
+    </div>
+</div>
+
+<div class="fixBrand">
+    <img src="@(Model.FirstOrDefault().category.image== null ?  "~/soltanistatic/pictures/SWP_new10.png" :    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.FirstOrDefault().category.image)))" />
+</div>
+
+
+
+<script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+<script>
+    $(window).scroll(function () {
+        $('.fixBrand').css('left', '0');
+    });
+</script>
+
+

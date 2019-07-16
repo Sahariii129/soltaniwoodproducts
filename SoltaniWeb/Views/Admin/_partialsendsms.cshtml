@@ -1,0 +1,86 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository
+@model tbl_user
+@{
+    entityproducutsreposit entityrep = new entityproducutsreposit();
+    int userid = int.Parse(User.Claims.FirstOrDefault().Value);
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    var fullname = Model.name + " " + Model.Lname;
+}
+<div id="formbody" mode="sendsms" class="form-horizontal" username="@Model.username" fname="@Model.name">
+    
+    <div class="form-group">
+        <label class="col-sm-3 control-label">شماره موبایل :</label>
+        <div class="col-sm-9">
+            <input type="text" id="celluser" placeholder="شماره موبایل مربوطه را وارد نمایید" class="form-control" value="@Model.cellphone" />
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">متن پیام :</label>
+        <div class="col-sm-9">
+            <textarea rows="5" placeholder="پیام خود را وارد نمایید" class="form-control"  id="smstextcontent" ></textarea>
+        </div>
+
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">متن پیش فرض :</label>
+        <div class="col-sm-9">
+            <select id="textselect" class="form-control">
+                <option value=0></option>
+                <option value=1>تکمیل فرآیند خرید</option>
+                <option value=2>خیر مقدم</option>
+            </select>
+        </div>
+
+    </div>
+
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label"></label>
+        <div class="col-sm-9">
+            <button type="submit" class="btn btn-success " id="btn_sendsms">ارسال</button>
+        </div>
+            
+        
+    
+        
+
+    </div>
+</div>
+<script>
+    $(textselect).change(function () {
+        $(smstextcontent).html('')
+        selectedvalue = $(this).val()
+        var username = $(formbody).attr('username')
+        var fname = $(formbody).attr('fname')
+        if (selectedvalue == 1) {
+            var smstextpattern = "سلام " + fname + " جان "
+            smstextpattern += '\n'
+            smstextpattern += 'سبد خرید شما باز مانده است.'
+            smstextpattern += '\n'
+            smstextpattern += 'خواهشمند است فرایند خرید خود را تکمیل نمایید.'
+            smstextpattern += '\n'
+            smstextpattern += 'www.soltaniwoodproducts.com'
+            smstextpattern += '\n'
+            smstextpattern += '07138219110'
+            $(smstextcontent).html(smstextpattern)
+        }
+
+
+    })
+
+    $(btn_sendsms).click(function () {
+        var smstext = $(smstextcontent).html()
+        var cellnumber = $(celluser).val()
+     
+        jQuery.post('/admin/sendsms', { cellnumber: cellnumber, smstext: smstext }, function (result) {
+
+            $(messageokbody).html('پیامک با موفقیت ارسال گردید')
+            $(messageokheader).html('ارسال موفق پیامک')
+            $(messageok).modal()
+
+        })
+        
+    })
+</script>

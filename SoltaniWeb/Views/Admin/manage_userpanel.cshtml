@@ -1,0 +1,532 @@
+﻿@using SoltaniWeb.Models.Domain
+
+@using SoltaniWeb.Models.Extensions
+
+@using Newtonsoft.Json;
+@using SoltaniWeb.Models.utility
+
+@{
+    ViewBag.Title = "مدیریت کاربران";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext(); ;
+    var today = DateTime.Now.ToPersianDate();
+
+
+
+}
+
+<style>
+    .loading-image {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        z-index: 10;
+    }
+    .loader {
+        display: none;
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+    .userHeading:before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        height: 100%;
+        width: 5px;
+        content: " ";
+        background-color: #ffca01;
+    }
+
+    .userHeading.open {
+        background-color: #f8eeca;
+        border-top: 4px solid #ffca01 !important;
+        border-left: 4px solid #ffca01 !important;
+    }
+
+        .userHeading.open:before {
+            display: none;
+        }
+
+    .hidden {
+        display: none;
+    }
+
+    .menuaccessholeder {
+        max-height: 400px;
+        overflow-y: scroll;
+    }
+
+    .fa-edit {
+        cursor: pointer;
+        display: none;
+    }
+
+    tr.actionsaccess:hover .fa-edit {
+        display: inline-block;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row mt-4" id="usermanagement">
+        <div class="col-md-3">
+            <div class="card myfont">
+                <div class="card-header" id="searchpanel" style="background-color:#332b3a; color:#ffca01;cursor:pointer;">پانل جستجو</div>
+                <div id="searchdiv" class="card-body hidden-xs hidden-sm">
+                    @Html.Partial("_searchboxusers")
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card myfont">
+                <div class="card-header card-danger" style="background-color:#332b3a; color:#ffffff; cursor:pointer;">
+                    مدیریت کاربران
+                    <span id="searchbasedon" style="font-weight:800">
+                    </span>
+
+                </div>
+                <div class="card-body ">
+                    <div id="panelbodyforusers" style="min-height:300px;">
+                    </div>
+
+                    <div class=" loader">
+                        <center>
+                            <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+                        </center>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="input-group col-md-2 d-flex align-items-center">
+                            <span class="input-group-addon" id="basic-addon2">تعداد کاربران:</span>
+                            <select id="numberinpage" class="form-control">
+                                <option value="6">6</option>
+                                <option value="12">12</option>
+                                <option value="18">18</option>
+                                <option value="24">24</option>
+                                <option value="30">30</option>
+                            </select>
+
+                        </div>
+                        <div class="col-md-3">
+
+                    <button id="UpdateControllerAction" class="btn" style="background-color:#332b3a;color:#ffca01">به روز رسانی لیست اکشن ها</button>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<script src="~/Scripts/jquery-2.1.4.js"></script>*@
+<script>
+    $(panelbodyforusers).on('click', '.vertificationofdeliver', function () {
+
+
+        jQuery.post('/admin/addvertificationofdeliver', { cartid: $(this).val() }, function (result) {
+            $(messageokheader).html('فرم ثبت تحویل سفارش')
+            $(messageokbody).html(result)
+        $(messageok).modal();
+
+
+
+        })
+    })
+    $(function () {
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/filterusersbystatus', { status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforusers').html(result)
+
+        })
+    })
+
+
+
+    $('#searchdiv').on('click', '#searchbyusername', function () {
+        var bodyform = $(this).parents('.card-body')
+        //alert(bodyform.html())
+        var username = bodyform.find('#username').val()
+        //alert(username)
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchusersbyusername', { username: username, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforusers').html(result)
+
+        })
+
+    })
+    //
+    $('#searchdiv').on('click', '#searchusersbyname', function () {
+        var fname = $('#fname_serach').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchusersbyname', { fname: fname, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforusers').html(result)
+
+        })
+
+    })
+    //
+
+    $('#searchdiv').on('click', '#searchusersbystatus', function () {
+
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchusersbystatus', {  status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforusers').html(result)
+
+        })
+
+    })
+    //
+    $('#searchdiv').on('click', '#searchbyfinalstatus', function () {
+        var finalstatus = $('#finalstatus').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchbyfinalstatus', { finalstatus: finalstatus, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforusers').html(result)
+
+        })
+
+    })
+    //
+    $('#searchdiv').on('click', '#searchbysignupdate', function () {
+
+        var signupdate = $('#signupdate').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchbysignupdate', { signupdate: signupdate, status: status, take: take }, function (result) {
+
+            $('.loader').hide()
+
+            $('#panelbodyforusers').html(result)
+
+        })
+
+    })
+    //
+    $('#searchdiv').on('click', '#searchbysignupdaterange', function () {
+        var signupdatefrom = $('#signupdatefrom').val()
+        var signupdateto = $('#signupdateto').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+
+        jQuery.post('/admin/searchbysignupdaterange', { signupdatefrom: signupdatefrom, signupdateto: signupdateto, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforusers').html(result)
+
+        })
+
+    })
+    //
+    $('#searchdiv').on('click', '#searchbyDemandtransportation', function () {
+
+        var Demandtransportation = $('#Demandtransportation').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchbyDemandtransportation', { Demandtransportation: Demandtransportation, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyforusers').html(result)
+
+        })
+
+    })
+    //
+
+    $('#panelbodyforusers').on('click', '.details', function () {
+
+        var id = $(this).val()
+
+        $('#p' + id).toggle(100)
+    })
+    $('#panelbodyforusers').on('click', '.transportaiondetails', function () {
+
+        var id = $(this).val()
+        $('#t' + id).toggle(100)
+    })
+    $('#panelbodyforusers').on('click', '.transportaioncost', function () {
+
+        var id = $(this).val()
+        $('#tcost' + id).toggle(100)
+    })
+
+    $(signupdate).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    $(signupdatefrom).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    $(signupdateto).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+
+
+    $('#usermanagement').on('click', '.card-header', function () {
+
+
+
+        var q = $(this).next()
+
+        if (q.hasClass('headeritem')) {
+
+            var cardbody = $(this).parent().find('.card-body')
+            cardbody.toggleClass('hidden')
+        } else {
+            if ($(this).hasClass('open')) {
+                $(this).removeClass('open')
+
+            }
+            else {
+                $(this).addClass('open')
+
+            }
+            q.toggle(200)
+        }
+    })
+
+    $('#messageok').on('click', '#btn_saveuser', function () {
+
+
+        var formbody = $(this).parents('.modal-body')
+        //alert(formbody.html())
+
+        var mydata = new FormData()
+
+        mydata.append('id', formbody.find('#id').val())
+        mydata.append('username', formbody.find('#username').val())
+
+        mydata.append('password', formbody.find('#password').val())
+        mydata.append('confirmpass', formbody.find('#confirmpass').val())
+        mydata.append('name', formbody.find('#fname').val())
+        mydata.append('lname', formbody.find('#lname').val())
+        mydata.append('cellphone', formbody.find('#cellphone').val())
+        mydata.append('email', formbody.find('#email').val())
+        mydata.append('access', formbody.find('#access').val())
+        mydata.append('status', formbody.find('#statususer').val())
+
+        mydata.append('userdescription', formbody.find('#userdescription').val())
+        mydata.append('image', document.getElementById("image").files[0])
+
+        console.log($(password).val() + ' ' + $(username).val())
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/edituserbyajax',
+            data: mydata,
+            datatype: 'json',
+            processData: false,
+            contentType: false,
+        }).done(function (msg) {
+            var htmls = "<br/><br/>"
+
+
+            //values = JSON.parse(msg)
+            if (msg.status == 'error') {
+                htmls = htmls + '<li style="margin:3px; color:red;">' + msg.message + '</li>'
+                $(infobox).html(htmls)
+            } else if (msg.status == 'errorinpass') {
+
+
+                    htmls = htmls + '<li style="margin:3px; color:red;">' + msg.message + '</li>'
+                    $(infobox).html(htmls)
+
+
+            } else if (msg.status == 'errorvalidation') {
+
+                $(msg.message).each(function (idx, item) {
+
+                    htmls = htmls + '<li style="margin:3px; color:red;">' + item + '</li>'
+                })
+                $(infobox).html(htmls)
+
+
+            }
+            else {
+
+                htmls = htmls + '<li style="margin:3px; color:green;">' + 'عملیات با موفقیت انجام شد.' + '</li>'
+                $(infobox).html(htmls)
+                resetform()
+
+
+            }
+        })
+
+    })
+
+
+    $('body').on('click', '.updateaccess', function () {
+        var userid = $(this).attr('userid')
+
+        jQuery.post('/admin/updateaccessleveltouser', { userid: userid }, function (msg) {
+            if (msg == true) {
+                alert('تمام فیلدهای سطح دسترسی به روز رسانی شده اند')
+            } else {
+                alert('خطایی رخ داده است')
+            }
+
+        })
+    })
+
+    $('body').on('click', '.Allaccess', function () {
+        var userid = $(this).attr('userid')
+
+        jQuery.post('/admin/Activeallforthisuserbyuserid', { userid: userid }, function (msg) {
+            if (msg == true) {
+                alert('فیلدهای سطح دسترسی به روز شدند')
+            } else {
+                alert('خطایی رخ داده است')
+            }
+
+        })
+    })
+    $('body').on('click', '.GiveAccessMenuToUser', function () {
+        var userid = $(this).attr('userid')
+
+        jQuery.post('/admin/GiveAccessMenuToUser', { userid: userid }, function (msg) {
+            if (msg == true) {
+                alert('فیلدهای مربوط به سطح دسترسی به منوها به کاربر مورد نظر داده شد.')
+            } else {
+                alert('خطایی رخ داده است')
+            }
+
+        })
+    })
+
+    // تغییر سطح دسترسی به منوها (نمایش یا عدم نمایش منوها)
+    $('body').on('click', '.accesscheckbox', function (e) {
+
+        var accesslevelid = $(this).attr('accesslevelid')
+        //alert(accesslevelid)
+        jQuery.post('/admin/editaccesslevel', { id: accesslevelid }, function (result) {
+            //alert(result)
+            //Console.log(result)
+            //alert($(".setting[accesslevelid='" + accesslevelid + "']").html())
+            //$(".setting[accesslevelid='" + accesslevelid + "']").html(result)
+
+
+        })
+
+
+    })
+
+    $('body').on('click', '.actionaccess', function (e) {
+        var userid = $(this).attr('userid')
+        var ob = $(this);
+        jQuery.post('/admin/GetActionAccessItems', { userid: userid }, function (result) {
+            var menuaccessholeder = ob.parents('.userpad').find('.menuaccessholeder')
+            menuaccessholeder.html(result)
+            menuaccessholeder.toggleClass('hidden')
+
+
+
+
+        })
+
+
+
+
+
+    })
+    //  changepermission
+    $('body').on('click', '.chb_permission', function (e) {
+
+        var id = $(this).attr('actionaccessid')
+
+        jQuery.post("/admin/changepermission", { id: id }, function (result) {
+
+        })
+
+
+    })
+
+    //  checkallfor a menu
+    $('body').on('click', '.checkall', function (e) {
+        var motherob = $(this).parents('.table-menuauserction')
+        var menuid = motherob.attr('menuid')
+        var userid = motherob.attr('userid')
+        var targetstatus = $(this).prop('checked')
+               var checkboxes = motherob.find('.chb_permission')
+              jQuery.post("/admin/checkallactionforthisusermenu", { menuid: menuid, userid: userid, targetstatus: targetstatus }, function (result) {
+            if (result == true) {
+                                checkboxes.prop('checked', 'checked')
+                            } else {
+                               checkboxes.prop('checked', '')
+            }
+
+        })
+
+
+    })
+
+    // Reflection to get actions and controllers
+    $(UpdateControllerAction).click(function (e) {
+        e.preventDefault()
+        jQuery.post('/admin/GetControllerActions2', {}, function (msg) {
+
+
+            alert(msg)
+        })
+
+
+
+    })
+
+
+    // To Edit Actiontable
+    $('body').on('click', '.fa-edit', function (e) {
+
+        var actionid = $(this).attr('actionid')
+        jQuery.post('/admin/toshoweditactionform', { actionid: actionid }, function (result) {
+            //alert(result)
+            $(messageokbody).html(result)
+            $(messageokheader).html('فرم ویرایش اکشن ها')
+            $(messageok).modal('show')
+
+        })
+    })
+
+
+
+</script>
+

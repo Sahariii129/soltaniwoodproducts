@@ -1,0 +1,404 @@
+﻿
+@font-face {
+    font-family: 'Yekan';
+    src: url('/fonts/Yekan.eot');
+    src: local('BYekan'), url('fonts/Yekan.woff') format('woff'), url('fonts/Yekan.ttf') format('truetype'), url('Yekan.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'B Titr';
+    src: url('../font/BTitrBd.ttf') format("truetype");
+}
+@font-face {
+    font-family: 'IranNastaliq';
+    src: url('../font/IranNastaliq_p30download.com.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'B Nazanin';
+    src: url('../font/BNazanin.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'B Yekan';
+    src: url('../font/BYekan.ttf') format("truetype");
+}
+@font-face {
+    font-family: 'Iranian Sans';
+    src: url('../font/irsans.ttf') format("truetype");
+}
+
+p.customfont {
+    font-family: 'B Titr', Verdana, Tahoma;
+}
+
+body {
+    font-family: 'B Titr' !important;
+    /*background-image: url('../img/otherimages/Grey-Texture-Background-and-Wallpaper-16.jpg') !important;*/
+    background-color: #dde0e2 !important;
+}
+
+.hoverclass :hover {
+    background-color: #0094ff;
+}
+
+.text-muted:hover {
+    background-color: #0094ff;
+}
+
+.img-responsive :hover {
+    margin: 10px;
+}
+
+.img-res {
+    width: 100%;
+    height: auto;
+}
+
+
+button.list-group-item {
+    text-align: right !important;
+}
+
+.panel-body {
+    padding: 3px !important;
+}
+
+.listing {
+    text-align: justify !important;
+    line-height: 1.5 !important;
+    margin-right: 50px;
+    text-indent: -20px !important;
+    font-size: 13px !important;
+    padding-right: 15px !important;
+    padding-left: 5px !important;
+}
+
+.lb1 {
+    color: #ffffff !important;
+    
+}
+
+#background2 {
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+
+.lb2 {
+    background-color: #ffffff !important;
+}
+
+.form01 {
+    border: 3px dotted #ffffff;
+    padding: 5px;
+}
+
+a.back-to-top {
+    display: none;
+    width: 48px;
+    height: 48px;
+    text-indent: -9999px;
+    position: fixed;
+    z-index: 999;
+    right: 10px;
+    bottom: 20px;
+    background: #27AE61 url("../img/icon/up-arrow.png") no-repeat center 43%;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+}
+
+.newspanel {
+    background-color: #6c0505 !important;
+    border-radius: 5px;
+    /*min-height:135px;*/
+    color: #ffffff;
+     
+}
+
+.newsheader {
+    background-color: #2f9518;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+}
+
+.newsabstract {
+    padding-top: 5px;
+    padding-right: 30px;
+    padding-left: 5px;
+    font-family: 'B Nazanin';
+    font-size: 16px;
+    height:90px;
+     background-color: #97b9cf;
+}
+
+    .newsabstract a {
+        text-decoration: none;
+        color:#000000;
+        
+    }
+
+.newsdate {
+    position: absolute;
+    bottom: -40px;
+    left: 10px;
+}
+
+
+.commentpanel {
+    margin: 5px;
+}
+
+.captionslider {
+    position: absolute;
+    right: 15%;
+    bottom: 10px !important;
+    left: 15%;
+    z-index: 10;
+    padding-top: 20px;
+    padding-bottom: 10px !important;
+    color: #fff;
+    text-align: center;
+}
+
+
+.ui-jqgrid-title {
+    font-family: 'B Titr' !important;
+    text-align: center !important;
+    font-size: 16px;
+}
+
+.ui-jqgrid-labels {
+    font-family: 'B Yekan' !important;
+    font-size: 14px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.ui-jqgrid .ui-jqgrid-htable th div {
+    height: 25px;
+}
+
+.ui-jqgrid-btable {
+    font-family: 'B Nazanin' !important;
+    font-size: 16px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.ui-jqgrid .ui-jqgrid-caption-rtl {
+    text-align: center !important;
+}
+.tcenter tr{
+    text-align:center;
+}
+.tcenter tr span{
+    font-size:12px;
+}
+
+.myfont  {
+    font-family:'Iranian Sans'
+
+}
+
+.dropdown-menu>li
+{	position:relative;
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
+	cursor:pointer;
+}
+.dropdown-menu .sub-menu {
+    left: 100%;
+    position: absolute;
+    top: 0;
+    display:none;
+    margin-top: -1px;
+	border-top-left-radius:0;
+	border-bottom-left-radius:0;
+	border-left-color:#fff;
+	box-shadow:none;
+}
+.right-caret:after
+ {	content:"";
+    border-bottom: 4px solid transparent;
+    border-top: 4px solid transparent;
+    border-left: 4px solid orange;
+    display: inline-block;
+    height: 0;
+    opacity: 0.8;
+    vertical-align: middle;
+    width: 0;
+	margin-left:5px;
+}
+.left-caret:after
+{	content:"";
+    border-bottom: 4px solid transparent;
+    border-top: 4px solid transparent;
+    border-right: 4px solid orange;
+    display: inline-block;
+    height: 0;
+    opacity: 0.8;
+    vertical-align: middle;
+    width: 0;
+	margin-left:5px;
+}
+/*.input-group > .input-group-btn:last-child > .selectpicker {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.input-group > .input-group-btn:first-child > .selectpicker {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}*/
+/*.my-group .form-control{
+    width:75% !important;
+}*/
+.txtcontrol{
+        width:45% !important;
+
+}
+.selectcontrol1{
+    width:15% !important;
+}
+.selectcontrol2{
+        width:15% !important;
+
+}
+.selectcontrol3{
+        width:10% !important;
+
+}
+.selectcontrol4{
+        width:15% !important;
+
+}
+.enter{
+    width:50% !important;
+}
+.fa {
+  padding: 20px;
+  font-size: 30px;
+  width: 50px;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px 2px;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+
+ .left {
+    float: left;
+}
+    .social-linkbox {
+    padding: .5rem 0;
+}
+    .icon {
+    background: url("/Content/img/icon/slices.png") no-repeat;
+        background-position-x: 0%;
+        background-position-y: 0%;
+    display: inline-block;
+    position: relative;
+}
+.icon-footer-telegram {
+    width: 29px;
+    height: 29px;
+    background-position: -617px -621px;
+}
+ .icon-footer-aparat {
+    width: 29px;
+    height: 29px;
+    background-position: -370px -621px;
+}
+    .icon-footer-instagram {
+    width: 28px;
+    height: 28px;
+    background-position: -536px -621px;
+}
+    .icon-footer-googleplus {
+    width: 28px;
+    height: 28px;
+    background-position: -494px -621px;
+}
+    .icon-footer-twitter {
+    width: 28px;
+    height: 28px;
+    background-position: -453px -621px;
+}
+    .icon-footer-facebook {
+    width: 29px;
+    height: 30px;
+    background-position: -577px -621px;
+}
+.clearfix {
+    display: block;
+}
+.social-panel {
+    height: 48px;
+}
+.social-linkbox li{
+    display:inline;
+}
+.menu-bar {
+    width: 100%;
+    padding: 34px 0;
+    /*background-color: #fff;*/
+    overflow: hidden;
+}
+.wrapper {
+    width: 1190px !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.inner-wraper {
+    width: 1190px;
+    margin: 0 auto;
+    display: block;
+}
+.menu-bar .box {
+    float: right;
+    margin-left: 111px;
+}
+ .mycolor{
+        color:#808080;
+    }
+
+ .ui-widget-overlay{
+     z-index:10 !important;
+ }
+ .btnlikea{
+    
+     background:none!important;
+     color:inherit;
+     border:none; 
+     padding:0!important;
+     font: inherit;
+     /*border is optional*/
+     
+     cursor: pointer;
+}
+ .cart-box {
+    float: right;
+    height: 38px;
+}
+ .cart-box .dk-button-container {
+    margin: 0!important;
+    box-shadow: 1px 1px 2px #ddd!important;
+    -moz-box-shadow: 0 1px 2px #ddd!important;
+    -webkit-box-shadow: 0 1px 2px #ddd!important;
+    -ms-box-shadow: 0 1px 2px #ddd!important;
+    -o-box-shadow: 0 1px 2px #ddd!important;
+    width: 190px!important;
+}

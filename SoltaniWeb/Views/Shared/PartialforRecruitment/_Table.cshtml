@@ -1,0 +1,283 @@
+﻿
+
+@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.structs
+
+@model IEnumerable<applicantstructs>
+@{
+    var modelids = Model.Select(a => new { id = a.app_id }).OrderByDescending(a=>a.id);
+    int skip = ViewBag.skip==null ? 0 : (int)ViewBag.skip;
+    int take = ViewBag.pagesize == null ? 10 : (int) ViewBag.pagesize;
+    var modeltoshow = Model.OrderByDescending(a => a.app_id).Skip(skip).Take(take);
+    
+
+}
+
+<style>
+    .pricetable tbody {
+        display: block;
+        overflow: auto;
+    }
+
+    .tbodygrid {
+        height: 550px;
+    }
+
+    .subgridetbody {
+        max-height: 500px;
+    }
+  
+    .idnumber {
+        width: 100px;
+    }
+    .f-name{
+        width :100px;
+    }
+    .l-name{
+        width :150px;
+    }
+    .codemelli{
+        width:150px;
+    }
+    .cellphone{
+        width:150px;
+    }
+    .sex{
+        width:100px;
+    }
+    .birthday{
+        width:150px;
+    }
+    .sabtdate{
+        width:150px;
+    }
+    .Toolscell{
+        width:300px;
+    }
+    .totalpnumberlbl {
+        width: 1000px;
+    }
+    .subgridexpand {
+        cursor: pointer;
+    }
+    .jobname{
+        width:200px;
+    }
+</style>
+
+<table class="table table-responsive table-bordered table-condensed sortable pricetable mb-0">
+    <thead>
+
+        <tr class="table-header">
+
+            <th class="phead hidden-xs idnumber">#</th>
+            <th class="phead    f-name">نام </th>
+            <th class="phead hidden-xs   l-name">نام خانوادگی</th>
+            <th class="phead hidden-xs  codemelli">کد ملی</th>
+
+            <th class="phead  cellphone">شماره موبایل</th>
+            <th class="phead  sex">جنسیت</th>
+            <th class="phead  jobname">شغل مورد درخواست</th>
+
+
+            <th class="phead hidden-xs   birthday">تاریخ تولد</th>
+            <th class="phead  sabtdate">تاریخ ثبت</th>
+
+            <th class="phead hidden-xs  Toolscell"></th>
+
+
+        </tr>
+    </thead>
+
+    <tbody id="tabletbody" tbodyforapp class="tbodygrid">
+
+        <partial name="~/Views/Shared/PartialforRecruitment/_Tablebody.cshtml" model="@modeltoshow" />
+
+    </tbody>
+  
+</table>
+<div id="toolsband_id" class="toolsbarclass">
+<partial name="~/Views/Shared/Partiallistkala/_Toolsband.cshtml" model="new Toolsbar() {Add=false , Edit=false , Delete=false }" />
+
+</div>
+
+<script>
+ 
+    var listrowidselected = 0
+    
+    var modelobj = @Html.Raw(Json.Serialize(modelids))
+    
+    var ids = [];
+
+    $(modelobj).each(function (n, m) {
+        ids.push(m.id)
+    })
+    
+    $(tabletbody).on('dblclick', '.listrow', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected')
+            listrowidselected =0
+        } else {
+            $('*').removeClass('selected')
+
+            $(this).addClass('selected')
+
+            listrowidselected = $(this).attr('listid')
+        }
+
+
+    })
+
+
+    //// click refresh btn
+
+    //$(Btn_Refresh).click(function () {
+
+    //    jQuery.post('/admin/Getlastlistitem', {}, function (result) {
+
+    //        $(tabletbody).html(result)
+
+    //    })
+
+
+    //})
+
+    $(pagesize_id).change(function () {
+       
+        var take = parseInt($(this).val());
+        
+        var skip = 0
+       
+      
+
+        var data01 = { model: ids, take: take, skip: skip }
+        $('.loader').show()
+
+        jQuery.post('/admin/reorderlistapplicants', data01, function (result) {
+            $('.loader').hide()
+            $(tabletbody).html(result)
+            $(pageindex).val('1')
+            var totalpage = $('.listrow').attr('totalpage')
+            $(totalpageindex).html(totalpage)
+        })
+
+
+
+
+    })
+
+    $('.toolsbarclass').on('click', '.next', function () {
+        
+
+
+      
+        var pagenumber = $('.toolsbarclass').find('#pageindex').val()
+        
+        var totalpage = $('.toolsbarclass').find('#totalpageindex').html()
+        var targetpagenumber = parseInt(pagenumber) + 1;
+          
+        
+        if (targetpagenumber > totalpage)
+            return;
+
+        var take = parseInt($(pagesize_id).val())
+        var skip = parseInt(take * (parseInt(targetpagenumber) - 1))
+       
+        if (skip > 1000) {
+            $(messagenotokbody).html('به دلایل امنیتی این رکوردها قابل رویت نمی باشند')
+            $(messagenotok).modal()
+            return;
+        }
+        
+    
+      
+        var data01 = { model: ids, take: take, skip: skip }
+
+        $('.loader').show()
+        jQuery.post('/admin/reorderlistapplicants', data01, function (result) {
+            $('.loader').hide()
+           
+            $('[tbodyforapp]').html(result)
+            $(pageindex).val(targetpagenumber)
+            $(totalpage).val(@ViewBag.totalpages)
+
+        })
+
+
+
+    })
+
+
+
+
+    /// push previous
+    
+    $(previous).click(function () {
+        var pagenumber = $('.toolsbarclass').find('#pageindex').val()
+
+        var totalpage = $('.toolsbarclass').find('#totalpageindex').html()
+        var targetpagenumber = parseInt(pagenumber) - 1;
+        if (targetpagenumber > totalpage || targetpagenumber<1)
+            return;
+
+        var take = parseInt($(pagesize_id).val())
+        var skip = parseInt(take * (parseInt(targetpagenumber) - 1))
+       
+        if (skip > 1000) {
+            $(messagenotokbody).html('به دلایل امنیتی این رکوردها قابل رویت نمی باشند')
+            $(messagenotok).modal()
+            return;
+        }
+        
+
+      
+        var data01 = { model: ids, take: take, skip: skip }
+        $('.loader').show()
+        jQuery.post('/admin/reorderlistapplicants', data01, function (result) {
+            $('.loader').hide()
+            $(tabletbody).html(result)
+            $(pageindex).val(targetpagenumber)
+
+        })
+
+
+
+    })
+    $(GotoFirst).click(function () {
+        var take = parseInt($(pagesize_id).val())
+        var data01 = { model: ids, take: take, skip: 0 }
+        $('.loader').show()
+        jQuery.post('/admin/reorderlistapplicants', data01, function (result) {
+            $('.loader').hide()
+            $(tabletbody).html(result)
+            $(pageindex).val(1)
+
+        })
+
+
+
+    })
+    $(GotoLast).click(function () {
+        var totalpage = $('.toolsbarclass').find('#totalpageindex').html()
+        var take = parseInt($(pagesize_id).val())
+        var skip = parseInt($(totalpageindex).html()-1) * take
+        var data01 = { model: ids, take: take, skip: skip }
+        $('.loader').show()
+        jQuery.post('/admin/reorderlistapplicants', data01, function (result) {
+            $('.loader').hide()
+            $(tabletbody).html(result)
+            $(pageindex).val(totalpage)
+
+        })
+
+
+
+    })
+
+  
+
+
+  
+
+
+</script>

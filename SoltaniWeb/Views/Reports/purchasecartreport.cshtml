@@ -1,0 +1,28 @@
+﻿@using Stimulsoft.Report.Mvc;
+
+@{
+    ViewBag.Title = "Purchase Report";
+
+    Layout = "~/Views/shared/_layoutbootstarpadminforreport.cshtml";
+}
+<link href="~/Content/styles/Style3.css" rel="stylesheet" />
+
+
+
+
+@Html.StiNetCoreViewer(new StiNetCoreViewerOptions()
+{
+    Actions =
+    {
+        GetReport = "GetReportofpcart",
+        ViewerEvent = "ViewerEventpcart"
+    }
+})
+
+<style>
+
+    .sstiJsViewerReportPanel {
+        direction: rtl !important;
+        font-family: 'Iranian Sans' !important
+    }
+</style>

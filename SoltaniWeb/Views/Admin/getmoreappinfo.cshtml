@@ -1,0 +1,79 @@
+﻿
+@using SoltaniWeb.Models.repository
+@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.Extensions
+ 
+@model IEnumerable<tbl_skillappinfo>
+@{
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    var degrees = db.tbl_educationaldegree.ToList();
+    var jobs = db.tbl_job.ToList();
+    var today = DateTime.Now.ToPersianDate();
+    
+
+}
+///
+<div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color:#ad1111;">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" style="color:#ffffff;" id="gridSystemModalLabel">اطلاعات  مهارتی  : @ViewBag.fullname</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-horizontal" style="margin-top:10px;">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @foreach (var item in Model)
+                    {
+                        <input type="hidden" name="skillid" value="@item.skillid" id="skillidlst" class="skillid" />
+                        <label class="control-label col-md-2 ">  @item.skill.skillname : <sup style="color:red;">*</sup> </label>
+                        if (item.skillid != 13)
+                        {
+                            
+                           <div class="col-md-2">
+                            <select class="form-control skillvalue" name="skillvalue" id="skillvaluelst">
+
+                                <option value=1 @(item.skillvalue == "1" ? "selected" : "")>آشنا نیستم</option>
+                                <option value=2 @(item.skillvalue == "2" ? "selected" : "")>کم</option>
+                                <option value=3 @(item.skillvalue == "3" ? "selected" : "")>خوب</option>
+                                <option value=4 @(item.skillvalue == "4" ? "selected" : "")>زیاد</option>
+                                <option value="5" @(item.skillvalue == "5" ? "selected" : "")>خیلی زیاد</option>
+
+
+                            </select>
+
+                        </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-10">
+
+                                <input type="text" class="form-control skillvalue" value="@item.skillvalue" />
+                            </div>
+                        }
+
+                    }
+                </div>
+
+
+                
+
+
+
+
+
+
+
+
+            </div>
+
+
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" data-dismiss="modal">بستن</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

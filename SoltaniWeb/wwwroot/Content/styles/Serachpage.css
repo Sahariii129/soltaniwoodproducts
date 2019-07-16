@@ -1,0 +1,147 @@
+﻿.productimage {
+    position: relative;
+}
+.productimage img {
+ 
+    width: 100%;
+    height: 150px;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background-color: #0db1d5;
+    /*opacity:0.5*/;
+    overflow: hidden;
+    width: 100%;
+    height: 0;
+    transition: .5s ease;
+}
+.productimage:hover .overlay {
+    bottom: 60%;
+    height: 40%;
+}
+.ProductSpec {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+    height: 50%;
+    /*background-color: red;*/
+}
+
+
+.productinfo {
+    border: 2px solid #192237;
+    margin-bottom: 10px !important;
+    background-color: #ffffff;
+    position: relative;
+    float: right;
+    width: 100%;
+}
+    .productinfo .section {
+        border-bottom: 1px dotted #f24d4d;
+        width: 100%;
+        height: 35px;
+        margin: 0px;
+        padding:5px;
+        background-color:#8e0d0d;
+         color:#ffffff;
+    }
+    .section p{
+        text-align:center;
+        font-weight:bolder;
+       
+    }
+
+
+
+.productinfo .brand {
+    /*border: 1px solid #ff6a00;*/
+    width: 100%;
+    height: 45px;
+    margin: 0px;
+    background-color: #8e0d0d;
+    color: #ffffff;
+}
+
+.brandname {
+    /*border: 1px solid #b6ff00;*/
+    width: 60%;
+    height: 45px;
+    margin: 0px;
+    float: right;
+}
+.brandname a{
+    text-decoration:none;
+    color:#ffffff;
+    cursor:pointer;
+}
+
+.brandimage {
+    /*border: 1px solid #b6ff00;*/
+    width: 40%;
+    height: 45px;
+    margin: 0px;
+    float: right;
+    background-color: #ffffff;
+}
+.productname {
+ 
+    height: 40px;
+    padding:5px;
+    border-bottom: 1px dotted #8e0d0d;
+   background-color:#b2fbc5;
+}
+
+.productname a {
+    text-decoration: none;
+    color: #000000;
+    cursor: pointer;
+    font-weight:bolder;
+}
+
+.SellPrice {
+    height: 40px;
+    padding: 5px;
+    border-bottom: 1px dotted #8e0d0d;
+}
+    .SellPrice p{
+        text-align:right;
+    }
+
+
+    .Dimension {
+        height: 40px;
+        padding: 5px;
+        border-bottom: 1px dotted #8e0d0d;
+    }
+
+    .Dimension a {
+        text-decoration: none;
+        color: #000000;
+        cursor: pointer;
+        font-weight: bolder;
+    }
+.status {
+    height: 40px;
+    padding: 5px;
+    border-bottom: 1px dotted #8e0d0d;
+}
+    .status p {
+        text-align: right
+    }
+  
+
+    .Samples {
+        height: 40px;
+        padding: 5px;
+    }
+
+    .Samples a {
+        text-decoration: none;
+        color: #000000;
+        cursor: pointer;
+        font-weight: bolder;
+    }

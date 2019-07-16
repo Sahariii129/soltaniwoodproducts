@@ -1,0 +1,82 @@
+﻿
+@{
+    //ViewBag.Title = "درباره ما";
+    ViewBag.description = "درباره کالای چوب سلطانی";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+<link href="~/soltanistatic/style/about.css" rel="stylesheet" />
+<div class="container-fluid about" data-aos="fade-up">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 aboutTitle">درباره ما</h5>
+            </div>
+            <p class="line">
+                این مجموعه فعالیت رسمی خود را با تولید اطاق چوبی کامیون ، فروش لوازم اطاق کامیون و همچنین تولید و ساخت درب های ساختمانی در سال 1330 به همت حاج عبدا... آقاسطان در چهارراه پانزده خرداد (پارامونت سابق) آغاز نمود. سال 1337 این مجموعه به دلیل وسعت فعالیت به محل کنونی واقع در میدان بسیج (فلکه فرودگاه قدیم) انتقال یافت. با گذشت چند سال این مجموعه توسط پسران و نوه های ایشان و با مدیریت غلامرضا آقاسلطان ، فرزند ارشد ذکور ایشان ، توسعه پیدا کرده به گونه ای که امروزه علاوه بر تولید و فروش لوازم اطاق کامیون به عنوان یکی از توزیع کننده های انواع فرآورده های چوبی در سطح شیراز و استان فارس به فعالیت حرفه ای خود ادامه می دهد.
+            </p>
+            <div class="row mt-5 pt-lg-5">
+                <div class="col-12 col-lg-6 text-center order-2 order-lg-1">
+                    <img src="~/soltanistatic/pictures/allll.jpg" class="w-100"/>
+                    <h4 class="mt-3 mt-lg-5 bold" id="typeit"></h4>
+                </div>
+                <div class="col-12 col-lg-6 order-1 order-lg-2">
+                    <div class="services">
+                        <h6 class="bold mb-5">انواع فرآورده های چوبی که هم اکنون در این مجموعه قابل عرضه می باشند عبارتند از :<i class="far fa-hand-point-down mx-1 fa-lg"></i></h6>
+                        <ul class="list-unstyled">
+                            <li><span>1</span>ام دی اف های هایگلاس ترک و ایرانی در برندهای AGT، LARIX، SEETEC و AGE </li>
+                            <li><span>2</span>ام دی اف های 16 میل در برندهای بست وود، نوین چوب، آرتا</li>
+                            <li><span>3</span>ام دی اف های 16 میل برجسته اکسترا رویساو اکسترا سالید و فوق برجسته اکسترا پلاس</li>
+                            <li><span>4</span>ام دی اف های خام با ضخامت 3، 5، 8، 16 و 25 میل</li>
+                            <li><span>5</span>ام دی اف های 3 میل سفید و رنگی کاغذی</li>
+                            <li><span>6</span>نئوپان خام رفسنجان و بست وود</li>
+                            <li><span>7</span>نئوپان روکش ملامینه بست وود</li>
+                            <li><span>8</span>صفحه کابینت ضدآب جی وود و ام دی اف زیباساز و نوین چوب</li>
+                            <li><span>9</span>ام دی اف های سفید صابونی ایرانی و خارجی در ابعاد متنوع</li>
+                            <li><span>10</span>نوار پی وی سی تکنوپل</li>
+                            <li><span>11</span>پی وی سی شیت مات و براق احسان کار</li>
+                            <li><span>12</span>چسب های لومیناک قالبی، سطلی و کیسه ای</li>
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+<script src="~/soltanistatic/script/typeit.min.js"></script>
+<script>
+    new TypeIt('#typeit', {
+        speed: 100,
+        loop: true,
+        deleteDelay: 900
+    })
+        .type('اعتبار ما ،  ')
+        .pause(500)
+        .type(' اعتماد')
+        .pause(600)
+        .type(' ')
+        .pause(300)
+        .type('شماست .')
+        .pause(2000)
+        .delete()
+        .pause(400)
+        .type('کارای ')
+        .pause(500)
+        .delete(1)
+        .pause(200)
+        .delete(1)
+        .pause(200)
+        .delete(1)
+        .pause(200)
+        .delete(1)
+        .pause(600)
+        .type('لای ')
+        .pause(600)
+        .type('چوب ')
+        .pause(600)
+        .type('سلطا')
+        .pause(300)
+        .type('نی')
+        .pause(3000)
+        .go();
+</script>

@@ -1,0 +1,505 @@
+﻿
+@using SoltaniWeb.Models.structs.PersonVM
+@model SoltaniWeb.Models.structs.PersonVM.PersonCreateViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    var listItems = ViewBag.Branches as List<SelectListItem>;
+}
+
+<div class="container-fluid col-md-12" style="padding: 20px;">
+    <div class="card">
+        <div class="card-header"> @(Model?.Id != 0 ? "ویرایش مشتریان" : "ایجاد مشتری جدید")</div>
+        <div class="card-body">
+    
+            <form asp-action="CreatePersson" class="m-form m-form--fit m-form--label-align-right  m-form--group-seperator-dashed">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id"/>
+                <input type="hidden" asp-for="GroupId"/>
+
+                <div class="card">
+                    <div class="card-header"> اطلاعات پایه مشتری</div>
+                    <div class="card-body">
+                        <div class="m-portlet__body">
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-6">
+                                    <label asp-for="FName" class="control-label"></label>
+                                    <input asp-for="FName" class="form-control" />
+                                    <span asp-validation-for="FName" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label asp-for="LName" class="control-label"></label>
+                                    <input asp-for="LName" class="form-control" />
+                                    <span asp-validation-for="LName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-6">
+                                    <label asp-for="Sex" class="control-label"></label>
+                                    @if (Model.Sex != null)
+                                    {
+                                        if (Model.Sex.Contains("مذکر"))
+                                        {
+                                            <select id="Sex" asp-for="Sex" name="Sex" class="form-control">
+                                                <option value="مذکر" selected>مذکر</option>
+                                                <option value="مونث">مونث</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select id="Sex"  asp-for="Sex" name="Sex" class="form-control">
+                                                <option value="مذکر">مذکر</option>
+                                                <option value="مونث" selected>مونث</option>
+                                            </select>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <select asp-for="Sex" name="Sex" class="form-control">
+                                            <option value="مذکر" selected>مذکر</option>
+                                            <option value="مونث">مونث</option>
+                                        </select>
+                                    }
+                                    <span asp-validation-for="Sex" class="text-danger"></span>
+                                </div>
+
+                                <div class="demo-section k-content col-lg-6">
+                                    <label asp-for="Prefix" class="control-label"></label>
+                                    <input asp-for="Prefix" class="form-control" />
+                                    <span asp-validation-for="Prefix" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-6">
+                                    <label asp-for="Codemelli" class="control-label"></label>
+                                    <input asp-for="Codemelli" class="form-control" />
+                                    <span asp-validation-for="Codemelli" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label asp-for="Cell" class="control-label"></label>
+                                    <input asp-for="Cell" class="form-control" />
+                                    <span asp-validation-for="Cell" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-6">
+                                    <label asp-for="Tell" class="control-label"></label>
+                                    <input asp-for="Tell" class="form-control" />
+                                    <span asp-validation-for="Tell" class="text-danger"></span>
+                                </div>
+
+                                <div class="demo-section k-content col-lg-6">
+                                    <label asp-for="Pdescription" class="control-label"></label>
+                                    <input asp-for="Pdescription" class="form-control" />
+                                    <span asp-validation-for="Pdescription" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+
+                                <div class="demo-section k-content col-lg-6">
+                                    <label asp-for="BrancheId" class="control-label"></label>
+                                    @Html.DropDownListFor(model => model.BrancheId, listItems,new{@class="form-control"})
+                                    <span asp-validation-for="BrancheId" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            <div class="card">
+                <div class="card-header"> آدرس های مشتری</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="m-portlet__body">
+                                <div class="form-group m-form__group row">
+                                    <input type="hidden" value="@Model.Id" id="hdPersinId"/>
+                                    <input type="hidden" value="0" id="hdPersinAddressId"/>
+                                    <label class="control-label">آدرس</label>
+                                    <textarea id="address" rows="3" class="form-control "></textarea>
+
+                                </div>
+                                <div class="form-group m-form__group row">
+
+                                    <label class="control-label">کد پستی</label>
+                                    <input id="postalCode" class="form-control "/>
+
+
+                                </div>
+                                <div class="form-group m-form__group row">
+
+                                    <label class="control-label">شماره تماس</label>
+                                    <input id="phone1" class="form-control "/>
+
+
+                                </div>
+                                <div class="form-group m-form__group row">
+
+                                    <label class="control-label">شماره تماس 2</label>
+                                    <input id="phone2" class="form-control "/>
+                                </div>
+                                <div class="form-group m-form__group row">
+
+                                    <label class="control-label">شماره تماس 3</label>
+                                    <input id="phone3" class="form-control "/>
+
+
+                                </div>
+
+                                <div class="m-form__actions">
+                                    <button type="button" id="btnSaveAddress" class="m-widget__detalis btn m-btn--pill btn-success  m-btn--wide pull-right">ذخیره آدرس</button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div id="divPersonAddress">
+                                @if (Model.PersonInformationSetting == null)
+                                {
+                                    @Html.Partial("_PersonAddress", new List<PersonAddressViewModel>())
+                                }
+                                else
+                                {
+                                    @Html.Partial("_PersonAddress", Model.PersonAddresses)
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="loader">
+                <center>
+                    <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+                </center>
+            </div>
+                <div class="card">
+                    <div class="card-header"> اطلاعات جانبی مشتری</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="m-portlet__body">
+                                    <div class="form-group m-form__group row">
+                                        <input type="hidden" value="0" id="hdPersonInfoId"/>
+                                        <label class="control-label" required>نوع اطلاعات</label>
+
+                                        @Html.DropDownList("PersonInformationSetting",
+                                            Html.GetEnumSelectList<PersonInformationSetting>(), new {@class = "form-control"})
+                                    </div>
+                                    <div class="form-group m-form__group row">
+
+                                        <label class="control-label">مقدار</label>
+                                        <input id="propertyValue" class="form-control "/>
+
+
+                                    </div>
+
+                                    <div class="m-form__actions">
+                                        <button type="button" id="btnSavePersonInfo" class="m-widget__detalis btn m-btn--pill btn-success  m-btn--wide pull-right">ذخیره اطلاعات</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div id="divPersonInformationSetting">
+                                    @if (Model.PersonInformationSetting == null)
+                                    {
+                                        @Html.Partial("_PersonInformation", new List<PersonInformationSettingViewModel>())
+                                    }
+                                    else
+                                    {
+                                        @Html.Partial("_PersonInformation", Model.PersonInformationSetting)
+                                    }
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div style="padding: 10px;">
+                    <div class="m-portlet__foot m-portlet__foot--fit">
+                        <div class="m-form__actions">
+
+                            <button type="button" id="btnsave"
+                                    class="m-widget__detalis btn m-btn--pill btn-success  m-btn--wide pull-right">
+                                @(Model.Id != 0 ? "ویرایش" : "ذخیره")
+
+                            </button>
+                            <a style="float: left;" asp-action="Index" class="btn m-btn--pill btn-secondary  m-btn--wide">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row col-lg-12" id="creatPerson">
+                </div>
+
+
+            </form>
+          
+        </div>
+    </div>
+   
+  
+</div>
+<script>
+    $('.loader').hide();
+    var lstPersonInfos =[];
+    $("#btnsave").click(function () {
+        var personName = $("#FName").val();
+        var personLastName = $("#LName").val();
+        var codeMeli = $("#Codemelli").val();
+        var mobile = $("#Cell").val();
+        var tel = $("#Tell").val();
+        var description = $("#Pdescription").val();
+        var personInfoId = $("#Id").val();
+        var brancheId = $('#BrancheId option:selected').val();;
+        var personSex = $("#Sex").val();
+        var personPrefix = $("#Prefix").val();
+        $('.loader').show();
+        lstPersonInfos = [];
+        var tableDataInfo = document.getElementById('tblPersonInformations');
+       
+        for (var i = 1; i < tableDataInfo.rows.length; i += 1) {
+            var row = tableDataInfo.rows[i];
+
+            lstPersonInfos.push(row.cells[0].innerText + "," + row.cells[1].id + "," + row.cells[2].innerText);
+        }
+        lstPersonAddresses = [];
+        var tableDataAdress = document.getElementById('tblPersonAddress');
+        for (var i = 1; i < tableDataAdress.rows.length; i += 1) {
+            var row = tableDataAdress.rows[i];
+
+            lstPersonAddresses.push(row.cells[0].id + "," + row.cells[0].innerText + "," + row.cells[1].innerText
+                + "," + row.cells[2].innerText + "," + row.cells[3].innerText + "," + row.cells[4].innerText);
+        }
+        $.ajax({
+                url: '@Url.Action("CreatePersson")',
+                type: "Post",
+                data: {
+                    Id: personInfoId, Sex: personSex, Prefix: personPrefix, BrancheId: brancheId,
+                    FName: personName, LName: personLastName, Codemelli: codeMeli, Cell: mobile, Tell: tel, Pdescription: description,
+                    personInfos: lstPersonInfos, personAddresses: lstPersonAddresses}
+            })
+            .done(function (data) {
+                $('.loader').hide();
+                var alert = "";
+                if (data.IsSuccessed) {
+                    alert ="<div class='alert alert-success'>"+
+                        data.Message + "</div>";
+                    if (personInfoId === "0"){
+                        $("#FName").val('');
+                        $("#LName").val('');
+                        $("#Codemelli").val('');
+                        $("#Cell").val('');
+                        $("#Tell").val('');
+                        $("#tblPersonInformations tbody").empty();    
+                        $("#tblPersonAddress tbody").empty();    
+                        $("#Pdescription").val('');
+                    }
+                } else {
+                    alert ="<div class='alert alert-danger'>"+
+                        data.Message + "</div>";
+                }
+                $("#creatPerson").html(alert);
+            }).fail(function () {
+                $('.loader').hide();
+                alert('خطا  در بروز عملیات');
+            });
+
+
+    });
+    function EditPersonInfo(persnId, id, propertyName, propertyValue) {
+        if (propertyName === "Mobile") {
+            propertyName = 0;}
+        else if (propertyName === "Email") {
+            propertyName = 1;
+        }
+        else if (propertyName === "AccountNumber") {
+            propertyName = 2;
+        }
+        else if (propertyName === "SocialNetworkingAccount") {
+            propertyName = 3;
+        }
+        $("#hdPersinId").val(persnId);
+        $("#hdPersonInfoId").val(id);
+        $("#propertyValue").val(propertyValue);
+        $("#PersonInformationSetting").val(propertyName);
+    }
+
+    $("#btnSavePersonInfo").click(function () {
+       
+        var propertyName = $("#PersonInformationSetting").val();
+        var propertyValue = $("#propertyValue").val();
+        var personId = $("#hdPersinId").val();
+        var id = $("#hdPersonInfoId").val();
+        lstPersonInfos = [];
+        var tableData = document.getElementById('tblPersonInformations');
+        var numberOfRows = tableData.rows.length;
+        for (var i = 1; i < numberOfRows; i += 1) {
+            var row = tableData.rows[i];
+
+            lstPersonInfos.push(row.cells[0].innerText + "," + row.cells[1].id + "," + row.cells[2].innerText);
+        }
+        if (propertyValue === "") {
+            alert("اطلاعات را وارد کنید");
+            return false;
+        }
+        $.ajax({
+                url: '@Url.Action("EditPersonInformation")',
+                type: "Post",
+                data: {
+                    personId: personId, id: id, propertyName: propertyName, propertyValue: propertyValue, personInfos: lstPersonInfos}
+            })
+            .done(function (partialViewResult) {
+                $("#divPersonInformationSetting").html(partialViewResult);
+                $('#propertyValue').val("");
+
+                $("#hdPersonInfoId").val("0");
+            });
+
+    });
+    function DeletPersonInfo(persnId, id) {
+       
+        if (id === "0") {
+            alert("رکوردی انتخاب نشده است");
+            return false;
+        }
+        lstPersonInfos = [];
+        
+        var tableData = document.getElementById('tblPersonInformations');
+        var numberOfRows = tableData.rows.length;
+        for (var i = 1; i < numberOfRows; i += 1) {
+            var row = tableData.rows[i];
+
+            lstPersonInfos.push(row.cells[0].innerText + "," + row.cells[1].id + "," + row.cells[2].innerText);
+        }
+        if (confirm("آیا از حذف اطلاعات مطمئن هستید")) {
+            @*$.post('@Url.Action("DeletPersonInformation")',
+                { id: id, personId: persnId, personInfos: lstPersonInfos},
+                function(data) {
+                    $("#divPersonInformationSetting").html(data);
+
+                }).fail(function() {
+
+                alert('خطا  در بروز عملیات');
+            });*@
+            $.ajax({
+                    url: '@Url.Action("DeletPersonInformation")',
+                    type: "Post",
+                    data: { id: id, personId: persnId, personInfos: lstPersonInfos }
+                })
+                .done(function (partialViewResult) {
+                    $("#divPersonInformationSetting").html(partialViewResult);
+                    $('#propertyValue').val("");
+
+                    $("#hdPersonInfoId").val("0");
+                });
+        }
+
+
+    }
+</script>
+<script>
+    var lstPersonAddresses = [];
+    function EditPersonAddres(persnId, id, addres, postalCode, phone, phone2, phone3) {
+        $("#hdPersinId").val(persnId);
+        $("#hdPersinAddressId").val(id);
+        $("#address").val(addres);
+        $("#postalCode").val(postalCode);
+        $("#phone1").val(phone);
+        $("#phone2").val(phone2);
+        $("#phone3").val(phone3);
+
+    }
+
+    $("#btnSaveAddress").click(function () {
+        var address=  $("#address").val();
+        var postalCode=   $("#postalCode").val();
+        var phone1=  $("#phone1").val();
+        var phone2=  $("#phone2").val();
+        var phone3=   $("#phone3").val();
+        var personId = $("#hdPersinId").val();
+        var id = $("#hdPersinAddressId").val();
+
+        if (address === "") {
+            alert("اطلاعات را وارد کنید");
+            return false;
+        }
+        lstPersonAddresses = [];
+        var tableData = document.getElementById('tblPersonAddress');
+        var numberOfRows = tableData.rows.length;
+        for (var i = 1; i < numberOfRows; i += 1) {
+            var row = tableData.rows[i];
+
+            lstPersonAddresses.push(row.cells[0].id + "," + row.cells[0].innerText + "," + row.cells[1].innerText
+                + "," + row.cells[2].innerText + "," + row.cells[3].innerText + "," + row.cells[4].innerText);
+        }
+        $.ajax({
+                url: '@Url.Action("EditAddresPerson")',
+                type: "Post",
+                data: {personId: personId, id: id, addres: address, postalCode: postalCode,
+                    phone: phone1, phone2: phone2, phone3: phone3, personInfos: lstPersonAddresses}
+            })
+            .done(function(partialViewResult) {
+                $("#divPersonAddress").html(partialViewResult);
+                $('#address').val("");
+                $('#postalCode').val("");
+                $('#phone1').val("");
+                $('#phone2').val("");
+                $('#phone3').val("");
+                $("#hdPersinAddressId").val("0");
+            });
+
+    });
+    function DeletPersonAddres(persnId, id) {
+        if (confirm("آیا از حذف اطلاعات مطمئن هستید")) {
+            @*$.get('@Url.Action("DeletAddresPerson")',
+                { id: id, personId: persnId},
+                function(data) {
+                    $("#divPersonAddress").html(data);
+
+                }).fail(function() {
+
+                alert('خطا  در بروز عملیات');
+            });*@
+            
+            if (id === "0") {
+                alert("رکوردی انتخاب نشده است");
+                return false;
+            }
+            lstPersonAddresses = [];
+        
+            var tableData = document.getElementById('tblPersonAddress');
+            var numberOfRows = tableData.rows.length;
+            for (var i = 1; i < numberOfRows; i += 1) {
+                var row = tableData.rows[i];
+
+                lstPersonAddresses.push(row.cells[0].id + "," + row.cells[0].innerText + "," + row.cells[1].innerText
+                    + "," + row.cells[2].innerText + "," + row.cells[3].innerText + "," + row.cells[4].innerText);
+            }
+            $.ajax({
+                    url: '@Url.Action("DeletAddresPerson")',
+                    type: "Post",
+                    data: { id: id, personId: persnId, personInfos: lstPersonAddresses }
+                })
+                .done(function(partialViewResult) {
+                    $("#divPersonAddress").html(partialViewResult);
+                  
+                    $("#hdPersinAddressId").val("0");
+                });
+        }
+
+
+    }
+
+</script>
+
+
+

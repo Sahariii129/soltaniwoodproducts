@@ -1,0 +1,12 @@
+﻿@using SoltaniWeb.Models.Domain
+@model IEnumerable<tbl_category>
+
+
+    @foreach (var item in Model)
+    {
+       
+            @Html.Partial("~/Views/shared/partialviewforproducts/_partialeachcatg.cshtml", item)
+
+
+            }
+

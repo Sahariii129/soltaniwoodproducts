@@ -1,0 +1,120 @@
+﻿<div class="card">
+    <div class="card-header userHeading" style="cursor:pointer;">تنطیمات اولیه جستجو:</div>
+    <div class="card-body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">وضعیت کاربر:</label>
+                    <div class="col-md-8">
+                        <select id="status" class="form-control">
+                            <option value=null>تمام کاربران</option>
+                            <option value=true selected>کاربران فعال</option>
+                            <option value=false>کاربران غیر فعال</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchusersbystatus" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header userHeading" style="cursor:pointer;" id="searchbyuser_heading">بر اساس نام کاربری:</div>
+    <div class="card-body" id="searchbyuser_body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">نام کاربری:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="username" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchbyusername" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header userHeading" style="cursor:pointer;" id="searchbyname_heading"> بر اساس نام و نام خانوادگی:</div>
+    <div class="card-body" id="searchbyuser_body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">نام یا نام خانوادگی:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="fname_serach" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchusersbyname" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header userHeading" style="cursor:pointer;"> بر اساس تاریخ ثبت نام:</div>
+    <div class="card-body" style="display:none;background-color:#f8eeca;border-left:4px solid #ffca01;border-bottom:4px solid #ffca01">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">تاریخ ثبت نام:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="signupdate" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchbysignupdate" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">از تاریخ :</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="signupdatefrom" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">تا تاریخ :</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="signupdateto" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchbysignupdaterange" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

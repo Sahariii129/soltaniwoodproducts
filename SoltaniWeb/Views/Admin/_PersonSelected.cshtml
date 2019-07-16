@@ -1,0 +1,23 @@
+﻿
+<div class="k-rtl">
+
+
+    @(Html.Kendo().Grid((IEnumerable<PersonViewModel>)ViewData["PersonsSelected"])
+                  .Name("myKendoGrid")
+                  .Columns(columns =>
+                  {
+                      columns.Bound(p => p.FullNamePerson).Title("نام مشتری");
+                      columns.Bound(p => p.Cell).Title("شماره همراه");
+                      columns.Bound(p => p.CodeMeli).Title("کد ملی");
+          // columns.Command(command => command.Custom("حذف").Click("deletePersonSelected"));
+      })
+
+                  .Pageable(pageable => pageable
+                      .Refresh(true)
+                      .PageSizes(new int[] { 10, 20, 50, 100 })
+                      .ButtonCount(10))
+                  .Sortable()
+                  .Scrollable()
+                  .Selectable()
+                  .Filterable())
+</div>

@@ -1,0 +1,380 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_category
+@using SoltaniWeb.Models.Domain
+
+@using SoltaniWeb.Models.repository
+@{
+    ViewBag.Title = "detailsproducts_catg";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.repository.productsrepository productrep = new SoltaniWeb.Models.repository.productsrepository();
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+
+    entityproducutsreposit entityrep = new entityproducutsreposit();
+    int userid = int.Parse(User.Claims.FirstOrDefault().Value);
+    var qproduct = db.tbl_products.Where(a => a.categoryid == Model.id).OrderBy(a => a.codename);
+
+}
+<style>
+    .loading-image {
+        /*position: absolute;
+        top: 50%;
+        left: 50%;*/
+        z-index: 10;
+    }
+
+    .loader {
+        display: none;
+        margin:10px;
+    }
+</style>
+<div class="container-fluid mt-4">
+
+    <div class="row myfont">
+        <div class=" col-12  ">
+            <div id="background2" class="row">
+                <br />
+                <div class="col-lg-3 col-12 ">
+
+                    <img src="~/Content/img/category/@Model.imagecategory" alt="@Model.categoryname" style="width:100%; height:100px;" class="img-thumbnail" />
+                </div>
+                <div class="col-lg-9 col-12 ">
+
+                    <table class="table table-bordered table-hover" style="display:table">
+                        <tr>
+                            <td>ID </td>
+                            <td>@Model.id </td>
+                        </tr>
+                        <tr>
+                            <td>نام محصول </td>
+                            <td>@Model.categoryname </td>
+                        </tr>
+                        <tr>
+                            <td>توضیحات </td>
+                            <td>@Model.description </td>
+                        </tr>
+                        <tr>
+                            <td>نام اختصاری </td>
+                            <td>@Model.shortname </td>
+                        </tr>
+                        <tr>
+                            <td>کلمات کلیدی </td>
+                            <td>@Model.keywords </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+    <br />
+
+
+    <div class="row myfont">
+        <div class="col-12 py-2">
+
+            <p id="imagegallery" style=" text-align :center; cursor :pointer;background-color:#6a95cc;color:#fff;margin-bottom:0">.:: کالا های بخش : @Model.categoryname ::.</p>
+
+        </div>
+    </div>
+    <button id="btn_addproduct" catgid="@Model.id" class="btn btn-lg" style=" margin-bottom:10px;background-color:#6a95cc;color:#fff"><span class="fas fa-plus" style=" padding-left:5px;" aria-hidden="true"></span>کالای جدید</button>
+
+
+    <div id="imagegallerydetaile" class="row myfont">
+        
+        @Html.Partial("_partialproductlist", qproduct)
+
+    </div>
+</div>
+
+
+
+
+
+<script>
+    // باز کردن مودال افزودن محصول جدید
+    $(btn_addproduct).click(function () {
+
+        var catgid = $(this).attr('catgid')
+        
+        jQuery.post('/admin/addproductform', { catgid: catgid }, function (p) {
+            $(messageokheader).html('افزودن محصول جدید')
+            $(messageokbody).html(p)
+            $('#messageok .modal-dialog').addClass('modal-lg')
+            $(messageok).modal()
+
+        })
+
+
+
+
+
+    })
+
+
+    // نمایش پریویو تصویر
+    $('#formbody').on('change', '#image', function () {
+
+
+        var reader = new FileReader();
+        reader.readAsDataURL(image.files[0])
+        reader.onloadend = function (e) {
+
+            imgpre.src = e.target.result
+
+        }
+    })
+    // ریست کردن فرم
+
+    function resetform() {
+        $('#formbody :input').val('')
+    }
+
+    // ذخیره اطلاعات
+
+    $('body').on('click', '#btn_save', function () {
+        var mode = $(formbody).attr('mode')
+     
+        if (mode=='add') {
+
+        var mydata = new FormData()
+
+        mydata.append('categoryid', $(categoryid).val())
+      
+        mydata.append('name', $(pname).val())
+        
+        mydata.append('dimension', $(dimension).val())
+      
+        mydata.append('codename', $(codename).val())
+       
+        mydata.append('description', $(description).val())
+       
+        mydata.append('grade', $(grade).val())
+      
+        mydata.append('keywords', $(keywords).val())
+      
+        mydata.append('inventory', $(inventory).val())
+      
+        mydata.append('lastbuycost', $(lastbuycost).val())
+     
+        mydata.append('lastcellcost', $(lastcellcost).val())
+      
+        mydata.append('status', $(pstatus).val())
+       
+        mydata.append('weight', $(weight).val())
+    
+            mydata.append('image', document.getElementById("addimage").files[0])
+       
+        $('.loader').show()
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/addproduct',
+            data: mydata,
+            datatype: 'json',
+            processData: false,
+            contentType: false,
+        }).done(function (msg) {
+            var htmls = "<br/><br/>" 
+            $('.loader').hide()
+            
+            //values = JSON.parse(msg)
+           if (msg.status=='error') {
+                htmls = htmls + '<li style="margin:3px; color:red;">' + msg.message + '</li>'
+                $(infobox).html(htmls)
+            } else if (msg.status == 'errorvalidation') {
+               
+                $(msg.message).each(function (idx, item) {
+
+                    htmls = htmls + '<li style="margin:3px; color:red;">' + item + '</li>'
+                })
+                $(infobox).html(htmls)
+                
+
+           } else {
+
+               $('#imagegallerydetaile').append(msg)
+              
+               resetform()
+               $(messageok).modal('hide');
+           } 
+
+        })
+        } else {
+            
+            var mydata = new FormData()
+            mydata.append('productid', $(productid).val())
+
+            mydata.append('categoryid', $(categoryid).val())
+
+            mydata.append('name', $(pname).val())
+
+            mydata.append('dimension', $(dimension).val())
+
+            mydata.append('codename', $(codename).val())
+
+            mydata.append('description', $(description).val())
+
+            mydata.append('grade', $(grade).val())
+
+            mydata.append('keywords', $(keywords).val())
+
+            mydata.append('inventory', $(inventory).val())
+
+            mydata.append('lastbuycost', $(lastbuycost).val())
+
+            mydata.append('lastcellcost', $(lastcellcost).val())
+
+            mydata.append('status', $(pstatus).val())
+
+            mydata.append('weight', $(weight).val())
+
+            mydata.append('image', document.getElementById("addimage").files[0])
+
+            $('.loader').show()
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/editproducts',
+                data: mydata,
+                datatype: 'json',
+                processData: false,
+                contentType: false,
+            }).done(function (msg) {
+                var htmls = "<br/><br/>"
+                $('.loader').hide()
+               
+                //values = JSON.parse(msg)
+                 if (msg.status == 'error') {
+                    htmls = htmls + '<li style="margin:3px; color:red;">' + msg.message + '</li>'
+                    $(infobox).html(htmls)
+                } else if (msg.status == 'errorvalidation') {
+
+                    $(msg.message).each(function (idx, item) {
+
+                        htmls = htmls + '<li style="margin:3px; color:red;">' + item + '</li>'
+                    })
+                    $(infobox).html(htmls)
+
+
+                 } else {
+                     //alert(msg)
+                     //alert($(productid).val())
+                     //alert($(".productbox[div_productid='" + $(productid).val() + "']").html())
+                    $(".productbox[div_productid='" + $(productid).val() + "']").html(msg);
+                    
+                     resetform()
+                     $(messageok).modal('hide');
+
+                 }
+            })
+
+        }
+        
+
+
+
+    })
+    // ajax section and category
+    $('#formbody').on('change', '#section', function () {
+
+        var catgid = $(this).attr('catgid')
+        var sectionid=$(this).val()
+        alert(catgid)
+        jQuery.post('/admin/getcatgformthissection', { sectionid: sectionid }, function (result) {
+        
+            $(categoryid).html(result)
+            
+        })
+            })
+
+
+
+
+    // ویرایش مشخصات محصول
+
+    $(imagegallerydetaile).on('click', '.editproduct', function (e) {
+
+  
+        e.preventDefault()
+        
+        var productid = $(this).attr('productid')
+        $('#messageok #formbody').attr('mode', 'edit')
+        jQuery.post('/admin/getproductinfo', { productid: productid }, function (p) {
+            $(messageokheader).html('ویرایش محصول ')
+            $(messageokbody).html(p)
+            $('#messageok .modal-dialog').addClass('modal-lg')
+
+            $(messageok).modal();
+        })
+
+
+
+
+
+    })
+
+    $(imagegallerydetaile).on('click', '.delcontact', function (e) {
+        e.preventDefault()
+        var id = $(this).attr('idproduct')
+        
+        if (confirm("آیا اطمینان به حذف دارید؟") == true) {
+            jQuery.post('/admin/delete_product', { idproduct: id }, function (result) {
+
+                if (result == true) {
+                    $(".productbox[div_productid='" + id + "']").remove();
+                   
+                    $(messageokbody).html('عملیات با موفقیت انجام شد');
+                    $(messageok).modal();
+                } else {
+
+                    $(messagenotokbody).html('عملیات حذف امکان پذیر نمی باشد');
+                    $(messagenotok).modal();
+                }
+            })
+        }
+
+
+
+
+    })
+
+    $(imagegallerydetaile).on('click', '.switchstatusproduct', function (e) {
+        e.preventDefault()
+
+        if (confirm('آیا می خواهید وضعیت نمایش این کالا تغییر یابد') == true) {
+
+            var id = $(this).val();
+            jQuery.post('/admin/switchstatusproduct', { productid: id }, function (result) {
+
+
+                if (result == '0') {
+                    $(messagenotokbody).html('شما مجوز این کار را ندارید');
+                    $(messagenotok).modal();
+                } else if (result == '1') {
+                    $('#sample' + id).html('<img src="/Content/img/icon/no-icon.png" style="width:24px; height:24px;" />')
+                    $(messageokbody).html('این کالا مجوز نمایش ندارد');
+                    $(messageok).modal();
+                } else if (result == '2') {
+                    $('#sample' + id).html('<img src="/Content/img/icon/Ok-icon.png" style="width:24px; height:24px;" />')
+                    $(messageokbody).html('این کالا مجوز نمایش دارد');
+                    $(messageok).modal();
+                } else if (result == '3') {
+
+                    $(messagenotokbody).html('چنین کالایی وجود ندارد');
+                    $(messagenotok).modal();
+
+                }
+
+
+            })
+
+
+        }
+
+
+
+
+    })
+
+</script>

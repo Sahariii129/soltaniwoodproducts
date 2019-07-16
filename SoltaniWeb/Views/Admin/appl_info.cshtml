@@ -1,0 +1,348 @@
+﻿@using SoltaniWeb.Models.repository
+@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.Extensions
+ 
+@model applicantrep
+@{
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    var degrees = db.tbl_educationaldegree.ToList();
+    var jobs = db.tbl_job.ToList();
+    var today = DateTime.Now.ToPersianDate();
+}
+///
+
+
+<div class="modal-dialog modal-lg " role="document">
+    <div class="modal-content">
+        <div class="modal-header" style="background-color:#0cd80a;">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" style="color:#ffffff;" id="gridSystemModalLabel">اطلاعات تکمیلی  :  @(Model.f_name + " " + Model.l_name) </h4>
+        </div>
+        <div class="modal-body">
+            <div class="row ">
+            <div class="col-md-12">
+
+                <div class="col-md-8">
+
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.HiddenFor(model => model.applicant_id)
+                            @Html.HiddenFor(model => model.uniqekey)
+                            <label class="control-label col-md-3"> نام :</label>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.f_name, new { htmlAttributes = new { @class = "form-control" } })
+
+                                @Html.ValidationMessageFor(model => model.f_name, "", new { @class = "text-danger" })
+
+                            </div>
+                            <label class="control-label col-md-3"> نام خانوادگی :  </label>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.l_name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.l_name, "", new { @class = "text-danger" })
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+
+
+
+                            <label class="control-label col-md-3"> نام پدر :  </label>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.fathername, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.fathername, "", new { @class = "text-danger" })
+                            </div>
+
+                            <label class="control-label col-md-3"> کد ملی : </label>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.codemelli, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.codemelli, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+
+
+                            <label class="control-label col-md-3"> ش ش : </label>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.shenasnamenum, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.shenasnamenum, "", new { @class = "text-danger" })
+                            </div>
+                            <label class="control-label col-md-3"> محل تولد :  </label>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.borncity, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.borncity, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+
+                            <label class="control-label col-md-3"> ملیت :  </label>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.nationality, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.nationality, "", new { @class = "text-danger" })
+                            </div>
+                            <label class="control-label col-md-3"> جنسیت :  </label>
+                            <div class="col-md-3">
+                                <select class="form-control" name="sex" id="sex">
+                                    <option value="null" @(Model.sex == null ? "selected" : "")></option>
+                                    <option value="1" @(Model.sex == 1 ? "selected" : "")>مذکر</option>
+                                    <option value="2" @(Model.sex == 2 ? "selected" : "")>مونت</option>
+
+                                </select>
+                                @Html.ValidationMessageFor(model => model.sex, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" id="img_app">
+                    @if (Model.applicant_image != null)
+                    {
+
+                        <img id="immmmm" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.applicant_image)))" class=" img-thumbnail" />
+
+
+                    }
+
+                </div>
+
+            </div>
+
+
+
+
+
+
+            <div class="col-md-12">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2"> شغل درخواستی : </label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="job_id" id="job_id">
+                                <option value="null" @(Model.job_id == null ? "selected" : "")></option>
+
+                                @foreach (var item in jobs)
+                                {
+                                    <option value="@item.jobid" @(Model.job_id == item.jobid ? "selected" : "")>@item.jobtitle</option>
+
+                                }
+
+                            </select>
+                            @Html.ValidationMessageFor(model => model.job_id, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> مدرک تحصیلی :  </label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="degree_id" id="degree_id">
+                                <option value="null" @(Model.degree_id == null ? "selected" : "")></option>
+
+                                @foreach (var item in degrees)
+                                {
+                                    <option value="@item.educationid" @(Model.degree_id == item.educationid ? "selected" : "")>@item.degree</option>
+
+                                }
+
+                            </select>
+
+
+
+                            @Html.ValidationMessageFor(model => model.edu_field, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> رشته تحصیلی :  </label>
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.edu_field, new { htmlAttributes = new { @class = "form-control", id = "nationality" } })
+                            @Html.ValidationMessageFor(model => model.edu_field, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2"> وضعیت تاهل :  </label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="Married" id="Married">
+                                <option value="null" @(Model.Married == null ? "selected" : "")></option>
+
+                                <option value=true @(Model.Married == true ? "selected" : "")>متاهل</option>
+                                <option value=false @(Model.Married == false ? "selected" : "")>مجرد</option>
+
+                            </select>
+                            @Html.ValidationMessageFor(model => model.Married, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> تعداد فرزند : </label>
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.number_child, new { htmlAttributes = new { @class = "form-control", id = "number_child" } })
+                            @Html.ValidationMessageFor(model => model.number_child, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> وضعیت نظام وظیفه :  </label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="militaryservicestatus" id="militaryservicestatus">
+                                <option value="null" @(Model.militaryservicestatus == null ? "selected" : "")></option>
+
+                                <option value="1" @(Model.militaryservicestatus == 1 ? "selected" : "")>دارای کارت پایان خدمت</option>
+                                <option value="2" @(Model.militaryservicestatus == 2 ? "selected" : "")> معافیت پزشکی</option>
+                                <option value="3" @(Model.militaryservicestatus == 3 ? "selected" : "")> سایر معافیت</option>
+                                <option value="4" @(Model.militaryservicestatus == 4 ? "selected" : "")>غایب</option>
+                                <option value="5" @(Model.militaryservicestatus == 5 ? "selected" : "")>مشمول نیستم</option>
+                                <option value="6" @(Model.militaryservicestatus == 6 ? "selected" : "")>سایر موارد</option>
+                            </select>
+
+
+                            @Html.ValidationMessageFor(model => model.militaryservicestatus, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2"> کد منحصر : </label>
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.uniqekey, new { htmlAttributes = new { @class = "form-control", id = "Religion" } })
+                            @Html.ValidationMessageFor(model => model.uniqekey, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> دین : </label>
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.Religion, new { htmlAttributes = new { @class = "form-control", id = "Religion" } })
+                            @Html.ValidationMessageFor(model => model.Religion, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> تاریخ تولد : </label>
+                        <div class="col-md-2">
+                            @if (Model.birthday != null)
+                            {
+                                DateTime b = Model.birthday.Value;
+                                <input id="birthday" name="birthday" value="@shamsi.ToShamsi(b).ToString("yyyy/MM/dd")" class="form-control" />
+                                @Html.ValidationMessageFor(model => model.birthday, "", new { @class = "text-danger" })
+                            }
+                            else
+                            {
+                                <input id="birthday" name="birthday" value="" class="form-control" />
+                                @Html.ValidationMessageFor(model => model.birthday, "", new { @class = "text-danger" })
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2"> تا حالا بیمه شده اید؟ : </label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="Insurance">
+                                <option value="null" @(Model.Insurance == null ? "selected" : "")></option>
+
+                                <option value=true @(Model.Insurance == true ? "selected" : "")>بلی</option>
+                                <option value=false @(Model.Insurance == false ? "selected" : "")>خیر</option>
+
+                            </select>
+                            @Html.ValidationMessageFor(model => model.Insurance, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> مدت زمان بیمه : </label>
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.Insurancepriod, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Insurancepriod, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> شماره بیمه :  </label>
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.Insurancenumber, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Insurancenumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2"> سلامت روحی و جسمی : </label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="Mentalphysicalhealth">
+                                <option value="null" @(Model.Mentalphysicalhealth == null ? "selected" : "")></option>
+
+                                <option value=true @(Model.Mentalphysicalhealth == true ? "selected" : "")>بلی</option>
+                                <option value=false @(Model.Mentalphysicalhealth == false ? "selected" : "")>خیر</option>
+
+                            </select>
+                            @Html.ValidationMessageFor(model => model.Mentalphysicalhealth, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> استعمال مواد دخانیات : </label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="status_smoking">
+                                <option value="null" @(Model.status_smoking == null ? "selected" : "")></option>
+
+
+                                <option value=false @(Model.status_smoking == false ? "selected" : "")>خیر</option>
+                                <option value=true @(Model.status_smoking == true ? "selected" : "")>بلی</option>
+                            </select>
+                            @Html.ValidationMessageFor(model => model.status_smoking, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> آیا هم اکنون شاغل هستید؟ </label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="workingnow">
+                                <option value="null" @(Model.workingnow == null ? "selected" : "")></option>
+
+
+                                <option value=false @(Model.workingnow == false ? "selected" : "")>خیر</option>
+                                <option value=true @(Model.workingnow == true ? "selected" : "")>بلی</option>>
+
+                            </select>
+                            @Html.ValidationMessageFor(model => model.workingnow, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2"> نحوه همکاری : </label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="Type_cooperation">
+                                <option value=null @(Model.workingnow == null ? "selected" : "")></option>
+
+                                <option value="1" @(Model.Type_cooperation == 1 ? "selected" : "")>تمام وقت</option>
+                                <option value="2" @(Model.Type_cooperation == 2 ? "selected" : "")>پاره وقت</option>
+
+                            </select>
+                            @Html.ValidationMessageFor(model => model.Type_cooperation, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2"> حقوق درخواستی :  </label>
+
+                        <div class="col-md-2">
+                            <select class="form-control" name="Expected_salary" id="Expected_salary">
+                                <option value="null" @(Model.Expected_salary == null ? "selected" : "")></option>
+
+                                <option value="1" @(Model.Expected_salary == "1" ? "selected" : "")>کمتر از پانصد هزار تومان</option>
+                                <option value="2" @(Model.Expected_salary == "2" ? "selected" : "")> طبق اداره کار </option>
+                                <option value="3" @(Model.Expected_salary == "3" ? "selected" : "")>  1 میلیون تا 1 میلیون و 250 هزار تومان </option>
+                                <option value="6" @(Model.Expected_salary == "6" ? "selected" : "")>  1 میلیون 250 هزار تا 1 میلیون و 500 هزار تومان </option>
+                                <option value="7" @(Model.Expected_salary == "7" ? "selected" : "")> 1 میلیون و 500 هزار تا 2 میلیون تومان </option>
+                                <option value="4" @(Model.Expected_salary == "4" ? "selected" : "")> بیش از 2 میلیون تومان </option>
+                                <option value="5" @(Model.Expected_salary == "5" ? "selected" : "")> بیش از 3 میلیون تومان </option>
+
+                            </select>
+                        </div>
+
+                        <label class="control-label col-md-2"> نحوه آشنایی :</label>
+                        <div class="col-md-2">
+                            <select class="form-control" name="method_introduction" id="Expected_salary">
+                                <option value="null" @(Model.method_introduction == null ? "selected" : "")></option>
+
+                                <option value="1" @(Model.method_introduction == "1" ? "selected" : "")>از طریق روزنامه</option>
+                                <option value="2" @(Model.method_introduction == "2" ? "selected" : "")> از طریق دیوار </option>
+                                <option value="3" @(Model.method_introduction == "3" ? "selected" : "")> از طریق اینترنت </option>
+                                <option value="4" @(Model.method_introduction == "4" ? "selected" : "")> از طریق معرفی آشنایان </option>
+                                <option value="5" @(Model.method_introduction == "5" ? "selected" : "")> سایر روش ها </option>
+
+
+                            </select>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" data-dismiss="modal">بستن</button>
+        </div>
+    </div>
+</div>
+///
+

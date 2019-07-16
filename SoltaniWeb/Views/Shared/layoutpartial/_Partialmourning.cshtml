@@ -1,0 +1,22 @@
+﻿@using SoltaniWeb.Models.Domain
+@{ 
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+
+    var setting = db.tbl_setting;
+    var mourning = setting.Where(a => a.settingname == "mourning").SingleOrDefault().settingvalue;
+}
+
+
+@if (mourning == "true")
+{
+
+    <div class="col-md-12 hidden-xs">
+        <img src="~/Content/img/icon/Corner_mourning_ribbon.svg%20-%20Copy.png" class="img-responsive" style="position:fixed;top:0px;left:0px;z-index:100;width:15%;height:25%;" />
+
+    </div>
+
+        <div class="col-xs-12 hidden-lg hidden-md hidden-sm">
+            <img src="~/Content/img/icon/Corner_mourning_ribbon.svg%20-%20Copy.png" class="img-responsive" style="position:fixed;top:0px;left:0px;z-index:100;width:30%;height:20%;" />
+
+        </div>
+}

@@ -1,0 +1,327 @@
+﻿ @model IQueryable<SoltaniWeb.Models.Domain.tbl_products>
+
+@{
+    //ViewBag.Title = "ACK";
+
+    ViewBag.description = "نتایج جستجوی " + @ViewBag.searchitem + " در بخش " + @ViewBag.section;
+
+    ViewBag.howtoindex = "index";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.repository.samplerepository samrep = new SoltaniWeb.Models.repository.samplerepository();
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    string username = Context.Session.GetString("username") == null ? "مهمان" : Context.Session.GetString("username");
+    var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
+    var sections = db.tbl_section.Where(a => a.status == true && a.tbl_category.Count() > 0).OrderBy(a => a.ordering);
+    int sectionid = ViewBag.sectionid;
+
+    var categories =sectionid!=0? db.tbl_category.Where(a => a.section_id == sectionid) : null;
+
+}
+<head>
+    <title></title>
+
+
+    <script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
+    <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+
+</head>
+
+
+
+<script src="~/Scripts/lightbox/js/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+
+<br />
+<br />
+
+
+
+
+<div class="panel panel-default col-lg-12" style="position:fixed; top:115px; right:0px; z-index:500;">
+    <div class="panel-heading">
+        <p>جستجوی کالا <a id="resetsearch" style="cursor:pointer;"><span style="float:left; color:#ff0000;" class="glyphicon glyphicon-remove" aria-hidden="true"></span></a> </p>    
+    </div>
+    <div class="panel-body">
+
+        <br />
+        <form role="search" action="~/search/searchproducts" method="get">
+
+
+        <div class="input-group  my-group myfont">
+
+            <input type="text" class="form-control txtcontrol " name="searchitem" id="searchitem" style="font-size:16px;" placeholder="نام یا کد کالای مورد نظر خود را وارد نمایید..." value="@ViewBag.searchitem">
+            <select id="section_id" name="section_id" class="selectpicker form-control selectcontrol1" data-live-search="true" style="font-size:14px;" title="Please select a lunch ...">
+                <option style="font-size:14px;" value="0" @(ViewBag.sectionid == 0 ? "selected" : "")>تمام بخش ها</option>
+
+                @foreach (var item in sections)
+                {
+                    <option style="font-size:14px;" value="@item.id" @(ViewBag.sectionid == item.id ? "selected" : "")>@item.name</option>
+
+                }
+
+            </select>
+            <select id="category_id" name="category_id" class="selectpicker form-control selectcontrol2" data-live-search="true" style="font-size:14px;" title="Please select a lunch ...">
+                <option style="font-size:14px;" value="0" selected>همه برندها</option>
+                @if (categories != null)
+                {
+                     foreach (var item in categories)
+                {
+                    <option value="@item.id" @(ViewBag.category_id == item.id ? "selected" : "")>@item.categoryname</option>
+
+                }
+                }
+               
+
+            </select>
+            <select id="status" name="status" class="selectpicker form-control selectcontrol3" data-live-search="true" style="font-size:14px;" title="Please select a lunch ...">
+
+                <option style="font-size:14px;" value=0 @(ViewBag.statusid == 0 ? "selected" : "")>همه کالا ها</option>
+                <option style="font-size:14px;" value=1 @(ViewBag.statusid == 1 ? "selected" : "")>کالاهای موجود</option>
+
+
+            </select>
+            <select id="order" name="order" class="selectpicker form-control selectcontrol4" data-live-search="true" style="font-size:14px;" title="Please select a lunch ...">
+
+                <option value="0" style="font-size:14px;" @(ViewBag.order == 0 ? "selected" : "")>به ترتیب موجودی</option>
+                <option value="1" style="font-size:14px;" @(ViewBag.order == 1 ? "selected" : "")>به ترتیب برند</option>
+                <option value="2" style="font-size:14px;" @(ViewBag.order == 2 ? "selected" : "")>به ترتیب حروف الفبا</option>
+
+            </select>
+            <span class="input-group-btn">
+                <button id="btnsearch" class="btn btn-default" type="submit">جستجو!</button>
+            </span>
+
+        </div>
+
+            <!-- /input-group -->
+            <!-- /.col-lg-6 -->
+
+            <br />
+
+        </form>
+        <h5 class="myfont">نتایج جستجوی واژه <span style="color:#3c06a3;">"@ViewBag.searchitem"</span>    در بخش  <span style="color:#3c06a3;">"@ViewBag.section"</span> در برند  <span style="color:#3c06a3;">"@ViewBag.category"</span> @ViewBag.status  <span style="color:#ff0000; float:left;">(تعداد یافته ها : @Model.Count() مورد)</span></h5>
+
+    </div>
+   
+
+</div>
+@*<div class="panel panel-success col-lg-12" style="position:fixed; top:200px; z-index:5000000;">
+    <div class="panel-heading">
+        <h5>نتایج جستجوی <span style="color:#3c06a3;">"@ViewBag.searchitem"</span>    در بخش  <span style="color:#3c06a3;">"@ViewBag.section"</span> @ViewBag.status  <span style="color:#ff0000; float:left;">(تعداد یافته ها : @Model.Count() مورد)</span></h5>
+    </div>
+
+</div>*@
+<script src="~/Scripts/jquery-3.1.1.js"></script>
+
+<script>
+  
+    $(resetsearch).click(function () {
+        $(searchitem).val('');
+        searchitem.focus();
+        $(section_id).prop("selectedIndex", 0);
+        $(category_id).prop("selectedIndex", 0);
+        $(status).prop("selectedIndex", 0);
+        $(order).prop("selectedIndex", 0);
+       
+    })
+
+
+
+    $(section_id).change(function () {
+        jQuery.post('/search/categoryfind', { section_id: $(section_id).val() }, function (category) {
+            
+            var html = ' <option style="font-size:14px;" value="0" selected>همه برندها</option>';
+           
+            $(category).each(function (idx, p) {
+                
+                html += ' <option style="font-size:14px;" value="' + p.id + '" >' + p.name + '</option>'
+
+            })
+
+            $(category_id).html(html)
+
+
+
+        });
+
+        //alert('hi2')
+
+    })
+
+
+
+</script>
+
+
+    @*/////*@
+    <div class=" col-xs-12  ">
+        
+        @{
+            int resultcount = Model.Count();
+
+            int wholeparts = Math.Abs(resultcount / 50) + 1;
+            int part = ViewBag.part;
+            int skip = (part - 1) * 50;
+
+
+        }
+
+        <br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div id="results" class="row" >
+            @if (Model.Count() != 0)
+        {
+            foreach (var item in Model.Skip(skip).Take(50))
+            {
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 ">
+            <a id="color" href="#"><img src="@(item.category.image!=null ?    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.category.image)) : "")" alt="@item.category.categoryname" style="width:100%; height:100px;" class="img-thumbnail" /></a>
+
+         @*   <a id="color" href="~/Content/img/category/@item.tbl_category.imagecategory"><img src="../../Content/img/category/@item.tbl_category.imagecategory" alt="@item.tbl_category.categoryname|   @item.name| @item.codename" style="width:100%; height :100px;" class="img-thumbnail" /></a>*@
+
+            @{
+                if (item.thumbnail_image != null)
+                {
+
+                    <a id="color" href="/products/getimage?id=@item.idproduct" data-lightbox="vahid-majidi" title="@item.category.categoryname @item.name کد: @item.codename"><img src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.thumbnail_image)))" alt="@item.category.categoryname|   @item.name| @item.codename" style="width:100%; height :150px;" class="img-thumbnail" /></a>
+                }
+                else
+                {
+                    if (item.imageproducts != null)
+                    {
+
+                        <a id="color" href="~/Content/img/products_L/@item.imageproducts" data-lightbox="vahid-majidi" title="@item.category.categoryname @item.name کد: @item.codename"><img src="~/Content/img/products/@item.imageproducts" alt="@item.category.categoryname|   @item.name| @item.codename" style="width:100%; height :150px;" class="img-thumbnail" /></a>
+                    }
+                    else
+                    {
+                        <a id="color" href="~/Content/img/category/@item.category.imagecategory" data-lightbox="vahid-majidi" title="@item.category.categoryname @item.name کد: @item.codename"><img src="../../Content/img/category/@item.category.imagecategory" alt="@item.category.categoryname|   @item.name| @item.codename" style="width:100%; height :150px;" class="img-thumbnail" /></a>
+
+                    }
+
+
+                }
+            }
+            <div id="sample1" style="position:absolute; top:110px;right:12px; padding-left:10px; padding-right:10px; border-radius:3px; font-size:14px; font-family:'Iranian Sans';"><span class="badge">وضعیت : @entityrep.getexistproducts(item.idproduct)</span> </div>
+
+            @if (qusersq != null)
+                    {
+                    <div id="sample2" style="position:absolute; top:130px;right:12px; padding-left:10px; padding-right:10px; border-radius:3px; font-size:14px; font-family:'Iranian Sans';"><a href="#" data-toggle="tooltip" data-placement="left" data-title="@item.description"><span class="badge">تعداد: @entityrep.getentityitem(item.idproduct)</span></a> </div>
+                    <div id="sellprice" style="position:absolute; top:150px;right:12px; padding-left:10px; padding-right:10px; border-radius:3px; font-size:14px; font-family:'Iranian Sans';"><span class="badge"> فروش: @string.Format("{0:#,##0.##}", item.lastcellcost) ریال</span> </div>
+                    <div class="moreinfo" productid="@item.idproduct" style="position:absolute; top:170px;right:12px; padding-left:10px; padding-right:10px; border-radius:3px; font-size:14px; font-family:'Iranian Sans';"><a style="cursor:pointer;" data-toggle="modal" data-target="#@item.idproduct"><span class="badge">...?</span></a> </div>
+
+                 
+
+
+
+                    }
+            <div class=" row" style="border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; ">
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="background-color:#ffffff; border-bottom:1px dashed #808080;">
+                    <a href="/products/@item.category.actionname" style=""><h5 style="text-align :center ; "> @item.category.categoryname  </h5></a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="font-size :8px;">
+                    <a href="../samples/samples?id01=@item.idproduct&key=@item.keywords"><h5 style="text-align :center ; font-size :12px;"> @item.name - @item.codename </h5></a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="background-color:#ffffff; border-top:1px dashed #808080;">
+                    <a href="../samples/samples?id01=@item.idproduct&key=@item.keywords" style=""><h5 style="text-align :center ; ">  ابعاد: @item.dimension </h5></a>
+                </div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="background-color:#ffffff; border-top:1px dashed #808080;">
+                    <a href="../samples/samples?id01=@item.idproduct&key=@item.keywords" style=""><h5 style="text-align :center ; "> <span style=" margin-left:5px;" class="glyphicon glyphicon-list" aria-hidden="true"></span> نمونه  - <span class="badge">@item.tbl_samples.Count()</span>  </h5></a>
+                </div>
+
+
+
+            </div>
+            <div class="col-lg-12" style=" height:10px;">
+
+            </div>
+        </div>
+
+            }
+        }
+        else
+        {
+        <div class="col-xs-12">
+            <div class="alert alert-danger" role="alert">موردی یافت نشد!</div>
+        </div>
+        }
+
+
+
+
+
+        </div>
+
+    </div>
+
+    <br />
+    @if (Model.Count() > 50)
+    {
+
+        <nav aria-label="...">
+            <ul class="pager myfont">
+
+                @if (part >= 1)
+                {
+                    <li><a href="/search/searchproducts?searchitem=@ViewBag.searchitem&section_id=@ViewBag.sectionid&part=1&status=@ViewBag.statusid&category_id=@ViewBag.category_id&order=@ViewBag.order">صفحه اول</a></li>
+
+                }
+
+
+                @if (part > 1)
+                {
+                    <li><a href="/search/searchproducts?searchitem=@ViewBag.searchitem&section_id=@ViewBag.sectionid&part=@(part-1)&status=@ViewBag.statusid&category_id=@ViewBag.category_id&order=@ViewBag.order">صفحه قبل</a></li>
+
+                }
+                @if (part < wholeparts)
+                {
+                    <li><a href="/search/searchproducts?searchitem=@ViewBag.searchitem&section_id=@ViewBag.sectionid&part=@(part+1)&status=@ViewBag.statusid&category_id=@ViewBag.category_id&order=@ViewBag.order">صفحه بعد</a></li>
+
+                }
+                @if (part <= wholeparts)
+                {
+                    <li><a href="/search/searchproducts?searchitem=@ViewBag.searchitem&section_id=@ViewBag.sectionid&part=@(wholeparts)&status=@ViewBag.statusid&category_id=@ViewBag.category_id&order=@ViewBag.order">صفحه آخر</a></li>
+
+                }
+            </ul>
+        </nav>
+    }
+
+
+
+
+
+    <script>
+
+        $('.moreinfo').click(function () {
+            var pid = $(this).attr("productid")
+            jQuery.post('/products/getproductinfo', { productid: pid }, function (result) {
+
+
+
+                $(messageokbody).html(result)
+                $(messageokheader).html('اطلاعات تکمیلی محصول :' + pid)
+                $(messageok).modal()
+
+            })
+
+
+
+        })
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

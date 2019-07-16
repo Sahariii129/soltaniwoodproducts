@@ -1,0 +1,43 @@
+﻿.loading-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 10;
+}
+
+.loader {
+    display: none;
+}
+
+.Recruitment .nav-link {
+    border-radius: 0 !important;
+    border: 4px solid transparent;
+    color: #fff !important;
+    padding: 20px 10px;
+}
+
+.Recruitment .nav-link:hover {
+        border: 4px solid transparent;
+}
+
+.Recruitment .nav-link.active {
+        background-color: #ffca01 !important;
+        border-color: #ffca01;
+        border-style: dashed !important;
+        border-bottom: none;
+        border-top: none;
+}
+.btndel img,.btnedit img{
+    height: 24px;
+    width: auto;
+}
+@media(max-width:991.98px){
+    .btn{
+        font-size:30px;
+        padding:15px 25px;
+    }
+    .btndel img, .btnedit img {
+        height: 40px;
+        width: auto;
+    }
+}

@@ -1,0 +1,86 @@
+﻿<div class="part1 px-4 py-4 py-lg-2">
+    <div class="d-flex align-items-center justify-content-between ">
+        <button class="navbar-toggler d-inline-block d-lg-none order-1 menubarpart" type="button" data-toggle="collapse" data-target="#menu"><i class="fas fa-bars"></i></button>
+        <div class="d-flex justify-content-between align-items-center order-lg-4 order-2 userloginandcard">
+            <div class="toptwobuttons signinandusermenupart">
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="UserMenudiv mx-2">
+                        <a href="" class="d-none d-lg-inline btn UserMenu" data-target="#collapseProfile" data-toggle="collapse"><i class="fas fa-bars mx-2"></i><span username="@User.Identity.Name">@User.Identity.Name</span>، خوش آمدید</a>
+                        <a href="" class="d-inline d-lg-none mx-5 UserMenu " data-target="#collapseProfile" data-toggle="collapse"><i class="fas fa-user"></i></a>
+                    </div>
+                }
+                else
+                {
+                    <div class="ContactBTNholder mx-2">
+                        <a class="btn btn-login d-none d-lg-inline" id="LogIn" data-target="#modalLogin" data-toggle="modal">ورود / ثبت نام</a>
+                        <a class="d-inline d-lg-none mx-5" id="LogIn" data-target="#modalLogin" data-toggle="modal"><i class="fas fa-sign-in-alt"></i></a>
+                    </div>
+                }
+
+            </div>
+
+
+            <div class="usermeupan collapse" id="collapseProfile"></div>
+
+
+            <div class="purchasecardpart">
+                <a href="" class="btn btn-cart d-none d-lg-inline">سبد خرید <span class="badge badge-pill">0</span><i class="fas fa-shopping-cart mx-2"></i></a>
+                <a href="" class="btn-cart d-inline d-lg-none"><i class="fas fa-shopping-cart mx-5"></i></a>
+            </div>
+        </div>
+        <div class="d-none d-lg-inline-block order-lg-3 sitesearchpartindesktop">
+            <form action="/products/Searchproducts" method="post">
+                <div class="input-group Searchinputbox">
+                    <input name="filter" type="text" class="form-control inputtextforsearch" placeholder="نام کالا، برند، دسته رنگ و یا کد کالای مورد نظر خود را جستجو کنید ...">
+                    <div class="input-group-append BtnSearch">
+                        <button type="submit" class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="order-3 order-lg-1 sitelogopart">
+            <a href="/"> <span><img id="img" class="img-fluid" src="/soltanistatic/pictures/SWP_new10.png" alt="logo" width="120" /></span></a>
+            <a href="/" class="d-none d-lg-inline-block"> <span class="soltaniWood mr-3">کالای چوب سلطانی</span></a>
+        </div>
+    </div>
+
+
+    <div class="modal fade" tabindex="-1" id="modalLogin">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a class="nav-link active" href="#login" data-toggle="tab">ورود</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#register" data-toggle="tab">ثبت نام</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade active show" id="login">
+                            <partial name="/Views/shared/PartialLayout/_partialLogIn.cshtml" model="new loginstruct() { }" />
+                        </div>
+                        <div class="tab-pane fade RegisterForm" id="register">
+                            <partial name="/Views/shared/PartialLayout/_PartialRegister.cshtml" model="new RegisterViewModel() { } " />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="d-block d-lg-none sitesearchpartinmobile">
+        <form action="/products/Searchproducts" method="post">
+            <div class="input-group Searchinputbox">
+                <input name="filter" type="text" class="form-control inputtextforsearch" placeholder="نام کالا، برند، دسته رنگ و یا کد کالای مورد نظر خود را جستجو کنید ...">
+                <div class="input-group-append BtnSearch">
+                    <button type="submit" class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

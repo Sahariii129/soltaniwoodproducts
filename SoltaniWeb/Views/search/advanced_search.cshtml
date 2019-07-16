@@ -1,0 +1,112 @@
+﻿@model IEnumerable<SoltaniWeb.Models.Domain.tbl_files>
+
+@{
+    ViewBag.Title = "کالای چوب سلطانی| جستجوی نمونه کارهای دکوراسیون داخلی ";
+    ViewBag.description = "جستجو نمونه کارهای مختلف بر اساس نوع کار (کابینت دکوراسیون داخلی کمد و ...) مجریان و کابینت سازها";
+    ViewBag.howtoindex = "index";
+
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <div class="panel-body" style=" background-color:#ededec; border-radius :5px;">
+        <div class="form-horizontal">
+
+            <center><h4>جستجوی پیشرفته : </h4></center>
+            <hr />
+            <form role="search" action="~/search/advanced_search" method="get" class="form-horizontal">
+
+                <div class="form-group ">
+                    <div class="col-md-3">
+                        <label for="decor" class="control-label  ">نام دکور</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" name="decorname" class="form-control" id="inputEmail3" placeholder="نام طرح ">
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <div class="col-md-3">
+                        <label for="decor" class="control-label">نام طراح یا مجری</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" name="designer" class="form-control" id="inputEmail3" placeholder="نام طراح یا مجری  ">
+                    </div>
+                </div>
+
+                <div class=" form-group">
+                    <div class=" col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn btn-default" style="margin-top:5px;">اعمال جستجو</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+      
+
+    </div>
+</div>
+<div class="col-lg-6 col-md-6 hidden-sm hidden-xs">
+    <img src="~/Content/img/otherimages/cabinet.jpg" style="width:100%;height :230px; border-radius :5px;"/>
+
+</div>
+
+    <br />
+
+
+    
+
+    @if (Model !=null)
+    {
+
+        <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12 " style=" margin-top:10px;">
+
+
+
+            <center><p id="imagegallery" class="bg-success" style=" text-align :center ; cursor :pointer;">@ViewBag.search : <span>طراح یا مجری : [@ViewBag.designer] - نوع دکور : [@ViewBag.decorname]</span> - تعداد نتایج : @Model.Count() </p></center>
+        </div>
+
+
+       foreach (var item in Model)
+        {
+
+        <div id="sample @item.id" class="col-lg-2 col-md-2 col-sm-3 col-xs-12 ">
+
+
+            <a href="/samples/showsample?id=@item.id&key=@item.keywords"><img src="~/Content/img/samples/@item.filename " onmouseover="$('#@item.id').show('slide', {direction: 'right'}, 500);" onmouseout="$('#@item.id').hide('slide', {direction: 'right'}, 500);" alt="" style="width:100%; height :150px; position:relative;" class="img-thumbnail" /></a>
+            <div id="@item.id" style="background-color:#070606; color:#ffffff; position:absolute; top:120px;right:30px; padding-left:10px; padding-right:10px; display:none; border-radius:3px; font-size:14px; font-family:'B Zar';">@shamsi.GetStringDate(item.date)</div>
+            @* <span id="date" style="background-color:#070606; color:#ffffff; position:absolute; top:120px;right:30px; width:40%; z-index:1000; padding-right:10px;">@shamsi.GetStringDate(item.date)</span>*@
+            <div class=" row" style="border :2px solid  rgb(227, 227, 200); margin :1px; background-color:#ffffff; ">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <a href="/samples/decortype?id=@item.decortypeid&key=@item.decortype.keywords"><h5 style="text-align :center ;"> @item.decortype.name </h5></a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <a href="#"><h5 style="text-align :center ;">ID: @item.id </h5></a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <a href="/samples/madeby?id=@item.madebyid&key=@item.madeby.Fname   @item.madeby.Lname "><h5 style=" text-align: center ; font-size:12px;"> طراحی و اجرا: </h5></a>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <a href="/samples/madeby?id=@item.madebyid&key=@item.madeby.Fname   @item.madeby.Lname "><h5 style="text-align :center ;  font-size:12px;">  @item.madeby.Fname  @item.madeby.Lname </h5></a>
+                </div>
+
+            </div>
+            <div class="col-lg-12" style=" height:10px;">
+
+            </div>
+        </div>
+
+    }
+        }
+
+    <script type="text/javascript">
+
+
+    </script>
+
+
+

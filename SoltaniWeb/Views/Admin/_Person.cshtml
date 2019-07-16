@@ -1,0 +1,30 @@
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+
+<div class="k-rtl">
+
+    @(Html.Kendo().Grid<PersonViewModel>()
+          .Name("gridPerson")
+          .Columns(columns =>
+          {
+
+              columns.Select().Width(50);
+              columns.Bound(p => p.FullNamePerson).Width(200).Filterable(true).Title("نام مشتری");
+              columns.Bound(p => p.Cell).Width(150).Title("شماره همراه");
+              columns.Bound(p => p.CodeMeli).Width(150).Title("کد ملی");
+          })
+          .Pageable(pageable => pageable
+              .Refresh(true)
+              .PageSizes(new int[] {10, 20, 50, 100})
+              .ButtonCount(10))
+          .Sortable()
+          .PersistSelection()
+          .Scrollable()
+          .Events(ev => ev.Change("onChange"))
+          .Resizable(resizable => resizable.Columns(true))
+          .Filterable()
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .PageSize(10)
+              .Model(model => model.Id(p => p.Id))
+              .Read(read => read.Action("PersonsForGroup_Read", "Admin").Data("AddFilter"))))
+</div>

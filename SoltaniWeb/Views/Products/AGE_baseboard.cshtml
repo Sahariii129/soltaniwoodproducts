@@ -1,0 +1,98 @@
+﻿@model IList<SoltaniWeb.Models.Domain.tbl_products>
+
+@{
+    //ViewBag.Title = "AGE_Highgloss";
+    ViewBag.description = " نمونه رنگ های قرنیز ای جی ای " + " - " + "فروش در شیراز و استان فارس";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    string username = Context.Session.GetString("username");
+    var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
+
+}
+
+<head>
+    <title></title>
+
+
+    <script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
+    <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+
+</head>
+
+
+<div class="container-fluid">
+
+
+        <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12  ">
+            <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12  " style="margin-left:5px; background-color:#ffffff;  border-radius:5px; min-height :433px; margin-bottom:5px;">
+
+                <div class="row">
+                    <div class="col-lg-9 col-xs-12">
+                        <h1 style="font-size:22px;"><span style="color:#0026ff;">قرنیز MDF با روکش PVC شرکت AGE </span></h1>
+                    </div>
+                    <div class="col-lg-3 col-xs-12">
+                        <br />
+                        <img src="~/Content/img/logo/age1.jpg" style="width :100%;height :50px;" alt="هایگلاس AGE - لوگو" />
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-lg-7 col-xs-12">
+                        <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span> جنس مغزی آن از MDF بوده ودارای روکش PVC میباشد.</p>
+                        <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>طول قرنیز ام دی اف 3.66  و 2.80 متر بوده و از نظر عرض به 4 دسته تقسیم میشوند</p>
+                        <p style="text-align: justify;line-height: 2; padding :5px; padding-right:30px; color:#ff0000;"><span class="glyphicon glyphicon-check" aria-hidden="true" style=" margin-left:20px;"></span>  قرنیز 7 سانتیمتر </p>
+                        <p style="text-align: justify;line-height: 2; padding :5px; padding-right:30px;color:#ff0000;"><span class="glyphicon glyphicon-check" aria-hidden="true" style=" margin-left:20px;"></span>  قرنیز 9 سانتیمتر</p>
+                        <p style="text-align: justify;line-height: 2; padding :5px; padding-right:30px;color:#ff0000;"><span class="glyphicon glyphicon-check" aria-hidden="true" style=" margin-left:20px;"></span>  قرنیز 10 سانتیمتر</p>
+                        <p style="text-align: justify;line-height: 2; padding :5px; padding-right:30px;color:#ff0000;"><span class="glyphicon glyphicon-check" aria-hidden="true" style=" margin-left:20px;"></span>  قرنیز 12 سانتیمتر</p>
+
+                        <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>از نظر ضخامت به دو دسته تقسیم میشوند</p>
+                        <p style="text-align: justify;line-height: 2; padding :5px; padding-right:30px;color:#ff0000;"><span class="glyphicon glyphicon-check" aria-hidden="true" style=" margin-left:20px;"></span> قرنیز 8 میلیمتر</p>
+                        <p style="text-align: justify;line-height: 2; padding :5px; padding-right:30px;color:#ff0000;"><span class="glyphicon glyphicon-check" aria-hidden="true" style=" margin-left:20px;"></span> قرنیز 16 میلیمتر</p>
+                      @*  <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span></p>*@
+
+                        </div>
+                    <div class="col-lg-5 col-xs-12" style="margin-bottom:10px;">
+                        <br />
+                        <img src="~/Content/img/otherimages/gharnizage.jpg" style="width :100%;height :auto;" class="img-circle" alt="قرنیز AGE" />
+                    </div>
+
+                    </div>
+
+
+            </div>
+
+            <div class="row">
+
+                <div id="topiccolor" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top:5px;">
+
+                    <p id="imagegallery" class="bg-success" style=" text-align :center ;">.:: کالیته قرنیز AGE  ::.-  <span id="baseon">چیدمان بر اساس شماره کد</span></p>
+
+                </div>
+
+            </div>
+            <div id="imagegallerydetaile" class="row myfont">
+                @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
+            </div>
+        </div>
+</div>
+
+
+    <br />
+
+
+
+    <script src="~/Scripts/jquery-2.1.4.js"></script>
+    <script src="~/Scripts/lightbox/js/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+
+  <script>
+    $(function(){
+        $(".categorylist[section_id='" + @Model.FirstOrDefault().category.section_.id + "']").toggle(500)
+         $(".category[catg_id='" + @Model.FirstOrDefault().category.id + "']").css('background-color', '#4cff00')
+
+
+    })
+</script>

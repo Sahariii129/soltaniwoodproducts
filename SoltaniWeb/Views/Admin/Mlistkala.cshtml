@@ -1,0 +1,854 @@
+﻿@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.structs
+
+@model IEnumerable<ItemListKala>
+
+@{
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    ViewBag.Title = "مدیریت انبار وب";
+
+    int i = 1;
+    var today = DateTime.Now.ToPersianDate();
+
+}
+
+<link href="~/Content/styles/styleTable.css" rel="stylesheet" />
+
+<style>
+
+   
+
+    .out {
+        background-color: #761818;
+        color: #ffffff;
+    }
+
+    .selected {
+        background-color: #141f98;
+        color: #ffffff;
+    }
+
+    .table-header {
+        background-color: #c7bebe;
+        color: #000000;
+        width: 100%;
+    }
+    
+    .panelbox {
+        position: relative;
+    }
+
+    .myform2 {
+        display: none;
+        z-index: 1000;
+        position: absolute;
+        width: 600px;
+    }
+
+    .myform3 {
+        display: none;
+        z-index: 1001;
+        position: absolute;
+        width: 600px;
+    }
+
+
+    .column {
+        float: right;
+        width: 50px;
+        padding: 5px;
+    }
+
+    .myrow {
+        width: 180px !important;
+    }
+        /* Clearfix (clear floats) */
+        .myrow::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+    .imgbtn {
+        cursor: pointer;
+    }
+
+    .loading-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 10;
+    }
+
+    .loader {
+        display: none;
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+
+    #panelbodyfororders {
+        height: 800px;
+        overflow: scroll;
+    }
+
+    .toolband {
+        position: absolute;
+        bottom: 30px;
+        left: 30px;
+        height: 40px;
+        width: 98%;
+        padding: 5px;
+        /*display: none;*/
+    }
+
+        .toolband button {
+            float: left;
+            font-weight: 600;
+            color: #000000;
+        }
+
+    .hidden {
+        display: none;
+    }
+
+    .psearch {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 90%;
+        z-index: 100;
+        max-width: 400px;
+        margin-right: 3px;
+        margin-top: 3px;
+    }
+</style>
+
+
+<div class="col-md-12" id="ordermanagement">
+
+    <div id="mainpart" class="col-md-12">
+
+        <div class="panel myfont">
+            <div class="panel-heading panel-danger" style="background-color:#06497a; color:#ffffff;">
+                <button id="btn_searhpanelshow" type="button" class="btn btn-default" aria-label="Left Align">
+                    <span class="glyphicon glyphicon-search" style="color:red;" aria-hidden="true"></span>
+                </button>
+                مدیریت انبار وب
+                <span id="searchbasedon" style="font-weight:800">
+                </span>
+
+            </div>
+            <div class="panel-body panelbox" id="mypanel_id">
+                <div id="psearch_id" class="psearch" style="display:none;">
+                    <div class="panel myfont">
+                        <div class="panel-heading" id="searchpanel " style="background-color:#045606; color:#ffffff;cursor:pointer;">
+                            پانل جستجو 
+                            <button type="button" class="close  closesearch">
+                                <span style="color:red;" aria-hidden="true">&times;</span>
+
+                            </button>
+                        </div>
+                        <div id="searchdiv" class="panel-body" style="background-color:#000000;">
+                            <partial name="~/Views/Shared/Partiallistkala/_searchboxlistkala.cshtml">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div id="mymodalform" class="myform2">
+
+                </div>
+                <div id="mymodalformtoedit" class="myform3">
+
+                </div>
+                <div id="panelbodyfororders">
+
+                    <partial name="~/Views/Shared/Partiallistkala/_TableListKala.cshtml" model="@Model" />
+                </div>
+
+                <div class=" loader">
+                    <center>
+                        <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+                    </center>
+                </div>
+
+
+
+            </div>
+            <div class="panel-footer" id="footerid" style="min-height:62px !important;">
+
+
+                <div id="tools" class="col-md-2 myrow">
+                    <div class="column">
+
+                        <img id="add_tools" class="img-responsive imgbtn" src="~/Content/img/icon/Button-Add-icon.png" />
+                    </div>
+
+
+                </div>
+                <div class="input-group col-md-3">
+                    <span class="input-group-addon" id="basic-addon2">تعداد حواله</span>
+                    <select id="numberinpage" class="form-control">
+                        <option value="6">6</option>
+                        <option value="12">12</option>
+                        <option value="18">18</option>
+                        <option value="24">24</option>
+                        <option value="30">30</option>
+                    </select>
+
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    $(panelbodyfororders).on('click', '#Btn_search', function () {
+        $(btn_searhpanelshow).click();
+        return false;
+
+
+    })
+    $(btn_searhpanelshow).click(function () {
+
+
+        $(psearch_id).slideToggle(200);
+
+    })
+    $('.closesearch').click(function () {
+        $(psearch_id).slideToggle(200);
+    })
+
+    $(panelbodyfororders).click(function () {
+        $(psearch_id).hide(200)
+    })
+
+
+
+    $('#searchdiv').on('click', '#searchbyusername', function () {
+        var username = $('#username').val()
+        var status = $('#status').val()
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchcartbyusername', { username: username, status: status, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+    // search based on from branch
+    $('#searchdiv').on('click', '#searchbyfrombranch', function () {
+        var frombranch_id = $('#frombranch').val()
+
+        var take = $(numberinpage).val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchordersbyfrombranch', { frombranch_id: frombranch_id, take: take }, function (result) {
+
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+    //
+    // search based on listkalaid
+    $('#searchdiv').on('click', '#btn_searchbylistkalaid', function () {
+        var listkalaid = $('#searchbylistkalaid').val()
+
+        var take = parseInt($(pagesize_id).val())
+
+        $('.loader').show()
+        jQuery.post('/admin/searchbylistkalaid', { id: listkalaid, take: take }, function (result) {
+
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+
+
+
+    // تاریخ ثبت
+
+    $('#searchdiv').on('click', '#searchlistkalbysabtdate', function () {
+        var sabtdate = $('#sabtdate').val()
+         var take = parseInt($(pagesize_id).val())
+
+        $('.loader').show()
+        jQuery.post('/admin/searchlistkalabysabtdate', { sabtdate: sabtdate, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+            $('#pagesize_id').val(take)
+        })
+
+    })
+
+
+    //
+    $('#searchdiv').on('click', '#searchorderbysodoordate', function () {
+        var sodoordate = $('#sodoordateoforder').val()
+        var take = $(numberinpage).val()
+        var frombranch_id = $('#frombranch').val()
+
+        $('.loader').show()
+        jQuery.post('/admin/searchorderbysodoordate', { sodoordate: sodoordate, frombranch_id: frombranch_id, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+    //
+    $('#searchdiv').on('click', '#searchordersbysodoordaterange', function () {
+        var sodoordatefrom = $('#sodoordatefrom').val()
+        var sodoordateto = $('#sodoordateto').val()
+        var take = $(numberinpage).val()
+        var frombranch_id = $('#frombranch').val()
+
+        $('.loader').show()
+
+        jQuery.post('/admin/searchordersbysodoordaterange', { sodoordatefrom: sodoordatefrom, sodoordateto: sodoordateto, frombranch_id: frombranch_id, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+    // search inventory based searchinventorysbysectioncategory
+    $('#searchdiv').on('click', '#searchinventorysbysectioncategory', function () {
+        var section_id = $('#section_id').val()
+        var category_id = $('#category_id').val()
+        var take = parseInt($(pagesize_id).val())
+
+        $('.loader').show()
+        jQuery.post('/admin/searchinventorysbysectioncategory', { section_id: section_id, category_id: category_id, take: take }, function (result) {
+            $('.loader').hide()
+            $('#panelbodyfororders').html(result)
+            $('#pagesize_id').val(take)
+        
+           
+        })
+
+    })
+
+
+
+
+
+
+
+
+
+    // search orders based on Done
+    $('#searchdiv').on('click', '#searchordersbydone', function () {
+        var orderdone = $(orderDone).val()
+        var take = $(numberinpage).val()
+        var frombranch_id = $('#frombranch').val()
+
+        $('.loader').show()
+
+        jQuery.post('/admin/searchordersbydone', { orderdone:orderdone, frombranch_id: frombranch_id, take: take }, function (result) {
+            $('.loader').hide()
+
+            $('#panelbodyfororders').html(result)
+
+        })
+
+    })
+    //
+
+    $('#panelbodyfororders').on('click', '.details', function () {
+
+        var id = $(this).val()
+
+        $('#p' + id).toggle(100)
+    })
+    $('#panelbodyfororders').on('click', '.transportaiondetails', function () {
+
+        var id = $(this).val()
+        $('#t' + id).toggle(100)
+    })
+    $('#panelbodyfororders').on('click', '.transportaioncost', function () {
+
+        var id = $(this).val()
+        $('#tcost' + id).toggle(100)
+    })
+
+
+
+    $(sodoordateoforder).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    $(sabtdate).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    $(sodoordatefrom).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+    $(sodoordateto).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+
+
+
+    $('#ordermanagement').on('click', '.sheading', function () {
+
+
+
+        var q = $(this).next()
+
+
+            q.toggle(200)
+
+
+
+
+    })
+
+
+    // add order
+    $(add_tools).click(function (e) {
+
+
+        jQuery.post('/admin/showorderform', {}, function (e) {
+
+            $('#mymodalform').html(e)
+            $(add_tools).hide()
+            $('#mymodalform').finish().show(100).css({ "width": 90 + '%' , "max-width":"1200px" })
+            dragElement(document.getElementById("mymodalform"));
+
+
+        })
+
+
+    })
+
+    // to edit selected order
+    $('body').off().on('click', '.btn_orderedit', function (e) {
+        var orderid = $(this).val()
+        jQuery.post('/admin/showorderformforedit', { orderid: orderid }, function (e) {
+
+            $('#mymodalformtoedit').html(e)
+
+            $('#mymodalformtoedit').finish().show(100).css({ "width": 90 + '%', "max-width": "1200px" })
+
+            dragElement2(document.getElementById("mymodalformtoedit"));
+
+        })
+
+    })
+    // to minimize addorderform
+    $('body').on('click','.minimize', function () {
+        var mode = $(this).attr('mode')
+        var orderid=$(this).attr('orderid')
+        var html = ''
+        if (mode=='Add') {
+        $('.myformcontent[mode="Add"]').hide(100);
+        html += '<button class="btn btn-success minimizedformbtn" mode="Add">حواله جدید</button>'
+        } else if (mode = 'Edit') {
+            $('.myformcontent[mode="Edit"]').hide(100);
+            html += '<button class="btn btn-primary minimizedformbtn" orderid="'+orderid +'" mode="Edit">ویرایش حواله '+orderid+'</button>'
+
+        }
+        $('.toolband').append(html)
+        //$('.toolband').toggle(100);
+
+    })
+    // to maximize minimized form
+
+    $('.panelbox').delegate('.minimizedformbtn', 'click', function () {
+        $(this).hide(100)
+        var mode =$(this).attr('mode')
+        if (mode == 'Add') {
+
+            $('.myformcontent[mode="Add"]').show(100);
+            dragElement(document.getElementById("mymodalform"));
+
+        } else if (mode = 'Edit') {
+            var orderid = $(this).attr('orderid')
+            jQuery.post('/admin/showorderformforedit', { orderid: orderid }, function (e) {
+
+                $('#mymodalformtoedit').html(e)
+
+                $('#mymodalformtoedit').finish().show(100).css({ "width": 90 + '%', "max-width": "1200px" })
+
+                dragElement2(document.getElementById("mymodalformtoedit"));
+
+            })
+         //$('.myformcontent[mode="Edit"]').show(100);
+        }
+        //$('.toolband').toggle(100);
+
+    })
+    // to close form
+    $('body').on('click', '.closeform', function () {
+        //if (confirm('آیا می خواهید فرم را ببندید؟')) {
+
+            if ($(this).attr('mode')=='Add') {
+                $('#mymodalform').html('')
+                $(add_tools).show()
+            } else if ($(this).attr('mode') == 'Edit') {
+                $('#mymodalformtoedit').html('')
+
+            }
+
+        //}
+
+    })
+   // to save new order
+
+
+
+    // to make a mymodalform movable
+
+    function dragElement2(elmnt) {
+
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById("myheadingpaneltoedit")) {
+            /* if present, the header is where you move the DIV from:*/
+            document.getElementById("myheadingpaneltoedit").onmousedown = dragMouseDown;
+
+
+        }
+        else {
+
+            /* otherwise, move the DIV from anywhere inside the DIV:*/
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            /* stop moving when mouse button is released:*/
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+
+    }
+    function dragElement(elmnt) {
+
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById("myheadingpanel")) {
+            /* if present, the header is where you move the DIV from:*/
+            document.getElementById("myheadingpanel").onmousedown = dragMouseDown;
+
+
+        }
+        else {
+
+            /* otherwise, move the DIV from anywhere inside the DIV:*/
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            /* stop moving when mouse button is released:*/
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+
+    }
+    var zadd = parseInt($('.myform2').css('z-index'))
+    var zedit = parseInt($('.myform3').css('z-index'))
+    // to bring front
+    $('.myform2').click(function () {
+        dragElement(document.getElementById("mymodalform"));
+
+        zadd = zedit+1
+        $(this).css({ 'z-index': zadd })
+
+    })
+    $('.myform3').click(function () {
+        dragElement2(document.getElementById("mymodalformtoedit"));
+        zedit = zadd + 1
+        $(this).css({ 'z-index': zedit })
+
+    })
+
+
+    // show additem form modal
+    $(panelbodyfororders).on('click', '#Btn_Add', function () {
+
+
+        jQuery.post('/admin/ShowAddItemFormModal', {}, function (result) {
+
+            $('#mymodalform').html(result)
+            $(add_tools).hide()
+            $('#mymodalform').finish().show(100)
+            dragElement(document.getElementById("mymodalform"));
+
+
+
+        })
+
+
+
+    })
+
+
+
+
+    // show EditItem form modal
+
+    $(panelbodyfororders).on('click', '#Btn_Edit', function () {
+
+        if (listrowidselected == 0) {
+
+            alert('هیچ رکوردی انتخاب نشده است')
+        } else {
+            jQuery.post('/admin/ShowEditItemFormModal', { id: listrowidselected }, function (result) {
+
+
+                $('#mymodalformtoedit').html(result)
+
+                $(anbaridinform).val($(anbaridinform).attr("anbarvalue"))
+                $(htype).val($(htype).attr("htypevalue"))
+
+                $('#mymodalformtoedit').finish().show(100)
+
+                dragElement2(document.getElementById("mymodalformtoedit"));
+
+
+
+            })
+
+        }
+    })
+
+    // to delete item
+
+    $(panelbodyfororders).on('click', '#Btn_Remove', function () {
+
+        if (listrowidselected == 0) {
+
+            alert('هیچ رکوردی انتخاب نشده است')
+        } else {
+            if (confirm('آیا مطمئن هستید؟')) {
+
+
+            jQuery.post('/admin/Removeitemfromlistkala', { id: listrowidselected }, function (result) {
+
+                $('.listrow[listid="' + result + '"]').remove()
+                alert('رکورد مورد نظر با موفقیت حذف گردید')
+
+
+
+            })
+            }
+        }
+    })
+    
+
+    //to save item (add or edit)
+
+    $(mypanel_id).on('click', '#additemtolistkalainform', function () {
+        $('#mypanel_id .alert').hide()
+        var id = $(mymodalform_id).attr('listkalaid')
+        var sodoordate = $(sodoordateinform).val()
+        var htypeid = $(htype).val()
+        var anbarid = $(anbaridinform).val()
+        var productid = $(productidinform).attr('productid')
+        var kalanumber = $(kalanumberinform).val()
+        var kalacost = $(kalacostinform).attr('purevalue')
+        var totalcost = $(TotalCost).attr('purevalue')
+        var description = $(kaladescription).val()
+        var usernameid = $(this).attr('userid')
+        var inventory = $('[totalinventory]').attr('totalinventory')
+        
+        /// Inventory Control
+        if (htypeid == -1) {
+            if (parseInt(kalanumber) > parseInt(inventory)) {
+                
+                $('#mypanel_id .alert').show()
+                $('.alert').html('مقدار خروجی از موجودی کل بیشتر است.')
+                return;
+            }
+
+        }
+
+
+        var data = { id: id, sodoordate: sodoordate, usernameid: usernameid, htype: htypeid, anbarid: anbarid, productid: productid, kalanumber: kalanumber, kalacost: kalacost, totalcost: totalcost, kaladescription: description }
+        var dataasjson = JSON.stringify(data)
+
+        $.ajax({
+
+            url: '/admin/Saveitemtolistkala',
+            type: 'POST',
+            data: dataasjson,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (data, textStatus, jqXHR) {
+
+                if (data.status == 'ADDMODE') {
+                    var html = '';
+                    html += '<tr class="listrow" listid="' + data.id + '">'
+                    html += '<td class="prow hidden-xs  idnumber">' + data.id + '</td>'
+                    html += '<td class="prow  Date">' + data.sodoordate + '</td>'
+                    html += '<td class="prow hidden-xs  Time">' + data.time + '</td>'
+                    html += '<td class="prow hidden-xs  htype">' + data.htype + '</td >'
+                    html += '<td class="prow anbarname">' + data.anbarname + '</td>'
+                    html += '<td class="prow  name">' + data.category + '   ' + data.name + '</td>'
+                    html += '<td class="prow hidden-xs  code">' + data.code + '</td>'
+                    html += '<td class="prow  kalanumber">' + data.kalanumberm + '</td>'
+                    html += '<td class="prow hidden-xs  cost">' + data.cost + '</td>'
+                    html += '<td class="prow hidden-xs  totalcostkala">' + data.totalcostkala + '</td>'
+                    html += '<td class="prow hidden-xs  kaladescription">' + data.kaladescription + '</td>'
+                    html += '<td class="prow hidden-xs  user">' + data.user + '</td>'
+                    html += '</tr>'
+
+                    $(tabletbody).prepend(html)
+                    var trselected = $('.listrow[listid="' + data.id + '"]')
+                    if (data.kalanumberm < 0) {
+                        trselected.addClass('out')
+
+                    } else {
+                        trselected.removeClass('out')
+                    }
+                    // -- manually call the function once
+                    reset();
+                } else if (data.status == 'EDITMODE') {
+                    var html = '';
+                    html += '<td class="prow hidden-xs  idnumber">' + data.id + '</td>'
+                    html += '<td class="prow  Date">' + data.sodoordate + '</td>'
+                    html += '<td class="prow hidden-xs  Time">' + data.time + '</td>'
+                    html += '<td class="prow hidden-xs  htype">' + data.htype + '</td >'
+                    html += '<td class="prow anbarname">' + data.anbarname + '</td>'
+                    html += '<td class="prow  name">' + data.category + '   ' + data.name + '</td>'
+                    html += '<td class="prow hidden-xs  code">' + data.code + '</td>'
+                    html += '<td class="prow  kalanumber">' + data.kalanumberm + '</td>'
+                    html += '<td class="prow hidden-xs  cost">' + data.cost + '</td>'
+                    html += '<td class="prow hidden-xs  totalcostkala">' + data.totalcostkala + '</td>'
+                    html += '<td class="prow hidden-xs  kaladescription">' + data.kaladescription + '</td>'
+                    html += '<td class="prow hidden-xs  user">' + data.user + '</td>'
+
+                    $('.listrow[listid="' + data.id + '"]').html(html)
+                    var trselected = $('.listrow[listid="' + data.id + '"]')
+                    if (data.kalanumberm < 0) {
+                        trselected.addClass('out')
+
+                    } else {
+                        trselected.removeClass('out')
+                    }
+                    $('#mymodalformtoedit').finish().hide(100)
+                } else if (data.status == 'error') {
+                    $('#mypanel_id .alert').show()
+                    $('.alert').html(data.message)
+                } else {
+                    $('#mypanel_id .alert').show()
+                    $('.alert').html(data.message)
+                }
+
+
+
+
+
+
+
+                //$(messageok).modal("show");
+
+            }
+        });
+
+
+    })
+
+    // -- define your function
+
+
+    function reset() {
+        $('#mymodalform :input').val('');
+        $('#sodoordateinform').val('@today')
+        $('#htype').val(1)
+        $('#anbaridinform').val(1)
+        setTimeout(function () {
+            $("#productidinform").filter(':visible').focus();
+        }, 500);
+        $('#mymodalform .alert').hide()
+        $('[totalinventory]').html('<option>0</option>')
+        $('#kalacostinform').attr('purevalue','')
+
+    }
+
+
+</script>
+

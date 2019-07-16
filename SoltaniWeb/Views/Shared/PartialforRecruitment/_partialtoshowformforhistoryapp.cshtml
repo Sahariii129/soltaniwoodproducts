@@ -1,0 +1,123 @@
+﻿@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.structs
+@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository;
+
+
+@model tbl_historyappconnect
+@{
+    //_4820_soltaniwebContext db4 = new _4820_soltaniwebContext();
+    //var anbar = db4.tbl_anbar.Select(a => new { id = a.id, name = a.anbarname });
+    //var i = 1;
+    var today = DateTime.Now.ToPersianDate();
+
+}
+
+<script src="~/Scripts/jquery-ui-1.11.4.custom/external/jquery/jquery.js"></script>
+<script src="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+<link href="~/Scripts/jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="stylesheet" />
+
+<style>
+    .validationrequired {
+        border: 3px solid red;
+    }
+
+
+    .myimgefrm {
+        margin: 5px;
+    }
+
+    .img1 {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+    }
+
+
+    .controltools {
+        /*float : left;*/
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        cursor: pointer;
+    }
+
+    .contorltoolsimg {
+        width: 32px;
+        height: 32px;
+    }
+</style>
+
+
+<div class="card myfont myformcontent" mode="@(Model!=null?"Edit": "Add")" id="mymodalform_id" historyid="@(Model!=null ? Model.id.ToString() : "")" style="border:2px ridge #000000;z-index:1050">
+    <div class="controltools">
+        @*<img class="contorltoolsimg minimize" id="minimizeaddform" mode="@(Model!=null?"Edit": "Add")" listkalaid="@(Model!=null ? Model.id.ToString() : "")" src="~/Content/img/icon/minimize-icon.png" />*@
+        <img class="contorltoolsimg closeform" id="closeaddform" mode="@(Model!=null?"Edit": "Add")" src="~/Content/img/icon/Button-Close-icon.png" />
+    </div>
+    <div class="card-header paneltomove" id="@(Model!=null ?"myheadingpanel" : "myheadingpanel")" style="background-color: @(Model!=null ?"#6a95cc" : "#6a95cc"); color:white; font-weight:900; font-size:16pt;">
+        <p>
+            @(Model != null ? "ویرایش رکورد" : "افزودن رکورد")
+
+        </p>
+
+    </div>
+    <div class="card-body">
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-2 control-label">تاریخ ثبت</label>
+                    <div class="col-md-4">
+                        <input class="form-control" id="sabtdateinform" value="@(Model!=null ? (Model.sabtdate.HasValue ? Model.sabtdate.Value.ToPersianDate() : today) : today)" />
+                    </div>
+                    <label class="col-md-3 control-label">روش ارتباط</label>
+                    <div class="col-md-3">
+                        <input class="form-control" id="howtoconnectinform" value="@(Model!=null? Model.howtoconnect : "")" placeholder="تلفنی / حضوری" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-2 control-label">نتیجه</label>
+                    <div class="col-md-10">
+                        <textarea class="form-control" id="resultinform" value="@(Model!=null? Model.result : "")">@(Model!=null? Model.result : "")</textarea>
+                    </div>
+                </div>
+            </div>
+            <button id="save" userid="78" appid="@ViewBag.appid" class="col-md-offset-2 btn btn-success">ثبت</button>
+
+        </div>
+        <div class="alert alert-danger" style="display:none;">
+
+        </div>
+    </div>
+    <div class="card-footer"></div>
+</div>
+
+
+
+
+
+
+
+<script>
+
+    setTimeout(function () {
+        $("#howtoconnectinform").filter(':visible').focus();
+    }, 500);
+   
+    $(sabtdateinform).click(function () {
+
+        PersianDatePicker.Show(this, '@today')
+    })
+   
+
+
+
+
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

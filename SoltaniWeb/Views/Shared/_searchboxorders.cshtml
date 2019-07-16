@@ -1,0 +1,142 @@
+﻿@using SoltaniWeb.Models.Domain
+@{
+    _4820_soltaniwebContext db2 = new _4820_soltaniwebContext();
+    var branches = db2.tbl_branches.ToList();
+}
+<div class="card sheadingH" style="border-width:2px">
+    <div class="card-header sheading" style="background-color:#fff;cursor:pointer;border:unset">تنطیمات اولیه جستجو:</div>
+    <div class="card-body" style="display:none;background-color: rgb(248, 238, 202); border-left: 4px solid rgb(255, 202, 1); border-bottom: 4px solid rgb(255, 202, 1);">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">  صادر کننده:</label>
+                    <div class="col-md-8">
+
+                        <select id="frombranch" class="form-control">
+                            @foreach (var item in branches)
+                            {
+                                <option value="@item.id">@item.branch_name</option>
+
+
+                            }
+                            <option value="0">تمام شعبات</option>
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchbyfrombranch" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="card sheadingH" style="border-width:2px">
+    <div class="card-header sheading" style="background-color:#fff;cursor:pointer;border:unset" id="searchbyuser_heading">جستجو بر اساس شماره حواله</div>
+    <div class="card-body" id="searchbyuser_body" style="display:none;background-color: rgb(248, 238, 202); border-left: 4px solid rgb(255, 202, 1); border-bottom: 4px solid rgb(255, 202, 1);">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">شماره حواله:</label>
+
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="searchbyorderid" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="btn_searchbyorderid" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<div class="card sheadingH" style="border-width:2px">
+    <div class="card-header sheading" style="background-color:#fff;cursor:pointer;border:unset">جستجو بر اساس تاریخ حواله</div>
+    <div class="card-body" style="display:none;background-color: rgb(248, 238, 202); border-left: 4px solid rgb(255, 202, 1); border-bottom: 4px solid rgb(255, 202, 1);">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">تاریخ حواله:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sodoordateoforder" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchorderbysodoordate" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">از تاریخ :</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sodoordatefrom" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">تا تاریخ :</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="sodoordateto" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchordersbysodoordaterange" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="card sheadingH" style="border-width:2px">
+    <div class="card-header sheading" style="background-color:#fff;cursor:pointer;border:unset">جستجو بر اساس وضعیت تحویل</div>
+    <div class="card-body" style="display:none;background-color: rgb(248, 238, 202); border-left: 4px solid rgb(255, 202, 1); border-bottom: 4px solid rgb(255, 202, 1);">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="row">
+                    <label class="control-label col-md-4">وضعیت تحویل: </label>
+                    <div class="col-md-8">
+                        <select id="orderDone" class="form-control">
+                            <option value="true">انجام شده </option>
+                            <option value="false">انجام نشده</option>
+                            <option value="0">هر دو حالت</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <button type="submit" class="btn" id="searchordersbydone" style="background-color:#332b3a;color:#ffca01">جستجو</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

@@ -1,0 +1,66 @@
+﻿@model IEnumerable<SoltaniWeb.Models.Domain.tbl_files>
+
+@{
+    //ViewBag.Title = "decortype";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+
+}
+
+<head>
+    <link href="~/soltanistatic/style/gallery.css" rel="stylesheet" />
+    <script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
+    <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row my-4">
+            <div class="col-12">
+                <div style="position:relative">
+                    <h5 class="my-5 contactTitle" id="imagegallery">گالری تصاویر :@Model.FirstOrDefault().decortype.name </h5>
+                </div>
+            </div>
+        </div>
+        @*<center><p id="imagegallery" class="bg-success" style=" text-align :center ; cursor :pointer;">نمونه کار های مرتبط با  @Model.FirstOrDefault().decortype.name </p></center>*@
+        <div class="row decortype">
+            @foreach (var item in Model)
+            {
+                string imageroot = _hostingEnvironment.WebRootPath + "/Content/img/samples/" + item.filename;
+                bool f = File.Exists(imageroot);
+
+                if (f == true)
+                {
+                <div class="col-lg-2 col-12 mb-lg-4 mb-5">
+                    <div style="box-shadow:0 2px 5px #808080">
+
+                        <a href="~/Content/img/samples_L/@item.filename " data-lightbox="vahid-majidi" title="@item.decortype.name اثر @item.madeby.prefix  @item.madeby.Fname   @item.madeby.Lname"><img src="~/Content/img/samples/@item.filename " onmouseover="$('#@item.id').show('slide', {direction: 'right'}, 500);" onmouseout="$('#@item.id').hide('slide', {direction: 'right'}, 500);" alt="@item. decortype.name - @item.madeby.Fname  @item.madeby.Lname" style=" position:relative;" /></a>
+                        <div id="@item.id" style="background-color:#ffca01; color:#132666; position:absolute; top:120px;right:30px; padding-left:10px; padding-right:10px; display:none; border-radius:3px; font-size:14px; font-family:'B Zar';">@item.date.ToPersianDate()</div>
+                        <div class="" style=" background-color:#ffffff; ">
+                            <div>
+                                <a href="/samples/decortype?id=@item.decortypeid&key=@item.decortype.keywords"><h5 style="text-align :center ;padding-top:10px"> @item.decortype.name </h5></a>
+                            </div>
+                            <div>
+                                <h5 style="text-align :center ;padding:10px;">ID: @item.id </h5>
+                            </div>
+                            <div>
+                               <h5 style=" text-align: center ; font-size:12px; margin-bottom:0"> طراحی و اجرا:   </h5>
+                            </div>
+                            <div class="pb-2">
+                                <a href="/samples/madeby?id=@item.madebyid&key=@item.madeby.Fname   @item.madeby.Lname "><h5 style="text-align :center ; font-size:12px; ">  @item.madeby.Fname  @item.madeby.Lname </h5></a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                }
+            }
+        </div>
+    </div>
+
+
+   
+    <script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+
+</body>

@@ -1,0 +1,26 @@
+﻿
+@model IEnumerable<ActionAccessModelView>
+
+<table class="table table-bordered table-responsive table-menuauserction" style="display:table" menuid="@Model.FirstOrDefault().menuid" userid="@Model.FirstOrDefault().userid">
+    <tr>
+        <td>اکشن</td>
+        <td><input type="checkbox" class="checkall"  /></td>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr class="actionsaccess">
+            <td>
+                <span>
+
+            @item.actionname
+                </span>
+                <span>
+                    <i class="fas fa-edit" actionid="@item.actionid"></i>
+                </span>
+            
+            </td>
+            <td><input class="chb_permission" type="checkbox" actionaccessid="@item.id" checked="@item.permission" /></td>
+        </tr>
+    }
+
+</table>

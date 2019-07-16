@@ -1,0 +1,36 @@
+﻿
+@using SoltaniWeb.Models.Domain
+@{
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+   
+    var slides = db.tbl_slides.Where(a => (a.show.HasValue ? a.show.Value == true : false)).OrderByDescending(a => a.rank);
+    var indexslide = 0;
+}
+
+<div class="slideshow-container">
+    @foreach (var item in slides)
+    {
+        <div class="mySlides fadeimg">
+            <div class="numbertext">1 / 6</div>
+            <img src=@(item.imge!=null?string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.imge)):"") style="width:100%" />
+
+            <div class="text">@item.nameslide</div>
+        </div>
+    }
+
+    <a class="prev" onclick="plusSlides(-1)">&#10095;</a>
+    <a class="next" onclick="plusSlides(1)">&#10094;</a>
+    <div class="dotcontainer">
+        @foreach (var item in slides)
+        {
+
+            <span class="dot" onclick="currentSlide(@(indexslide+1))"></span>
+            indexslide++;
+        }
+
+
+    </div>
+
+
+
+</div>

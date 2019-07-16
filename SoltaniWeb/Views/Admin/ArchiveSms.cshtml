@@ -1,0 +1,194 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+<script src="~/lib/moment/moment.js"></script>
+<script src="~/lib/moment-jalaali/moment-jalaali.js"></script>
+<link rel="stylesheet" href="~/lib/persianDatepicker-master/css/persianDatepicker-default.css" />
+<script src="~/lib/persianDatepicker-master/js/persianDatepicker.min.js"></script>
+<script>
+    var counter = 0;
+
+    function OnDataBound() {
+        $('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+
+    }
+
+    function OnDataBinding(e) {
+        //Implement the event handler for DataBinding
+        var page = e.sender.dataSource.page();
+        var pageSize = e.sender.dataSource.pageSize();
+        // reset row number based on the selected page in the pager
+        counter = (page - 1) * pageSize;
+    }
+    function renderNumber() {
+        return ++counter;
+    }
+
+
+</script>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">پیام های ارسال شده</div>
+        <div class="card-body">
+            <input type="button" id="clearFilterButton" class="btn btn-secondary" value="حذف فیلتر" />
+            <hr />
+            <div class="k-rtl">
+
+                @(Html.Kendo().Grid<ArchiveSmsViewModel>()
+                                      .Name("grid_SentMessag")
+                                      .Events(x => x.DataBinding("OnDataBinding")
+                                          .FilterMenuInit("filterMenuInit")
+                                          .FilterMenuOpen("filterMenuOpen")
+                                          .Filter("OnDataFilter"))
+                                      .Columns(columns =>
+                                      {
+                                      columns.Bound(p => p.SentMessagId).Width(150).Title("گروه های پیامک");
+                                      columns.Bound(p => p.Branch).Width(150)
+                                          .Filterable(filterable =>
+                                                                          filterable.UI("branchFilter")
+
+
+                                                                  ).Filterable(filter =>
+                                                                  {
+                                                                      filter.Extra(false);
+                                                                      filter.Operators(op =>
+                                                                      {
+                                                                          op.ForString(str =>
+                                                                          {
+                                                                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                                                                          });
+
+
+                                                                      });
+                                                                  }).Title("شعبه");
+                                      columns.Bound(p => p.FullNameSender).Width(150).Title("فرستنده");
+                                      columns.Bound(p => p.FullNamePerson).Width(150).Title("نام مشتری");
+                                      columns.Bound(p => p.ContextMessage).Width(600).Title("متن پیام");
+                                      columns.Bound(p => p.DeliveryStatus).Width(200).Title("وضعیت دریافت");
+                                      columns.Bound(c => c.CreateDateTime)
+                                          //.Filterable(filterable => filterable.UI("OnDataFilter"))
+                                          .ClientTemplate("<span data-toggle='tooltip' data-original-title='#=CreateDateTime# '>#=CreateDateTimeShamsi#</span>")
+                                          .Width(150)
+                                          .Filterable(filterable => filterable.UI("PersianDateTimeFilter"))
+                                          .Title("تاریخ ارسال");
+                                      columns.Bound(p => p.Mobile).Width(160).Title("شماره همراه");
+                                      columns.Bound(p => p.SMSCount).Width(160).Title("تعداد پیام")
+                                          .ClientFooterTemplate("مجموع : #=sum#");
+                                      // .ClientGroupHeaderColumnTemplate("Sum : #=sum#");
+                                      /**/
+                                      /**/
+                                        @*columns.Bound(p => p.SMSCount).Format("{0:c}").ClientFooterTemplate(@<text>@item.Sum</text>).Format("{0:c}");*@
+                                        /**/
+                                        /**/
+                                    })
+                                  .Pageable(pageable => pageable
+                                      .Refresh(true)
+                                      .PageSizes(new int[] { 10, 20, 50, 100 })
+                                      .ButtonCount(10))
+                                 
+                                  .Groupable()
+                                  .Scrollable()
+                                  .Filterable()
+                                  .Resizable(resizable => resizable.Columns(true))
+                                  .DataSource(dataSource => dataSource
+                                      .Ajax()
+                                      .Aggregates(aggregates =>
+                                      {
+                                          aggregates.Add(p => p.SMSCount).Sum();
+                                      })
+                                      .Group(groups => groups.AddDescending(p => p.SentMessagId))
+                                      .PageSize(10)
+                                      .Read(read => read.Action("ArchiveSms_Read", "Admin"))
+                                  ))
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+     function branchFilter(element) {
+        element.kendoDropDownList({
+            dataSource: {
+                transport: {
+                    read: "@Url.Action("FilterMenuCustomization_Branch")"
+                }
+            },
+            optionLabel: "--انتخاب گروه--"
+        });
+    }
+    $("#clearFilterButton").click(function () {
+
+        $("#grid_SentMessag").data("kendoGrid").dataSource.filter({});
+    });
+    var scroll = false;
+    function filterMenuInit(e) {
+
+        var popup = $(e.container[0]).data("kendoPopup");
+        popup.bind("close", function(e) {
+            if (scroll) {
+                e.preventDefault(); //prevent popup closing
+            }
+        });
+
+    }
+    function filterMenuOpen(e) {
+        if (e.field == "CreateDateTime") {
+            var firstInput = e.container.find(".k-textbox:first");
+            var secondInput = e.container.find(".k-textbox:last");
+
+            var value1 = firstInput.attr('data-jdate'), value2 = secondInput.attr('data-jdate');
+            var text1 = firstInput.val(), text2 = secondInput.val();
+            if (value1 && text1) {
+                firstInput.val(value1);
+                firstInput.change();
+            }
+
+            if (value2 && text2) {
+                secondInput.val(value2);
+                secondInput.change();
+            }
+        }
+    }
+
+    function OnDataFilter(args) {
+        if (args.filter)
+            if (args.field === "CreateDateTime" ) {
+                for (var i = 0; i < args.filter.filters.length; i++) {
+                    var filterValue = args.filter.filters[i].value;
+                    if (filterValue) {
+                        args.filter.filters[i].value = moment(filterValue, 'jYYYY/jMM/jDD').format('YYYY-MM-DD');
+                    }
+                }
+            }
+
+    }
+    function PersianDateTimeFilter(element) {
+        var id = "el-" + newId();
+        $(element[0]).addClass("k-input k-textbox").attr("style", "width:100%").attr("name", id).attr("id", id);
+
+        $(element[0]).persianDatepicker({
+            cellWidth: 40,
+            cellHeight: 30,
+            fontSize: 14,
+            onShow: function () {
+                scroll = true;
+            },
+            onHide: function () {
+                scroll = false;
+            },
+            onSelect: function () {
+                $(element[0]).change();
+            }
+        });
+    }
+    var newId = function () {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        for (var i = 0; i < 10; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        return text;
+    };
+</script>

@@ -1,0 +1,159 @@
+﻿.contactTitle {
+    text-align: center;
+    font-weight: bolder;
+    color: #6a95cc;
+    position: relative;
+}
+
+    .contactTitle:after {
+        position: absolute;
+        content: " ";
+        right: 0;
+        top: 20px;
+        width: 10%;
+        height: 4px;
+        background-color: #6a95cc;
+    }
+
+    .contactTitle:before {
+        position: absolute;
+        content: " ";
+        left: 0;
+        top: 20px;
+        width: 10%;
+        height: 4px;
+        background-color: #6a95cc;
+    }
+#imagegallerydetaile img{
+    width:100%;
+    height:200px;
+}
+#imagegallerydetaile a {
+    color: #6a95cc !important;
+    font-weight: bold;
+}
+    #imagegallerydetaile a :hover {
+        color: #ffca01 !important;
+    }
+#imagegallerydetaile .count {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    width: 50px;
+    height: 30px;
+    padding: 8px 15px;
+    background-image: linear-gradient(180deg,#6a95cc,#132666);
+    color: #fff;
+    font-weight: bold;
+    transition: all .4s ease-in-out;
+    z-index: 100 !important;
+    border-radius: 3px;
+    perspective: 5px;
+    /*box-shadow:1px 1px 3px #132666;*/
+}
+    #imagegallerydetaile .count:before {
+        position: absolute;
+        top: -9px;
+        right: -3px;
+        width: 50px;
+        height: 10px;
+        content: " ";
+        background-image: linear-gradient(0deg,#6a95cc,#b2c9e7);
+        transform: skewX(-30deg);
+        z-index: -1000 !important;
+        border-top-left-radius: 15px;
+    }
+.imagegallerydetaileBox:hover .count {
+    height: 60px !important;
+    padding-top: 20px !important;
+}
+.decortype a {
+    color: #6a95cc !important;
+    font-weight: bold !important;
+}
+    .decortype a :hover {
+        color: #132666 !important;
+    }
+.decortype img,.made img {
+    width: 100%;
+    height: 150px;
+}
+.container .table td {
+    border-top: unset;
+    color: #132666;
+    position: relative;
+    padding-right: 0 !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: .5rem !important;
+}
+/*td.beforeTD{
+            position:relative;
+            
+            padding-right:0 !important;
+            padding-top:1rem;
+        }*/
+.beforeTD:after {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #332b3a;
+    content: " ";
+    height: 2px;
+    width: 50px;
+}
+
+.madebyPage a {
+    color: #6a95cc !important;
+    font-weight: bold !important;
+}
+
+    .madebyPage a :hover {
+        color: #132666 !important;
+    }
+
+.container i {
+    font-size: 18px;
+    background-color: #332b3a;
+    padding: 7px;
+    color: #ffca01;
+    width: 30px;
+    height: 30px;
+}
+@media(max-width:992px){
+    #imagegallerydetaile img {
+        height: 500px;
+    }
+    #imagegallerydetaile .count {
+        width: 120px;
+        height: 80px;
+        padding: 15px 40px;
+      
+    }
+        #imagegallerydetaile .count:before {
+            width: 120px;
+            height: 20px;
+        }
+    .imagegallerydetaileBox:hover .count {
+        height: 150px !important;
+        padding-top: 50px !important;
+    }
+    .decortype img , .made img{
+        height:500px;
+    }
+    .container i {
+        font-size: 30px;
+        padding: 15px;
+        width: 55px;
+        height: 55px;
+    }
+    .beforeTD:after {
+        height: 3px;
+        width: 80px;
+    }
+    .container .table td {
+        padding-top: 0 !important;
+    }
+    .container .td-left{
+        text-align:left;
+    }
+ }

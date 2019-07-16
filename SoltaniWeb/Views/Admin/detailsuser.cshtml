@@ -1,0 +1,74 @@
+﻿@model SoltaniWeb.Models.Domain.tbl_user
+
+@{
+    ViewBag.Title = "detailsuser";
+   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+
+
+<div class="col-lg-12" style=" background-color :#ffffff;">
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <td>id</td>
+            <td>@Model.id</td>
+        </tr>
+        <tr>
+            <td>نام کاربری</td>
+            <td>@Model.username</td>
+        </tr>
+        <tr>
+            <td>گذر واژه</td>
+            <td>@Model.password</td>
+        </tr>
+        <tr>
+            <td>نام</td>
+            <td>@Model.name</td>
+        </tr>
+        <tr>
+            <td>نام خانوادگی</td>
+            <td>@Model.Lname</td>
+        </tr>
+        <tr>
+            <td>ایمیل</td>
+            <td>@Model.email</td>
+        </tr>
+        <tr>
+            <td>سطح دسترسی</td>
+            <td>@Model.Access</td>
+        </tr>
+        <tr>
+            <td>شرح</td>
+            <td>@Model.userdescription</td>
+        </tr>
+
+        <tr>
+            <td>وضعیت</td>
+            <td>@Model.status</td>
+        </tr>
+
+        <tr>
+            <td>کلید انحصار</td>
+            <td>@Model.uniqkey</td>
+        </tr>
+
+        <tr>
+            <td>تصویر</td>
+            <td>@Model.image</td>
+        </tr>
+        <tr>
+            <td>تصویر</td>
+            <td><img src="~/Content/img/user/@Model.image" style="width: 64px; height:64px; margin-top:3px;" /> </td>
+        </tr>
+
+
+
+
+
+
+    </table>
+</div>
+<p>
+    <a href="/admin/editusers/@Model.id">اصلاح مشخصات</a>
+    @Html.ActionLink("بازگشت به لیست کاربران","manage_userpanel","admin")
+</p>

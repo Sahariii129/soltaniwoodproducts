@@ -1,0 +1,34 @@
+﻿@using Stimulsoft.Report.Mvc;
+
+@{
+    ViewBag.Title = "Order Report";
+
+    Layout = "~/Views/shared/_layoutbootstarpadminforreport.cshtml";
+}
+
+
+
+@Html.StiNetCoreViewer(new StiNetCoreViewerOptions()
+{
+    Actions =
+        {
+            GetReport = "GetReportoforder",
+            ViewerEvent = "ViewerEventorder"
+        },
+    Server =
+    {
+        RequestTimeout = 4000,
+
+    }
+})
+<style>
+
+    .sstiJsViewerReportPanel {
+        direction: rtl !important;
+    }
+
+    table tr td {
+        /*direction:rtl !important;*/
+        word-wrap: normal;
+    }
+</style>

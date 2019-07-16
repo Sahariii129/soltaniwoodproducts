@@ -1,0 +1,33 @@
+﻿@model List<SoltaniWeb.Models.structs.PersonVM.PersonInformationSettingViewModel>
+
+<div class="container table-responsive">
+
+    <h2>آدرس ها</h2>
+    <table id="tblPersonInformations" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>شماره</th>
+            <th>نوع اطلاعات</th>
+            <th>مقدار اطلاعات</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var perInfo in Model)
+        {
+            <tr>
+                <td>
+                    @perInfo.Id
+                </td>
+                <td id="@perInfo.PropertyName">
+                    @(perInfo.PropertyName.ToEnum<PersonInformationSetting>().GetDisplayName())
+                </td>
+                <td> @perInfo.PropertyValue</td>
+                <td><a class="btn btn-info" onclick="EditPersonInfo(@perInfo.PersonId, @perInfo.Id, '@perInfo.PropertyName', '@perInfo.PropertyValue')"><span id="pnrstate-@perInfo.Id"><i class="fas fa-user-edit"></i></span></a></td>
+                <td><a class="btn btn-info" onclick="DeletPersonInfo(@perInfo.PersonId, @perInfo.Id)"><span id="pnrstate-@perInfo.Id"><i class="fas fa-trash-alt"></i></span></a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

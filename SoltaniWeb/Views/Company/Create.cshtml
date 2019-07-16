@@ -1,0 +1,172 @@
+﻿
+@model SoltaniWeb.Models.structs.CompanyVM.CompanyViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+     Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+
+
+<script src="~/js/jquery.bootstrap-modal-ajax-form.js"></script>
+<script src="~/js/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"></script>
+
+
+<div class="container-fluid col-md-12" style="padding: 20px;">
+    <div class="card">
+        <div class="card-header"> @(Model?.Id != 0 ? "ویرایش مشتریان" : "ایجاد مشتری جدید")</div>
+        <div class="card-body">
+
+            <form asp-action="Create" class="m-form m-form--fit m-form--label-align-right  m-form--group-seperator-dashed"
+                  data-ajax="true"
+                  role="form"
+                  data-ajax-method="POST"
+                  data-ajax-complete="onComplete"
+                  data-ajax-begin="dataAjaxBegin"
+                  data-ajax-success="dataAjaxSuccess"
+                  data-ajax-failure="dataAjaxFailure">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="card">
+                    <div class="card-header"> اطلاعات شرکت</div>
+                    <div class="card-body">
+                        <div class="m-portlet__body">
+                            <div class="loader">
+                                <center>
+                                    <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+                                </center>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-6">
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <input asp-for="Name" class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label asp-for="Phone" class="control-label"></label>
+                                    <input asp-for="Phone" class="form-control" />
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-6">
+                                    <label asp-for="Phone2" class="control-label"></label>
+                                    <input asp-for="Phone2" class="form-control" />
+                                    <span asp-validation-for="Phone2" class="text-danger"></span>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label asp-for="Phone3" class="control-label"></label>
+                                    <input asp-for="Phone3" class="form-control" />
+                                    <span asp-validation-for="Phone3" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <div class="col-lg-6">
+                                    <label asp-for="CompanyType" class="control-label"></label>
+                                    @Html.DropDownList("CompanyType",
+                                        Html.GetEnumSelectList<CompanyType>(), new {@class = "form-control"})
+                                    <span asp-validation-for="CompanyType" class="text-danger"></span>
+                                </div>
+
+                                <div class="demo-section k-content col-lg-6">
+                                    <label asp-for="CompanyRegistrationNumber" class="control-label"></label>
+                                    <input asp-for="CompanyRegistrationNumber" class="form-control" />
+                                    <span asp-validation-for="CompanyRegistrationNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <div class="demo-section k-content col-lg-6">
+                                    <label asp-for="Address" class="control-label"></label>
+                                    <textarea asp-for="Address" rows="3" class="form-control"></textarea>
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div style="padding: 10px;">
+                    <div class="m-portlet__foot m-portlet__foot--fit">
+                        <div class="m-form__actions">
+
+                            <button type="submit"
+                                    class="m-widget__detalis btn m-btn--pill btn-success  m-btn--wide pull-right">
+                                @(Model.Id != 0 ? "ویرایش" : "ذخیره")
+
+                            </button>
+                            <a style="float: left;" asp-action="Index" class="btn m-btn--pill btn-secondary  m-btn--wide">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row col-lg-12" id="creatCompany">
+                </div>
+
+
+            </form>
+
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    $('.loader').hide();
+    function dataAjaxSuccess(data) {
+        $('.loader').hide();
+        if (data.ResultStatus !== undefined) {
+
+            if (data.ResultStatus.IsSuccessed) {
+                var alertbody = "<div class='alert alert-success'>" +
+                    "<a href='#' class='close' data-dismiss='alert'></a>" +
+                    "<h4>" + data.ResultStatus.Message + "</h4></div>";
+                $("#creatCompany").html(alertbody);
+                if ($("#Id").val() === "0") {
+                    $("#Phone").val('');
+                    $("#Phone2").val('');
+                    $("#Phone3").val('');
+                    $("#Name").val('');
+                    $("#CompanyRegistrationNumber").val('');
+                    $("#Address").val('');
+
+                }
+
+
+            } else {
+                var alertbody = "<div class='alert alert-danger'>" +
+                    "<a href='#' class='close' data-dismiss='alert'></a>" +
+                    "<h4>" + data.ResultStatus.Message + "</h4></div>";
+                $("#creatCompany").html(alertbody);
+            }
+
+        }
+        else {
+            var alertbody = "<div class='alert alert-danger'>" +
+                "<a href='#' class='close' data-dismiss='alert'></a>" +
+                "<h4> خطا در عملیات </h4></div>";
+            $("#creatCompany").html(alertbody);
+        }
+    }
+    function dataAjaxFailure(data) {
+        $('.loader').hide();
+        var alertbody = "<div class='alert alert-danger'>" +
+            "<a href='#' class='close' data-dismiss='alert'></a>" +
+            "<h4> خطا در عملیات </h4></div>";
+        $("#creatCompany").html(alertbody);
+    }
+    function dataAjaxBegin() {
+
+        $('.loader').show();
+    }
+    var onComplete = function () {
+        $('.loader').hide();
+    };
+</script>
+
+
+

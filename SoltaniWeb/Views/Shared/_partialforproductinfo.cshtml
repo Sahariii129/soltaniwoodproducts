@@ -1,0 +1,154 @@
+﻿@using SoltaniWeb.Models.Domain
+
+@model tbl_products
+@{
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext(); ;
+    var b = Model;
+    var catgtables = Model.category.section_.tbl_category.ToList();
+}
+
+<div id="formbody" mode="edit" class="form-horizontal">
+    <input type="hidden" id="productid" value="@Model.idproduct" />
+    <div class="form-group row">
+        <label class="control-label col-2 ">بخش : </label>
+        <div class="col-4">
+            <select class="form-control" id="section">
+
+
+                @foreach (var item in db.tbl_section)
+                {
+                    <option value="@item.id" selected=@(item.id == Model.category.section_.id)>@item.name</option>
+                }
+            </select>
+        </div>
+        <label class="control-label col-2 ">برند : </label>
+        <div class="col-4">
+            <select class="form-control" id="categoryid">
+
+                @Html.Partial("_partialforcatg", catgtables)
+
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label class="control-label col-2 ">نام : </label>
+        <div class="col-4">
+            <input id="pname" type="text" class="form-control" placeholder="نام محصول را وارد کنید" value="@Model.name">
+        </div>
+        <label class="control-label col-2 ">ابعاد : </label>
+        <div class="col-4">
+            <input id="dimension" type="text" class="form-control" placeholder="واحد : سانتیمتر" value="@Model.dimension">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="control-label col-2 ">کد : </label>
+        <div class="col-4">
+            <input id="codename" type="text" class="form-control" placeholder="" value="@Model.codename">
+        </div>
+        <label class="control-label col-2 ">کلاس : </label>
+        <div class="col-4">
+            <input id="grade" type="text" class="form-control" placeholder="" value="@Model.grade">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="control-label col-2 ">کلمات کلیدی : </label>
+        <div class="col-4">
+            <input id="keywords" type="text" class="form-control" placeholder="کلمات با - جدا شوند" value="@Model.keywords">
+        </div>
+        <label class="control-label col-2 ">حد نصاب : </label>
+        <div class="col-4">
+            <input id="inventory" type="text" class="form-control" placeholder="حتماً وارد شود." value="@Model.inventory">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-2 ">قیمت خرید : </label>
+        <div class="col-4">
+            <input id="lastbuycost" type="text" class="form-control" placeholder="به ریال وارد کنید" value="@Model.lastbuycost">
+        </div>
+        <label class="control-label col-2 ">قیمت فروش : </label>
+        <div class="col-4">
+            <input id="lastcellcost" type="text" class="form-control" placeholder="به ریال وارد کنید" value="@Model.lastcellcost">
+        </div>
+    </div>
+    <div class="form-group row">
+
+        <label class="control-label col-2">وزن : </label>
+        <div class="col-4">
+            <input id="weight" type="text" class="form-control" placeholder="واحد : کیلوگرم" value="@Model.weight">
+        </div>
+        <label class="control-label col-2">وضعیت نمایش :</label>
+        <div class="col-4">
+            <select id="pstatus" class="form-control">
+
+
+                <option value="true" selected=@(Model.status.Value == true)>نمایش</option>
+                <option value="false" selected=@(Model.status.Value != true)>عدم نمایش</option>
+
+
+
+            </select>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-2 ">توضیحات : </label>
+        <div class="col-10">
+            <input id="description" type="text" class="form-control" placeholder="رنگ های مشابه در سایر برندهای را وارد نمایید" value="@Model.description">
+        </div>
+
+    </div>
+
+
+    <div class="form-group row">
+        <label class="control-label col-2">تصویر :</label>
+        <div class="col-4">
+            <input type="file" id="addimage" />
+
+            <div class="loader">
+                <center>
+
+                    <img class="loading-image" src="~/Content/img/icon/130.gif" alt="loading..">
+                </center>
+            </div>
+            <div id="infobox"></div>
+        </div>
+        <div class="col-6">
+
+            @if (Model.thumbnail_image != null)
+            {
+
+                <img id="addimgpre" height="250" width="250" style="border:3px solid blue; border-radius:10px; float:left;" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.thumbnail_image)))" />
+            }
+            else
+            {
+                <img id="addimgpre" height="250" width="250" style="border:3px solid blue; border-radius:10px; float:left;" src="" />
+
+            }
+
+        </div>
+
+    </div>
+
+</div>
+<btn id="btn_save" class="btn" style="background-color:#6a95cc;color:#fff">ثبت و ذخیره</btn>
+
+
+<script>
+    // نمایش پریویو تصویر
+    $('#addimage').change(function () {
+   
+        var reader = new FileReader();
+        reader.readAsDataURL(addimage.files[0])
+        reader.onloadend = function (e) {
+
+            addimgpre.src = e.target.result
+
+        }
+    })
+
+
+
+</script>

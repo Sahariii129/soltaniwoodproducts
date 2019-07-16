@@ -1,0 +1,233 @@
+﻿@using SoltaniWeb.Models.Domain
+@{ 
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+
+    int user = 0;
+    int numberitemsincart = 0;
+    //SoltaniWeb.Models.repository.newsrepository newsrep = new SoltaniWeb.Models.repository.newsrepository();
+    var sections = db.tbl_section.Where(a => a.status == true && a.tbl_category.Count() > 0).OrderBy(a => a.ordering);
+    var catg = db.tbl_category.ToList();
+    if (Context.Session.GetInt32("userid") != null)
+    {
+        user = Context.Session.GetInt32("userid").Value;
+        var pcartopen = db.tbl_purchasekart.Where(a => a.userid == user && a.ispaid == false).SingleOrDefault();
+        if (pcartopen != null)
+        {
+            numberitemsincart = db.tbl_purchasekartitemlist.Where(a => a.perchasekart_id == pcartopen.id).Count();
+        }
+    }
+}
+<style>
+    .m  {
+        border: 1px solid #ffffff;
+    }
+    .catg {
+        background-color:#ffffff;
+        padding-right:10px;
+    }
+    li .section {
+        background-color: #ffffff;
+    }
+</style>
+
+<nav class="navbar navbar-default navbar-fixed-top" style="margin-bottom:10px;">
+
+    <div class="col-md-12 myfont" style="background-color:#ffffff; background-image:url(/content/img//otherimages//headersite.jpg);background-repeat: no-repeat; background-size: cover; font-weight:bolder;  padding:15px; font-size:20px;">
+
+        <div class="rtl">
+
+
+            <div class="btn-group" role="group" aria-label="...">
+               
+
+                @if (Context.Session.GetInt32("userid")!=null)
+                {
+                    
+                    int userid = Context.Session.GetInt32("userid").Value;
+                    var accsesstypes = db.tbl_accesstypes.Where(a => a.actionname != null && a.actiontype == 1);
+                    var accesslevelforuser = db.tbl_accesslevels.Where(a => a.user.id == userid);
+                   
+                    <div class="btn-group" role="group">
+
+                        <button type="button" class="btn btn-primary dropdown-toggle btn-group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @*@Session["fullname"]*@
+                            @Context.Session.GetString("fullname")
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="/admin/adminpanel">پنل مدیریت</a></li>
+                            <li role="separator" class="divider"></li>
+                            @foreach (var item in accsesstypes.OrderBy(a => a.ordernumber))
+                            {
+                                if (accesslevelforuser.Where(a => a.access.accesstype == item.accesstype).SingleOrDefault() != null && accesslevelforuser.Where(a => a.access.accesstype == item.accesstype).SingleOrDefault().accessvalue == true)
+                                {
+
+                                    <li><a href="/admin/@item.actionname">@item.accesscaption</a></li>
+
+                                }
+                            }
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a href="~/home/login" class="btn btn-primary  btn-group" aria-haspopup="true" aria-expanded="false">
+
+
+                        فروشگاه اینترنتی کالای چوب سلطانی، وارد شوید
+
+                    </a>
+                }
+                <a class="btn btn-group btn-success " href="/purchasecart/showcart?userid=@user" aria-label="Left Align">
+                    <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                    سبد کالا
+                    <span id="cartnumberitems" class="badge" style="color:red;">@numberitemsincart</span>
+                </a>
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header" style="padding-top:0px !important;">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar" style=" background-color:#b200ff;"></span>
+                <span class="icon-bar" style=" background-color:#b200ff;"></span>
+                <span class="icon-bar" style=" background-color:#b200ff;"></span>
+            </button>
+            <a class="navbar-brand" href="/home/index" style="margin-top:0px !important; padding-top:2px">
+
+                <img style="margin-top:0px; width:120px;height:48px" src="~/content/img/logo/SWP_new.png" />
+               @*  <span style="font-family:IranNastaliq; color:#ffffff;font-size:32px;">کالای چوب سلطانی</span>*@
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+
+                <li id="home" style="margin-right:10px;"><a href="/home/index?key=هایگلاس-ام-دی-اف-نئوپان-فرآوردههای-چوبی-تخته-روسی-کالای-چوب-سلطانی-mdf-نوار-پی-وی-سی-تکنوپل-پارس-لمینت-highgloss-agt-age-iran-ایران-شیراز-فارس">خانه</a></li>
+                <li class="m"><a href="/news/newsdetails?id=1">اخبار و مقالات</a></li>
+
+                <li class="dropdown m">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">محصولات <span class="caret"></span></a>
+                    <ul class="dropdown-menu" style="right:0 !important;width:100% !important;">
+                        @foreach (var item in sections)
+                        {
+                            <li class="section">
+                                <a class="trigger left-caret"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px;">  </span> @item.name </a>
+                                <ul class="dropdown-menu sub-menu" style="right:100% !important;width:150% !important;">
+                                    @foreach (var item2 in db.tbl_category.Where(a =>a.section_id==item.id &&  a.status != false))
+                                    {
+                                        <li class="catg" ><a href="/products/@item2.actionname?key=@item2.keywords"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true" style=" margin-left :5px;">  </span>@item2.categoryname</a></li>
+
+                                    }
+
+                                </ul>
+                            </li>
+                        }
+
+                    </ul>
+                </li>
+                <li class="dropdown m">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">گالری تصاویر <span class="caret"></span></a>
+                    <ul class="dropdown-menu" style="right:0 !important; width:270px !important;">
+                        <li><a href="~/samples/samples_catg?key=نمونه-کار-ها-به-تفکیک-نوع-دکور"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px; ">  </span>تصاویر نمونه کارها به تفکیک نوع کار</a></li>
+                        <li><a href="~/samples/samples_madeby?key=نمونه-کار-ها-به-تفکیک-طراح-کابینت-ساز-مجری"><span class=" glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px; ">  </span>تصاویر نمونه کارها به تفکیک طراح و مجری </a></li>
+                        <li><a href="~/search/advanced_search"><span class=" glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px; ">  </span>جستجوی پیشرفته نمونه کارها  </a></li>
+                    </ul>
+                </li>
+
+
+
+                <li class="m"><a href="/home/contactus">تماس با ما</a></li>
+
+
+                <li class="m"><a href="/home/aboutus">درباره ما</a></li>
+                <li class="dropdown m">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">استخدام <span class="caret"></span></a>
+                    <ul class="dropdown-menu" style="right:0 !important; width:270px !important;">
+                        <li><a href="/home/registerforjob"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px; ">  </span>ثبت متقاضی جدید</a></li>
+                        <li><a href="/home/editapplicantinfo"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px; ">  </span>تکمیل اطلاعات متقاضی </a></li>
+                    </ul>
+                </li>
+
+
+
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-left">
+                @if (Context.Session.GetInt32("userid") == null)
+                {
+
+                    <li><a href="~/home/login"><span class="glyphicon glyphicon-log-in" style="color:#2cb60b;" aria-hidden="true"></span></a></li>
+                }
+                else
+                {
+
+                    <li><a href="~/home/Exit"><span class="glyphicon glyphicon-log-out" style="color:#ff0000;" aria-hidden="true"></span></a></li>
+                }
+                <li><a href="~/home/register"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span></a></li>
+
+            </ul>
+            <form class="navbar-form navbar-left" role="search" action="~/search/searchsamplesfiles" method="get">
+                @*<div class="input-group">
+                        <input type="text" name="searchitems" class="form-control" placeholder="جستجوی نمونه کار">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                        </span>
+                    </div>*@<!-- /input-group -->
+
+            </form>
+
+            <form class="navbar-form navbar-left form-inline" role="search" action="~/search/searchproducts" method="get">
+
+                <div class="input-group myfont">
+
+                    <input id="textsearch" type="text" name="searchitem" class="form-control" style="font-size:12px;" placeholder="برند کالا یا نام کالا یا کد کالا ...  " aria-label="...">
+                    <span class="input-group-btn">
+                        <select name="section_id" class="form-control  myfont">
+                            <option value="0">تمام بخش ها</option>
+
+                            @foreach (var item in sections)
+                            {
+                                <option value="@item.id">@item.name</option>
+
+                            }
+
+                        </select>
+
+                    </span>
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </span>
+
+                </div><!-- /input-group -->
+
+            </form>
+
+
+
+
+
+
+
+
+
+
+        </div><!-- /.navbar-collapse -->
+
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+
+
+

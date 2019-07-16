@@ -1,0 +1,25 @@
+﻿@using SoltaniWeb.Models.Domain;
+@model IEnumerable<tbl_transportaiondetails>
+
+<table class="table table-responsive table-bordered">
+    <tr>
+        <td colspan="4">
+            اطلاعات محل تحویل سفارش شما  :
+        </td>
+    </tr>
+    <tr>
+        <td>نام محل</td>
+        <td>آدرس کامل</td>
+        <td>شخص پیگیری کننده</td>
+        <td>موبایل پیگیری کننده</td>
+    </tr>
+   
+        <tr id="tabledetailsinfo" >
+            <td id="lname">@(Model.Count()>0? Model.FirstOrDefault().location_name:"")</td>
+            <td id="laddress">@(Model.Count()>0? Model.FirstOrDefault().location_address:"")</td>
+            <td id="personpeygiri">@(Model.Count()>0 ? Model.FirstOrDefault().person_peygiri : "")</td>
+            <td id="tellpeygiri">@(Model.Count()>0? Model.FirstOrDefault().tell:"")</td>
+        </tr>
+    
+    
+</table>

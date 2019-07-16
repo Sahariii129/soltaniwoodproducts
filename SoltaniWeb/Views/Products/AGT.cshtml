@@ -1,0 +1,155 @@
+﻿@model IList<SoltaniWeb.Models.Domain.tbl_products>
+
+@{
+    //ViewBag.Title = "AGT";
+    ViewBag.description = " نمونه رنگ های هایگلاس ترک ای جی تی " + " - " + "فروش در شیراز و استان فارس" + " -  " + " AGT مشخصات کلی ام دی اف های گلاس  ";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    SoltaniWeb.Models.repository.samplerepository samrep = new SoltaniWeb.Models.repository.samplerepository();
+    int i = 0;
+    SoltaniWeb.Models.Domain._4820_soltaniwebContext db = new SoltaniWeb.Models.Domain._4820_soltaniwebContext();
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    string username = Context.Session.GetString("username");
+    var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
+}
+<script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
+<link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/soltanistatic/style/products.css" />
+<style>
+    .loading-image {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 10;
+    }
+
+    .loader {
+        display: none;
+        width: 200px;
+        height: 200px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        text-align: center;
+        margin-left: -50px;
+        margin-top: -100px;
+        z-index: 2;
+        overflow: auto;
+    }
+</style>
+<div class=" loader">
+    <center>
+        <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+    </center>
+</div>
+
+
+
+<div class="container-fluid products" data-aos="fade-up">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 productsTitle">ای جی تی ترکیه <span style="color:#132666">AGT Turkey</span></h5>
+            </div>
+            @if (Model.FirstOrDefault().category.fulldescription != null)
+            {
+                <div style="box-shadow:0 3px 10px #aab3c2; padding:30px">
+                    @Html.Raw(Model.FirstOrDefault().category.fulldescription)
+                </div>
+            }
+        </div>
+    </div>
+    @*<div class="d-block d-lg-flex align-items-center justify-content-between filter">
+        <div class="d-block d-lg-flex justify-content-between">
+            <div class="dropdown">
+                <button class="btn btn-filter dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    چیدمان بر اساس
+                </button>
+                <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                    <a class="dropdown-item" href="#"><i class="fas fa-sort-alpha-down mx-1"></i>حروف الفبا</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-sort-numeric-down mx-1"></i>شماره کد</a>
+                </div>
+            </div>
+            <div class="dropdown mx-0 mx-lg-2 my-3 my-lg-0">
+                <button class="btn btn-filter dropdown-toggle" type="button" id="classDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    انتخاب کلاس
+                </button>
+                <div class="dropdown-menu" aria-labelledby="classDropdown">
+                    <a class="dropdown-item" href="#">A: طرح ساده</a>
+                    <a class="dropdown-item" href="#">B: طرح چوب</a>
+                    <a class="dropdown-item" href="#">C: طرح سه بعدی</a>
+                </div>
+            </div>
+        </div>
+        <div>
+            <form>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="نام یا کد محصول را وارد نمایید...">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary"><i class="fas fa-search fa-lg"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>*@
+    <div class="row" id="imagegallerydetaile">
+        @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model)
+       
+    </div>
+    @*<div class="keyword d-flex mt-4">
+        <p class="bold ml-4 px-4">کلمات کلیدی</p>
+        <div>
+            @foreach (var item in keywords.Split('-'))
+            {
+                <a href="/products/Searchproducts?filter=@item" class="btn">@item</a>
+            }
+        </div>
+    </div>*@
+</div>
+
+
+
+
+
+<script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
+
+
+<script>
+  
+
+    $(sortingbyalpha).click(function (e) {
+        e.preventDefault()
+        alert('hi')
+        $('.loader').show()
+        var catgid = $(this).val();
+        alert(catgid)
+        jQuery.post('/products/sortingbyalpha', { id: catgid }, function (result) {
+            $('.loader').hide();
+            alert(JSON.stringify(result))
+            $("#imagegallerydetaile").html(result);
+            $("#baseon").html("<span id='baseon'>چیدمان بر اساس نام کالا</span>")
+
+
+        })
+
+    })
+
+    $(sortingdefault).click(function (e) {
+        e.preventDefault()
+        alert('hi')
+        $('.loader').show()
+
+        jQuery.post('/products/sortingdefault', { id: $(this).val() }, function (result) {
+            $('.loader').hide();
+            alert(JSON.stringify(result))
+            $("#imagegallerydetaile").html(result);
+            $("#baseon").html("<span id='baseon'>چیدمان بر اساس حروف کد کالا</span>")
+
+
+        })
+
+    })
+
+
+
+</script>

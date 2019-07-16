@@ -1,0 +1,292 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.repository
+@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.utility
+@model IEnumerable<tbl_order>
+           @{
+               //abstractinfoofpurchasecart getinfo = new abstractinfoofpurchasecart();
+               int take = ViewBag.pagesize;
+               int skip =  ViewBag.skip;
+               var cartids = Model.Select(a => new { id = a.id }).ToList();
+               string  userid = Context.Session.GetString("userid");
+              
+               //_4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+               //var access = db.tbl_accesslevels.Where(a => a.userid == userid && a.accessid == 32 && a.accessvalue == true).SingleOrDefault();
+           }
+
+<div class="row">
+    @foreach (var item in Model.Skip(skip).Take(take))
+
+    {
+
+        <div class="col-lg-4 col-12">
+            <div class="card mb-3" orderid="@item.id">
+                <div class="card-header @(item.from_branchid==1 ? "daftar":"shahrak" ) sheading" style=" color:#ffffff; cursor:pointer;">
+                    @( "حواله : " + item.id)
+
+                    <span style="float:left;">@(item.orderfor.Fname + " " + item.orderfor.Lname)</span>
+
+                </div>
+                <div class="card-body" style="background-color:#f8eec9; color:#000000;font-weight:800;display:none">
+                    <table class="table table-responsive table-bordered torderinfo" style="display:table">
+                        <tr>
+                            <td>تاریخ صدور :</td>
+                            <td> @item.sodoor_date.ToPersianDate() </td>
+                        </tr>
+
+                        <tr>
+                            <td>کاربر :</td>
+                            <td>@(item.user.username) </td>
+                        </tr>
+
+                        <tr>
+                            <td>تعداد کل :</td>
+                            <td>@(item.tbl_orderdetails.Sum(a=>a.number)) </td>
+                        </tr>
+                        <tr>
+                            <td>وضعیت نهایی حواله :</td>
+                            <td class="donestatus" orderid="@item.id">@(item.done == true ? "تحویل مشتری " : "عدم تحویل") </td>
+                        </tr>
+                    </table>
+
+                    <hr />
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-primary details btn_orderdetails" value="@item.id">اقلام حواله</button>
+                        <button class="btn btn-success details btn_orderedit" value="@item.id">ویرایش حواله</button>
+                        <button class="btn btn-danger details btn_ordervalid" value="@item.id">@(item.valid == true ? "ابطال حواله" : "تائید حواله")</button>
+                        <button class="btn btn-warning deliverorder" value="@item.id">تحویل حواله</button>
+                    </div>
+                    <div class="odetails" orderid="@item.id" style="display:none">
+
+
+                    </div>
+                    <div class="deliverform" orderid="@item.id" style="display:none">
+
+
+                    </div>
+                </div>
+                <div class="card-footer">
+
+                    <div class="valid" orderid="@item.id" style="position:absolute; top:50px; left:80px; display:@(item.valid==false?"block":"none")">
+                        <img src="~/Content/img/icon/cancelled.png" style="width:120px; height:60px;" />
+                    </div>
+                    <div class="done" orderid="@item.id">
+                        @if (item.done == true)
+                    {
+
+                            <img src="~/Content/img/icon/isdeliverd_s.png" />
+                    }
+                    else
+                    {
+                            <img src="~/Content/img/icon/no-icon.png" />
+                    }
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    }
+    <div class="col-12 align-self-end">
+        <ul class="pagination pr-0 row">
+            <li class="page-item">
+                <a class="prenext page-link" id="previous" pageId="@(ViewBag.pagenumber)" aria-label="Previous" take="@(ViewBag.pagesize)" totalpage="@(ViewBag.totalpages)">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for (int i = 1; i < ViewBag.totalpages + 1; i++)
+            {
+                <li class="page-item"><a class="page-link paging" id="@(ViewBag.pagesize*(i-1))" style="background-color:@(ViewBag.pagenumber==i?"#b7c9e1":"");" pageId="@i">@i</a></li>
+            }
+
+            <li class="page-item">
+                <a class="prenext page-link" id="next" aria-label="Next" pageId="@(ViewBag.pagenumber)" take="@(ViewBag.pagesize)" totalpage="@(ViewBag.totalpages)">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+  
+    <script>
+        $('.btn_orderdetails').click(function () {
+            var btn = $(this)
+            var orderid = $(this).val()
+            
+            jQuery.post('/admin/getorderdetails', { orderid: orderid }, function (result) {
+
+                $('.odetails[orderid="' + orderid + '"]').html(result).toggle(100)
+
+
+                return;
+            })
+
+
+
+
+        })
+
+
+
+        $('.btn_ordervalid').click(function () {
+
+            var orderid = $(this).val()
+          var thisbtn=$(this)
+            $.post('/admin/changevalidationoforder', { orderid: orderid }, function (result) {
+                //alert($('.valid[orderid="' + orderid + '"]').html())
+                if (result.msg == 'notallowed') {
+                    $(messagenotokbody).html('امکان ابطال این حواله وجود ندارد')
+                    $(messagenotok).modal()
+                    return;
+                }
+                if (result.result == true) {
+                    
+                    $('.valid[orderid="' + orderid + '"]').css({ "display": "none" })
+                    thisbtn.html('ابطال حواله')
+                }else{
+                    $('.valid[orderid="' + orderid + '"]').css({ "display": "block" })
+                    thisbtn.html('تائید حواله')
+                }
+
+            })
+
+
+        })
+
+        $('.paging').click(function (e) {
+            e.preventDefault()
+
+
+            var modelobj = @Html.Raw(Json.Serialize(cartids))
+            var skip = $(this).attr('id')
+
+            var take = @ViewBag.pagesize
+            var ids =[];
+            $(modelobj).each(function(n,m){
+                ids.push(m.id)
+            })
+
+            $('.loader').show()
+            jQuery.post('/admin/manage_orderajax', {take:take , skip:skip , model:ids}, function (result) {
+                $('.loader').hide()
+                $('#panelbodyfororders').html(result)
+
+
+            })
+
+        })
+
+        $('.prenext').click(function (e) {
+
+
+            e.preventDefault();
+            var modelobj = @Html.Raw(Json.Serialize(cartids))
+            var pagenumber = $(this).attr('page')
+            var totalpage = $(this).attr('totalpage')
+
+            var id = $(this).attr('id')
+            var ids =[];
+            $(modelobj).each(function(n,m){
+                ids.push(m.id)
+            })
+
+            if (id == 'previous') {
+                var targetpagenumber = pagenumber - 1;
+                if (targetpagenumber <= 0)
+                    return;
+
+                var take = $(this).attr('take')
+                var skip = take * (targetpagenumber - 1)
+            } else {
+                var targetpagenumber = parseInt(pagenumber) + 1;
+                if (targetpagenumber > totalpage)
+                    return;
+
+                var take = $(this).attr('take')
+                var skip = take * (parseInt(targetpagenumber) - 1)
+
+            }
+            $('.loader').show()
+            jQuery.post('/admin/manage_orderajax', { take: take, skip: skip ,model:ids}, function (result) {
+                $('.loader').hide()
+                $('#panelbodyfororders').html(result)
+
+
+            })
+
+
+        })
+
+        // show deliver order form
+        $('.deliverorder').click(function () {
+
+            var orderid = $(this).val()
+            //alert(orderid)
+            $.post('/admin/showdeliverorderform', { orderid: orderid }, function (result) {
+
+
+                if (result.err =='cancelled') {
+                    $(messagenotokbody).html(result.errmsg)
+                    var heading = 'عدم امکان تحویل حواله شماره  : ' + orderid
+                    $(messagenotokheader).html(heading)
+                    $(messagenotokfooter).html('')
+                    $(messagenotok).modal()
+                } else {
+
+                $(messageokbody).html(result)
+                var heading = 'فرم تعیین وضعیت تحویل کالا حواله شماره : ' + orderid
+                $(messageokheader).html(heading)
+                $(messageokfooter).html('')
+                $(messageok).modal()
+                }
+                
+            })
+
+        })
+
+
+        // save deliver info
+        $('#messageok').on('click', '#savedeliverorderinfo', function () {
+
+            var orderid = $(orderidindeliverform).val()
+            var userid = $(done_userid).attr('userid')
+            var username = $(done_userid).val()
+            var deliverdate = $(deliverdateinfrom).val()
+            var done = $(doneinform).val()
+            var orderdesc = $('#orderdescdeliver').val();
+            $(messageok).modal('hide')
+            var dataob = {
+                "orderid": orderid,
+                "userid": userid, "username": username, "deliverdate": deliverdate, "done": done, "deliverorderdesc": orderdesc
+            }
+            var data = JSON.stringify(dataob);
+           
+            $.ajax({
+                url: '/admin/savedeliverorderinfo',
+                type: 'Post',
+                data: data,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data, textStatus, jqXHR) {
+                    var html = ''
+                   
+                    if (data.done == 'true') {
+                        html +='<img src="/Content/img/icon/isdeliverd_s.png" style="width:40px; height:40px;" />'
+                    } else {
+                        html +='<img src="/Content/img/icon/no-icon.png" style="width:40px; height:40px;" />' 
+                    }
+                    $('.done[orderid="' + data.orderid + '"]').html(html)
+                    $('.donestatus[orderid="' + data.orderid + '"]').html(data.donemsg)
+                }
+
+            })
+
+
+        })
+
+
+
+
+    </script>

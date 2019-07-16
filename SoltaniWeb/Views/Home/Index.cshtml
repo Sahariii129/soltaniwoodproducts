@@ -1,0 +1,174 @@
+﻿
+@{
+    //ViewBag.Title = "Index";
+    ViewBag.description = "فروش انواع هایگلاس های ترک و ایرانی - ام دی اف  3 و 16 میل - صفحه کابینت  -  نوار پی وی سی - ضد آب - تخته روسی - ملامینه و نئوپان و سایر فرآورده های چوبی در شیراز و استان فارس";
+    ViewBag.howtoindex = "index";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    var firstslide = db.tbl_slides.Where(a => a.first == true).FirstOrDefault();
+    var otherslides = db.tbl_slides.Where(a => a.show == true).OrderByDescending(a => a.rank);
+    var i = 1;
+    var newproducts = db.tbl_listkala97.Where(a=>a.htype==1).OrderByDescending(a => a.id).Take(7);
+    var newsamples = db.tbl_samples.OrderByDescending(a => a.Id).Take(6);
+    var lastnews = db.tbl_news.OrderByDescending(a => a.id).Take(3);
+
+
+
+}
+<link href="~/soltanistatic/style/index.css" rel="stylesheet" />
+
+
+<main>
+    <div class="index">
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators d-none d-lg-flex">
+
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                @foreach (var item in otherslides)
+                {
+
+                    <li data-target="#carouselExampleIndicators" data-slide-to="@i"></li>
+                    i++;
+                }
+
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(firstslide.imge)))" alt="@firstslide.discription">
+                </div>
+
+                @foreach (var item in otherslides)
+                {
+                    <div class="carousel-item">
+                        <img class="d-block w-100" src="@(string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.imge)))" alt="@item.discription">
+                    </div>
+                }
+
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+            </a>
+        </div>
+        <div class=" container-fluid">
+            <div class="row newProducts">
+                <div class="col-12 col-lg-3 mb-4 mb-lg-0">
+                    <a href="">
+                        <div class="card card-newProducts" data-aos="fade-up">
+                            <div class="card-body">
+                                <img class="card-img-top img-fluid" src="~/soltanistatic/pictures/w1.jpg" alt="جدید ترین محصولات کالای چوب سلطانی" >
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                @foreach (var item in newproducts)
+                {
+                    <div class="col-12 col-lg-3 mb-4 mb-lg-0">
+                        <a href="">
+                            <div class="card card-newProducts" data-aos="fade-up">
+                                <div class="card-body">
+                                    <div class="brand"><img src="@(item.product.category.image==null ? "/soltanistatic/pictures/SWP_new1.png" :   string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.product.category.image)))" /></div>
+                                    <img class="card-img-top img-fluid" src="@(item.product.image==null ? "/Content/img/icon/img-na.png" :   string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.product.image)))" alt="@(item.product.keywords)" height="200">
+                                    <div class="card-box">
+                                        <h6>@item.product.category.categoryname</h6>
+                                        <h6>@item.product.name</h6>
+                                        <h6>کد <span class="yellow">@item.product.codename</span></h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+
+               
+            </div>
+            <div class="row brands ">
+                <div class="col-12 col-lg-9 order-lg-1 order-2">
+                    <div class="owl-carousel owl-rtl owl-loaded container">
+                        <div class="owl-stage-outer">
+                            <div class="owl-stage">
+                                @foreach (var item in newsamples)
+                                {
+                                <div class="owl-item" data-aos="zoom-in">
+                                    <a href="customer.php">
+                                        <div fileid="@item.filesid" class="owlBox">
+                                            <div><img src="~/Content/img/samples/@item.files.filename" alt="@item.files.keywords"></div>
+                                            <div class="owlBox-item"><h5>@(item.files.madeby.Fname + " " + item.files.madeby.Lname)</h5></div>
+                                        </div>
+                                    </a>
+                                </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 order-1 order-lg-2 samplesIndex">
+                    <img src="~/soltanistatic/pictures/w3.jpg" alt="تازه ترین نمونه کارها">
+                </div>
+            </div>
+            <div class="row news ">
+                <div class="col-12 col-lg-3 newsTitle pb-2 pb-lg-0">
+                    <a href="">
+                        <div class="card card-newNews text-center" data-aos="fade-up">
+                            <div class="card-body text-center align-items-center">
+                                <img src="~/soltanistatic/pictures/w2.jpg" alt=" جدیدترین اخبار">
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                @foreach (var item in lastnews)
+                {
+                    <div class="col-12 col-lg-3 pb-2 pb-lg-0">
+                        <a href="/news/newsdetails?id=@item.id&&key=@item.keywords">
+                            <div class="card card-newNews text-center" data-aos="fade-up">
+                                <div class="card-body">
+                                    @if (@item.tbl_newsimages.LastOrDefault() != null)
+                                    {
+
+                                        <img class="card-img-top img-fluid" src="~/Content/img/newsimages/@item.tbl_newsimages.LastOrDefault().newsimage.filename" alt="">
+                                    }
+                                    else
+                                    {
+                                        <img class="card-img-top img-fluid" src="~/Content/img/icon/img-na.png" alt="">
+                                    }
+                                    <div class="card-box">
+                                        <p>@item.issudate.ToPersianDate()</p>
+                                        <h5>@item.title</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    $(".owl-carousel").owlCarousel({
+        rtl: true,
+        nav: true,
+        dots: true,
+        loop: true,
+        margin: 0,
+        center: false,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        autoplayHoverPause: true,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 1
+            },
+            1000: {
+                items: 3
+            }
+        }
+    });
+</script>

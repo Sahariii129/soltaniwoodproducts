@@ -1,0 +1,15 @@
+﻿@using  SoltaniWeb.Models.Domain
+@model tbl_section
+@{ 
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    var sections = db.tbl_section.ToList();
+
+}
+<select id="section_id" class="form-control">
+    <option value="0">همه برند ها</option>
+    @foreach (var item in Model.tbl_category)
+    {
+    <option value="@item.id"> @item.categoryname</option>
+
+    }
+</select>
