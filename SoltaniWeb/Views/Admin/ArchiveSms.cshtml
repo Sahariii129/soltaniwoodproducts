@@ -64,18 +64,18 @@
 
                                                                       });
                                                                   }).Title("شعبه");
-                                      columns.Bound(p => p.FullNameSender).Width(150).Title("فرستنده");
+                                      columns.Bound(p => p.FullNameSender).Sortable(false).Width(150).Title("فرستنده");
                                       columns.Bound(p => p.FullNamePerson).Width(150).Title("نام مشتری");
-                                      columns.Bound(p => p.ContextMessage).Width(600).Title("متن پیام");
-                                      columns.Bound(p => p.DeliveryStatus).Width(200).Title("وضعیت دریافت");
-                                      columns.Bound(c => c.CreateDateTime)
+                                      columns.Bound(p => p.ContextMessage).Sortable(false).Width(600).Title("متن پیام");
+                                      columns.Bound(p => p.DeliveryStatus).Sortable(false).Width(200).Title("وضعیت دریافت");
+                                      columns.Bound(c => c.CreateDateTime).Sortable(false)
                                           //.Filterable(filterable => filterable.UI("OnDataFilter"))
                                           .ClientTemplate("<span data-toggle='tooltip' data-original-title='#=CreateDateTime# '>#=CreateDateTimeShamsi#</span>")
                                           .Width(150)
                                           .Filterable(filterable => filterable.UI("PersianDateTimeFilter"))
                                           .Title("تاریخ ارسال");
-                                      columns.Bound(p => p.Mobile).Width(160).Title("شماره همراه");
-                                      columns.Bound(p => p.SMSCount).Width(160).Title("تعداد پیام")
+                                      columns.Bound(p => p.Mobile).Sortable(false).Width(160).Title("شماره همراه");
+                                      columns.Bound(p => p.SMSCount).Sortable(false).Width(160).Title("تعداد پیام")
                                           .ClientFooterTemplate("مجموع : #=sum#");
                                       // .ClientGroupHeaderColumnTemplate("Sum : #=sum#");
                                       /**/

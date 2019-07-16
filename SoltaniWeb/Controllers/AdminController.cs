@@ -6730,6 +6730,7 @@ namespace SoltaniWeb.Controllers
             }
 
             Cls_SMS.ClsSend send = new Cls_SMS.ClsSend();
+            var translateFilters = new List<IFilterDescriptor>();
             IEnumerable<ArchiveSmsViewModel> result;
             var branchIdsend = userId == 78 ? branchId : 0;
            
@@ -6793,93 +6794,248 @@ namespace SoltaniWeb.Controllers
             //    data = db3.tbl_SentMessagPerson.Where(x => x.DeliveryStatus == null);
             //}
 
-            var  data = db3.tbl_SentMessagPerson.Where(x => x.DeliveryStatus == null);
+          //  IQueryable<tbl_SentMessagPerson> data,dataFilter;
+           var data = db3.tbl_SentMessagPerson;
+           // var dataGroup = data.Select(x => new { RefNumber = x.SentMessag.RefNumber }).GroupBy(x => x.RefNumber).ToList();
+            var dataGroup2 = data.OrderByDescending(x=>x.SentMessagId);
+            foreach (var descriptor in request.Filters)
+                TransformFilterQuery(descriptor);
 
-            var dataGroup = data.Select(x => new { RefNumber = x.SentMessag.RefNumber }).GroupBy(x => x.RefNumber).ToList();
-            Cls_SMS.ClsStatus clsStatus = new Cls_SMS.ClsStatus();
-
-            foreach (var sms in dataGroup)
+            foreach (var descriptor in request.Sorts)
+                TransformSortQuery(descriptor);
+            void TransformFilterQuery(IFilterDescriptor filter)
             {
-                
-                var lstStatusSms = clsStatus.StatusSMS("koohi8", "87g5820", "http://193.104.22.14:2055/CPSMSService/Access", "KOOHI",
-                    "KOOHI+" + sms.Key);
-                if (lstStatusSms != null && lstStatusSms.Count > 0)
+                if (filter is CompositeFilterDescriptor)
                 {
-                    
-                    foreach (var perSms in data.Where(x => x.SentMessag.RefNumber == sms.Key))
+                    foreach (var filterDescriptor in ((CompositeFilterDescriptor)filter).FilterDescriptors)
+                        TransformFilterQuery(filterDescriptor);
+                }
+                else
+                {
+                    var filterDescriptor = (FilterDescriptor)filter;
+                    if (filterDescriptor.Member == "FullNamePerson")
                     {
-                       
-                        Cls_SMS.ClsStatus.STC_SMSStatus findPerson=null;
-                        if (perSms.Person != null)
+                        var name = filterDescriptor.Value.ToString();
+
+                        switch (filterDescriptor.Operator)
                         {
-                            if (perSms.Person.cell != null)
+                            case FilterOperator.Contains:
+
+                                dataGroup2 = dataGroup2.Where(
+                                    x => (x.Person.Fname ?? "").Contains(name) ||
+                                         (x.Person.Lname ?? "").Contains(name) ||
+                                         ((x.Person.Fname ?? "") + " " + (x.Person.Lname ?? "")).Contains(name)).OrderByDescending(x=>x.SentMessagId);
+                                break;
+                            case FilterOperator.IsEqualTo:
+                                dataGroup2 = dataGroup2.Where(
+                                    x => x.Person.Fname == (name) ||
+                                         x.Person.Lname == (name) ||
+                                         (x.Person.Fname ?? "") + " " + (x.Person.Lname ?? "") == (name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                        }
+                        
+                    }
+                    if (filterDescriptor.Member == "FullNameSender")
+                    {
+                        var name = filterDescriptor.Value.ToString();
+
+                        switch (filterDescriptor.Operator)
+                        {
+                            case FilterOperator.Contains:
+
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.User.username.Contains(name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsEqualTo:
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.User.username == (name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                        }
+                       
+                    }
+                    if (filterDescriptor.Member == "Branch")
+                    {
+                        var name = filterDescriptor.Value.ToString();
+
+                        switch (filterDescriptor.Operator)
+                        {
+                            case FilterOperator.Contains:
+
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.User.branches_.branch_name.Contains(name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsEqualTo:
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.User.branches_.branch_name == (name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                        }
+                       
+                    }
+                    if (filterDescriptor.Member == "ContextMessage")
+                    {
+                        var name = filterDescriptor.Value.ToString();
+
+                        switch (filterDescriptor.Operator)
+                        {
+                            case FilterOperator.Contains:
+
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.ContextMessage.Contains(name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsEqualTo:
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.ContextMessage == (name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                        }
+                       
+                    }
+                    if (filterDescriptor.Member == "DeliveryStatus")
+                    {
+                        var name = filterDescriptor.Value.ToString();
+
+                        switch (filterDescriptor.Operator)
+                        {
+                            case FilterOperator.Contains:
+
+                                dataGroup2 = dataGroup2.Where(x => ((x.DeliveryStatus != null && x.SentMessag.State == "CHECK_OK") ? ((DeliveryStatus)Enum.Parse(typeof(DeliveryStatus), x.DeliveryStatus)).GetDisplayName() : (x.SentMessag.State != "CHECK_OK") ? "خطای ارسال پیام به سرویس" : "نامشخص").Contains(name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsEqualTo:
+                                dataGroup2 = dataGroup2.Where(x => ((x.DeliveryStatus != null && x.SentMessag.State == "CHECK_OK") ? ((DeliveryStatus)Enum.Parse(typeof(DeliveryStatus), x.DeliveryStatus)).GetDisplayName() : (x.SentMessag.State != "CHECK_OK") ? "خطای ارسال پیام به سرویس" : "نامشخص") == (name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                        }
+                      
+                    }
+                    if (filterDescriptor.Member == "Mobile")
+                    {
+                        var name = filterDescriptor.Value.ToString();
+
+                        switch (filterDescriptor.Operator)
+                        {
+                            case FilterOperator.Contains:
+
+                                dataGroup2 = dataGroup2.Where(x => (x.PersonId != null ? x.Person.cell ?? ((x.Person.PersonInformationSettings == null || x.Person.PersonInformationSettings.Count == 0) ? "" : x.Person.PersonInformationSettings.FirstOrDefault(per => per.PropertyName == PersonInformationSetting.Mobile.ToString()).PropertyValue) : x.PersonCellPhone).Contains(name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsEqualTo:
+                                dataGroup2 = dataGroup2.Where(x => (x.PersonId != null ? x.Person.cell ?? ((x.Person.PersonInformationSettings == null || x.Person.PersonInformationSettings.Count == 0) ? "" : x.Person.PersonInformationSettings.FirstOrDefault(per => per.PropertyName == PersonInformationSetting.Mobile.ToString()).PropertyValue) : x.PersonCellPhone) == (name)).OrderByDescending(x => x.SentMessagId);
+                                break;
+                        }
+                        
+                    }
+                    if (filterDescriptor.Member == "CreateDateTime")
+                    {
+                        var name = (DateTime)filterDescriptor.Value;
+
+                        switch (filterDescriptor.Operator)
+                        {
+                            case FilterOperator.IsGreaterThanOrEqualTo:
+
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.CreateDateTime.Date>= name.Date).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsEqualTo:
+
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.CreateDateTime.Date == name.Date).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsGreaterThan:
+
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.CreateDateTime.Date > name.Date).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsLessThan:
+
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.CreateDateTime.Date < name.Date).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsNotEqualTo:
+
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.CreateDateTime.Date != name.Date).OrderByDescending(x => x.SentMessagId);
+                                break;
+                            case FilterOperator.IsLessThanOrEqualTo:
+                                dataGroup2 = dataGroup2.Where(x => x.SentMessag.CreateDateTime.Date <= name.Date).OrderByDescending(x => x.SentMessagId);
+                                break;
+                        }
+
+                    }
+                }
+            }
+
+            void TransformSortQuery(SortDescriptor sort)
+            {
+                var sortDescriptor = sort;
+                if (sortDescriptor.Member == "FullNamePerson")
+                {
+                    dataGroup2= dataGroup2.OrderBy(x=> (x.Person.Fname ?? "") + " " + (x.Person.Lname ?? ""));
+                }
+                if (sortDescriptor.Member == "Branch")
+                {
+                    dataGroup2 = dataGroup2.OrderBy(x => x.SentMessag.User.branches_.branch_name);
+                }
+                if (sortDescriptor.Member == "SentMessagId")
+                {
+                    dataGroup2 = dataGroup2.OrderBy(x => x.SentMessagId);
+                }
+            }
+            
+            Cls_SMS.ClsStatus clsStatus = new Cls_SMS.ClsStatus();
+            var datagroupFilter = dataGroup2.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize)
+               .ToList();
+            try
+            {
+                foreach (var sms in datagroupFilter.Where(x => x.DeliveryStatus == null).Select(x => new { RefNumber = x.SentMessag.RefNumber })
+                    .GroupBy(x => x.RefNumber))
+                {
+
+                    var lstStatusSms = clsStatus.StatusSMS("koohi8", "87g5820", "http://193.104.22.14:2055/CPSMSService/Access", "KOOHI",
+                        "KOOHI+" + sms.Key);
+                    if (lstStatusSms != null && lstStatusSms.Count > 0)
+                    {
+
+                        foreach (var perSms in datagroupFilter.Where(x => x.SentMessag.RefNumber == sms.Key))
+                        {
+
+                            Cls_SMS.ClsStatus.STC_SMSStatus findPerson = null;
+                            if (perSms.Person != null)
+                            {
+                                if (perSms.Person.cell != null)
+                                {
+                                    findPerson = lstStatusSms.Cast<Cls_SMS.ClsStatus.STC_SMSStatus>()
+                                        .FirstOrDefault(x => x.ReceiveNumber.Replace("+98", "0").Contains(perSms.Person.cell));
+                                }
+                                else if((perSms.Person.PersonInformationSettings != null && perSms.Person.PersonInformationSettings.Count != 0))
+                                {
+                                    var personMobile =
+                                              perSms.Person.PersonInformationSettings.Where(per =>
+                                                  per.PropertyName == PersonInformationSetting.Mobile.ToString()).ToList();
+                                    findPerson = lstStatusSms.Cast<Cls_SMS.ClsStatus.STC_SMSStatus>()
+                                        .FirstOrDefault(x => personMobile.Any(y => y.PropertyValue == x.ReceiveNumber.Replace("+98", "0")));
+                                }
+                                
+                            }
+                            else if (perSms.PersonCellPhone!=null)
                             {
                                 findPerson = lstStatusSms.Cast<Cls_SMS.ClsStatus.STC_SMSStatus>()
-                                    .FirstOrDefault(x => x.ReceiveNumber.Replace("+98", "0").Contains(perSms.Person.cell));
+                                    .FirstOrDefault(x => x.ReceiveNumber.Replace("+98", "0").Contains(perSms.PersonCellPhone));
+                            }
+                            if (findPerson != null)
+                            {
+                                perSms.DeliveryStatus = findPerson.DeliveryStatus;
+                                var test = result.FirstOrDefault(x => x.Id == perSms.Id);
+                                if (test != null)
+                                    test.DeliveryStatus = ((DeliveryStatus)Enum.Parse(typeof(DeliveryStatus), findPerson.DeliveryStatus)).GetDisplayName();
                             }
                             else
                             {
-                                var personMobile = (perSms.Person.PersonInformationSettings == null ||
-                                        perSms.Person.PersonInformationSettings.Count == 0)
-                                          ? new List<tbl_PersonInformationSetting>()
-                                          : perSms.Person.PersonInformationSettings.Where(per =>
-                                              per.PropertyName == PersonInformationSetting.Mobile.ToString()).ToList();
-                                findPerson = lstStatusSms.Cast<Cls_SMS.ClsStatus.STC_SMSStatus>()
-                                    .FirstOrDefault(x => personMobile.Any(y=>y.PropertyValue== x.ReceiveNumber.Replace("+98", "0")));
+                                perSms.DeliveryStatus = lstStatusSms.Cast<Cls_SMS.ClsStatus.STC_SMSStatus>()
+                                    .FirstOrDefault().DeliveryStatus;
+                                var test = result.FirstOrDefault(x => perSms.Id == x.Id);
+                                if (test != null)
+                                    test.DeliveryStatus = ((DeliveryStatus)Enum.Parse(typeof(DeliveryStatus), lstStatusSms.Cast<Cls_SMS.ClsStatus.STC_SMSStatus>()
+                                        .FirstOrDefault().DeliveryStatus)).GetDisplayName();
                             }
-                        }
-                       
-                        
 
-                        if (findPerson != null)
-                        {
-                            perSms.DeliveryStatus = findPerson.DeliveryStatus;
-                            var test = result.FirstOrDefault(x => x.Id== perSms.Id);
-                            if (test != null)
-                                test.DeliveryStatus = ((DeliveryStatus)Enum.Parse(typeof(DeliveryStatus), findPerson.DeliveryStatus)).GetDisplayName();
+                            data.FirstOrDefault(x => x.Id == perSms.Id).DeliveryStatus = perSms.DeliveryStatus;
                         }
-                        else
-                        {
-                            perSms.DeliveryStatus = lstStatusSms.Cast<Cls_SMS.ClsStatus.STC_SMSStatus>()
-                                .FirstOrDefault().DeliveryStatus;
-                            var test = result.FirstOrDefault(x => perSms.Id==x.Id);
-                            if (test != null)
-                                test.DeliveryStatus = ((DeliveryStatus)Enum.Parse(typeof(DeliveryStatus), lstStatusSms.Cast<Cls_SMS.ClsStatus.STC_SMSStatus>()
-                                    .FirstOrDefault().DeliveryStatus)).GetDisplayName();
-                        }
+
                     }
-                   
+                 
                 }
-                //else
-                //{
-                //    foreach (var perSms in data.Where(x => x.SentMessag.CreateDateTime<DateTime.Today.AddDays(-5) && x.SentMessag.RefNumber == sms.Key && string.IsNullOrEmpty(x.DeliveryStatus)))
-                //    {
-                //        perSms.DeliveryStatus = DeliveryStatus.CHECK_OK.ToString();
-                //        var test = result.FirstOrDefault(x => x.Id == perSms.Id);
-                //        if (test != null)
-                //            test.DeliveryStatus = DeliveryStatus.CHECK_OK.GetDisplayName();
-                //    }
-
-                   
-                //}
-                
-                //foreach (Cls_SMS.ClsStatus.STC_SMSStatus res in lstStatusSms)
-                //{
-                //    res.ReceiveNumber = res.ReceiveNumber.Replace("+98", "0");
-                //    var pers = data.FirstOrDefault(x => x.SentMessag.RefNumber == sms.Key
-                //                                        && (res.ReceiveNumber.Contains(x.PersonCellPhone ?? "0000000")
-                //                                        || res.ReceiveNumber.Contains(x.Person?.cell ?? "0000000")));
-                //    if (pers != null)
-                //    {
-                //        pers.DeliveryStatus = res.DeliveryStatus;
-                //        var test = result.FirstOrDefault(x => x.RefNumber == pers.SentMessag.RefNumber &&
-                //                                              res.ReceiveNumber.Contains(x.Mobile));
-                //        if (test != null)
-                //            test.DeliveryStatus = ((DeliveryStatus)Enum.Parse(typeof(DeliveryStatus), res.DeliveryStatus)).GetDisplayName();
-                //    }
-                //}
-
             }
+            catch (Exception e)
+            {
+               
+            }
+           
             db3.SaveChanges();
 
             var dsResult = result.ToList().ToDataSourceResult(request);
