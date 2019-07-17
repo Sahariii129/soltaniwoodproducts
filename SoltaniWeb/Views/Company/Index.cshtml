@@ -2,225 +2,133 @@
 @using SoltaniWeb.Models.structs.PersonVM
 @{
     ViewData["Title"] = "Index";
-      Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
 }
 
+
+
 <div class="container-fluid">
-    <div class="card">
-        <div class="card-header">لیست شرکت ها</div>
+    <div id="modal" class="card" role="wizard">
+        <div class="card-header bg-primary text-white" style="text-align: center;"> شرکت</div>
         <div class="card-body">
-            <input type="button" id="clearFilterButton" class="btn btn-info" value="حذف فیلتر" />
-            <a asp-action="Create" class="btn m-btn--pill btn-success  m-btn--wide">ایجاد شرکت جدید</a>
-            <hr />
-            <div class="tab-pane fade  show active" id="addDatabase">
+            <input type="hidden" id="companyId" value="@ViewBag.CompanyId" />
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" data-toggle="tab" href="#lstCompany" role="tab">لیست شرکت ها</a>
+                <li>
+                <li class="nav-item" >
+                <a class="nav-link" data-toggle="tab" href="#lstCompanyPerson" role="tab">لیست مشتری های شرکت</a>
+                <li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#addPerson" role="tab">اضافه کردن مشتری به شرکت</a>
+                <li>
 
-                <div class="k-rtl">
-
-                    @(Html.Kendo().Grid<CompanyViewModel>()
-                    .Name("grid_company")
-                    .Columns(columns =>
-                    {
-
-                        //  columns.Select().Width(50);
-                        columns.Bound(p => p.Name).Width(100).Filterable(true).
-                            Filterable(filter =>
-                            {
-                                filter.Operators(op =>
-                                {
-                                    op.ForString(str =>
-                                    {
-                                        str.Clear().Contains("شامل").IsEqualTo("مساوی با");
-
-                                    });
-
-
-                                });
-                            }).Title("نام شرکت");
-                        columns.Bound(p => p.Address).Filterable(filter =>
-                        {
-                            filter.Operators(op =>
-                            {
-                                op.ForString(str =>
-                                {
-                                    str.Clear().Contains("شامل").IsEqualTo("مساوی با");
-
-                                });
-
-
-                            });
-                        }).Width(130).Title("آدرس");
-                        columns.Bound(p => p.Phone).Width(100).Filterable(true).
-                        Filterable(filter =>
-                        {
-                            filter.Operators(op =>
-                            {
-                                op.ForString(str =>
-                                {
-                                    str.Clear().Contains("شامل").IsEqualTo("مساوی با");
-
-                                });
-
-
-                            });
-                        }).Title("تلفن");
-                        columns.Bound(p => p.Phone3).Width(100).Filterable(true).
-                            Filterable(filter =>
-                            {
-                                filter.Operators(op =>
-                                {
-                                    op.ForString(str =>
-                                    {
-                                        str.Clear().Contains("شامل").IsEqualTo("مساوی با");
-
-                                    });
-
-
-                                });
-                            }).Title("تلفن");
-                        columns.Bound(p => p.Phone3).Width(100).Filterable(true).
-                            Filterable(filter =>
-                            {
-                                filter.Operators(op =>
-                                {
-                                    op.ForString(str =>
-                                    {
-                                        str.Clear().Contains("شامل").IsEqualTo("مساوی با");
-
-                                    });
-
-
-                                });
-                            }).Title("تلفن");
-                        //columns.Bound(c => c.Id)
-                        //    .ClientTemplate("#=showStatus(Id)#")
-                        //    .Width(120)
-                        //    .Title("آدرس های کاربر");
-                        //columns.Bound(c => c.Id)
-                        //    .ClientTemplate("#=showInformation(Id)#")
-                        //    .Width(120)
-                        //    .Title("اطلاعات کاربر");
-                        columns.Bound(p => p.Id).Width(120).Title("ویرایش کاربر").ClientTemplate("<a  class='btn btn-success' href='company/Create/#=Id#'>ویرایش</a>");
-                    })
-                    .Pageable(pageable => pageable
-                        .Refresh(true)
-                        .PageSizes(new int[] { 10, 20, 50, 100 })
-                        .ButtonCount(10))
-                    .Sortable()
-                    // .Events(ev => ev.Change("onChange"))
-                    .PersistSelection()
-                    .Scrollable()
-                    .Resizable(resizable => resizable.Columns(true))
-                    .Filterable()
-                    .DataSource(dataSource => dataSource
-                        .Ajax()
-                        .PageSize(10)
-                        .Model(model => model.Id(p => p.Id))
-                        .ServerOperation(false)
-                        .Read(read => read.Action("Company_Read", "Company"))
-                    ))
-                </div>
-                <div class="row">
-                    <div class="k-rtl">
-
-                        @{
-                            Html.Kendo().Window()
-                                .Name("windowAddressPerson")
-                                .Title("")
-                                .Actions(x => x.Close().Minimize().Maximize())
-                                .Visible(false)
-                                .Modal(true)
-                                .Height(600)
-                                .Width(1100)
-                                .Animation(c => c.Open(builder => builder.Zoom(ZoomDirection.In).Duration(AnimationDuration.Fast))
-                                    .Close(builder => builder.Zoom(ZoomDirection.Out).Duration(AnimationDuration.Fast))
-                                    .Enable(true))
-                                .Draggable()
-                                .Resizable()
-                                .Render();
-                        }
-                        @{
-                            Html.Kendo().Window()
-                                .Name("windowInformationPerson")
-                                .Title("")
-                                .Actions(x => x.Close().Minimize().Maximize())
-                                .Visible(false)
-                                .Modal(true)
-                                .Height(600)
-                                .Width(1100)
-                                .Animation(c => c.Open(builder => builder.Zoom(ZoomDirection.In).Duration(AnimationDuration.Fast))
-                                    .Close(builder => builder.Zoom(ZoomDirection.Out).Duration(AnimationDuration.Fast))
-                                    .Enable(true))
-                                .Draggable()
-                                .Resizable()
-                                .Render();
-                        }
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#addCompany" role="tab">اضافه کردن گروه شرکت</a>
+                <li>
+            </ul>
+            <div class="tab-content mt-2">
+                <div class="tab-pane fade show active" id="lstCompany" role="tabpanel">
+                    <div class="tab-pane fade show active" id="divlstCompany" role="tabpanel">
+                        @Html.Partial("_CompanyList")
                     </div>
+
+                </div>
+                <div class="tab-pane fade" id="lstCompanyPerson" role="tabpanel">
+                    <div id="divCompanyPerson" >
+                        @Html.Partial("_CompanyPerson")
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="addPerson" role="tabpanel">
+                    <div class="row btn-next-tab" style="text-align: right;">
+
+                        <button class="btn btn-info" id="btnaddPersonToCompany">اضافه کردن به شرکت</button>
+                    </div>
+                    <h4></h4>
+                    <div class="row col-md-12" id="lstCompanyDrop">
+
+                        @Html.Partial("_ListCompanyForDrop")
+                    </div>
+                    <h4></h4>
+                    <div class="tab-pane fade show active" id="lstPersonInGroup" role="tabpanel">
+                        @Html.Partial("_Person")
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="addCompany" role="tabpanel">
+                    @Html.Partial("_Create", new CompanyViewModel())
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script>
-    function iterate(object) {
-        var html = "<ul>";
 
-        for (var x = 0; x < object.length; x++) {
-            html += "<li>";
-            html += object[x];
-            html += "</li>";
-        }
-
-        html += "</ul>";
-        return html;
-    }
     $("#clearFilterButton").click(function () {
 
         $("#grid_company").data("kendoGrid").dataSource.filter({});
     });
-    function showStatus(id) {
-        var str = "";
-        str += "<div style='width:100%;text-align:center;margin: 5px 0;'><a class='btn btn-info' onclick=\"OpenWindowPersonAddress('" + id + "')\"><span id='pnrstate-" + id + "' > <i class='fas fa-address-card'></i> </span></a>" +
-            "</div>";
-        return str;
-    }
-    function OpenWindowPersonAddress(id) {
 
-        var window = $("#windowAddressPerson").data("kendoWindow");
-        var url = '@Url.Action("PersonAddres")';
-        window.content("");
-        window.refresh({
-            url: url,
-            data: { personId: id }
-        });
-        window.center().open();
+</script>
+<script>
 
+    var selectedDropDownValue = 0;
+    var checkedValuesTemp = [];
+    var checkedValuesTempNotMap = [];
+    function AddFilter()
+    {
+        return { companyId: selectedDropDownValue};
     }
-    function showInformation(id) {
-        var str = "";
-        str += "<div style='width:100%;text-align:center;margin: 5px 0;'><a class='btn btn-info' onclick=\"OpenWindowInformations('" + id + "')\"><span id='pnrstate-" + id + "' ><i class='fas fa-info-circle'></i></span></a>" +
-            "</div>";
-        return str;
+    function searchGrid()
+    {
+        var gridListFilter = { filters: [] };
+        var gridDataSource = $("#gridPerson").data("kendoGrid").dataSource;
+        gridDataSource.read();
     }
-    function OpenWindowInformations(id) {
 
-        var window = $("#windowAddressPerson").data("kendoWindow");
-        var url = '@Url.Action("PersonInformation")';
-        window.content("");
-        window.refresh({
-            url: url,
-            data: { personId: id }
-        });
-        window.center().open();
 
+    function onChange(arg) {
+
+            checkedValuesTemp = this.selectedKeyNames();
     }
-    function groupFilter(element) {
-        element.kendoDropDownList({
-            dataSource: {
-                transport: {
-                    read: "@Url.Action("FilterMenuCustomization_Groups","GroupPerson")"
+    function change() {
+        var dropdownListCompany = $("#dropdownListCompany").data("kendoDropDownList");
+        selectedDropDownValue = dropdownListCompany.value();
+        searchGrid();
+    };
+    function delPersonGroup(companyId,personId) {
+        $.post('@Url.Action("PersonCompanyDestroy")',
+            { companyId: companyId, personId: personId},
+            function(data) {
+                if (data.IsSuccessed) {
+                    $("#divCompanyPerson").load('@Url.Action("CompanyPerson", "Company")');
                 }
-            },
-            optionLabel: "--انتخاب گروه--"
+                alert(data.Message);
+                checkedValuesTemp = [];
+            }).fail(function() {
+
+            alert('خطا  در بروز عملیات');
         });
     }
+    $("#btnaddPersonToCompany").click( function() {
+
+        if (checkedValuesTemp.length === 0 || (selectedDropDownValue === 0 || selectedDropDownValue === "")) {
+            alert("انتخاب گروه و مشتری های اجباری می باشد");
+            return false;
+        }
+        $.post('@Url.Action("AddPersonToCompany")',
+            { companyId: selectedDropDownValue , personId: checkedValuesTemp},
+            function(data) {
+                if (data.IsSuccessed) {
+                    $("#lstPersonInGroup").load('@Url.Action("Person", "Company")');
+                    $("#divCompanyPerson").load('@Url.Action("CompanyPerson", "Company")');
+                }
+                alert(data.Message);
+                checkedValuesTemp = null;
+            }).fail(function() {
+
+            alert('خطا  در بروز عملیات');
+        });
+    });
+   
 </script>

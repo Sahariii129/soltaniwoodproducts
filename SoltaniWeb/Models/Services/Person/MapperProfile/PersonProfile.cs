@@ -24,6 +24,8 @@ namespace SoltaniWeb.Models.Services.Person.MapperProfile
                 .ForMember(x => x.GroupId, opt => opt.MapFrom(z => (z.Groups==null || z.Groups.Count==0)?0: z.Groups.FirstOrDefault().GroupId))
                 .ForMember(x => x.GroupName, opt => opt.MapFrom(z => (z.Groups == null || z.Groups.Count == 0) ? "نامشخص" : string.Join(",", z.Groups.Select(x => x.Group.Name).ToArray())))
                 .ForMember(x => x.PersonGroups, opt => opt.MapFrom(z => (z.Groups == null || z.Groups.Count == 0) ?new List<string>(): z.Groups.Select(x=>x.Group.Name).ToList()))
+                .ForMember(x => x.CompanyName, opt => opt.MapFrom(z => (z.tbl_CompanyPerson == null || z.tbl_CompanyPerson.Count == 0) ? "" : string.Join(",", z.tbl_CompanyPerson.Select(x => x.tbl_Company.Name).ToArray())))
+                .ForMember(x => x.Companys, opt => opt.MapFrom(z => (z.tbl_CompanyPerson == null || z.tbl_CompanyPerson.Count == 0) ? new List<string>() : z.tbl_CompanyPerson.Select(x => x.tbl_Company.Name).ToList()))
                 .ForMember(x => x.PersonAddresses, opt => opt.Ignore())
                 .ForMember(x => x.PersonInformationSetting, opt => opt.Ignore())
                 .ForMember(x => x.BrancheName, opt => opt.MapFrom(z => z.Branches.branch_name))

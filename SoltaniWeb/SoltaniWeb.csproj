@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Errors\**" />
+    <Content Remove="Views\Errors\**" />
+    <EmbeddedResource Remove="Views\Errors\**" />
+    <None Remove="Views\Errors\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Controllers\SWPAuthorizeController.cs" />
   </ItemGroup>
 
@@ -17,7 +24,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Stimulsoft.Reports.Web.NetCore" Version="2019.2.1" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
@@ -46,10 +53,6 @@
     <Content Update="Views\Shared\_layoutswp1.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Errors\" />
   </ItemGroup>
 
   <ItemGroup>

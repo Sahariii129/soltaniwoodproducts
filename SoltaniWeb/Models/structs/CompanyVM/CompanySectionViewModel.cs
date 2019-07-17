@@ -7,7 +7,8 @@ namespace SoltaniWeb.Models.structs.CompanyVM
 {
     public class CompanySectionViewModel
     {
-        public CompanyViewModel Company { get; set; }
+        public string CompanyName { get; set; }
+        public int CompanyId { get; set; }
         public int Id { get; set; }
         public string SectionName { get; set; }
         public string SectionKeywords { get; set; }

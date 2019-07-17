@@ -1,0 +1,8 @@
+﻿@model CompanyTypeClass
+
+
+@(Html.Kendo().DropDownListFor(m => m)
+      .DataValueField("Id")
+      .DataTextField("Name")
+      .BindTo((List<CompanyTypeClass>)ViewData["CompanyTypeClass"])
+      )

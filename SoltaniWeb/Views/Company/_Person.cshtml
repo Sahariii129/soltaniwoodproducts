@@ -1,0 +1,68 @@
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+
+<div class="k-rtl">
+
+    @(Html.Kendo().Grid<PersonViewModel>()
+                  .Name("gridPerson")
+                  .Columns(columns =>
+                  {
+
+                      columns.Select().Width(50);
+                      
+                      columns.Bound(p => p.FullNamePerson).Filterable(filter =>
+                      {
+                          filter.Operators(op =>
+                          {
+                              op.ForString(str =>
+                              {
+                                  str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                              });
+
+
+                          });
+                      }).Width(130).Title("مشتری");
+                      columns.Bound(p => p.Cell).Filterable(filter =>
+                      {
+                          filter.Operators(op =>
+                          {
+                              op.ForString(str =>
+                              {
+                                  str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                              });
+
+
+                          });
+                      }).Width(130).Title("شماره همراه");
+                      columns.Bound(p => p.CodeMeli).Filterable(filter =>
+                      {
+                          filter.Operators(op =>
+                          {
+                              op.ForString(str =>
+                              {
+                                  str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                              });
+
+
+                          });
+                      }).Width(130).Title("کد ملی");
+                  })
+                  .Pageable(pageable => pageable
+                      .Refresh(true)
+                      .PageSizes(new int[] { 10, 20, 50, 100 })
+                      .ButtonCount(10))
+                  .PersistSelection()
+                  .Scrollable()
+                  .Events(ev => ev.Change("onChange"))
+                  .Resizable(resizable => resizable.Columns(true))
+                  .Filterable()
+                  .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .PageSize(10)
+                      .ServerOperation(false)
+                      .Model(model => model.Id(p => p.Id))
+                      .Read(read =>
+                          read.Action("Person_Read", "Company").Data("AddFilter"))))
+</div>
