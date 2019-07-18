@@ -4,7 +4,7 @@
           .Columns(columns =>
           {
               columns.Bound(c => c.CompanyId)
-                  .ClientTemplate("<div style='text-align:center;width:70%;'><button class='btn btn-danger' onclick='delPersonGroup(\"#=CompanyId#\",\"#=Id#\")'  type='button'>حذف</button></div>")
+                  .ClientTemplate("<div style='text-align:center;width:70%;'><button class='btn btn-danger' onclick='delPersonGroup(\"#=Id#\")'  type='button'>حذف</button></div>")
                   .Title("مورد")
                   .Width(120)
                   .Filterable(false)

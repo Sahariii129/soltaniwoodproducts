@@ -1,0 +1,18 @@
+﻿<div class="k-rtl">
+    @(Html.Kendo().DropDownList()
+                  .OptionLabel("انتخاب شرکت...")
+                  .Name("dropdownListCompanyForSection")
+                  .HtmlAttributes(new { style = "width:100%" })
+                  .DataTextField("CompanyName")
+                  .DataValueField("Id")
+                  .Filter(FilterType.StartsWith)
+                  .DataSource(source =>
+                  {
+                      source.Read(read =>
+                      {
+                          read.Action("CompanyForDrop_Read","Company");
+                      });
+                  })
+                  .Events(e => e.Change("changeSection"))
+    )
+</div>

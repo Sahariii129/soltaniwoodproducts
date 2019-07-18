@@ -32,13 +32,14 @@ namespace SoltaniWeb.Models.Services.Company
 
         public IEnumerable<CompanyViewModel> GetAll()
         {
-            var companies = _context.tbl_Company.Select(x=>new CompanyViewModel
-            {
-                Address=x.Address,
-                CompanyRegistrationNumber=x.CompanyRegistrationNumber,
-                CompanyType=x.Type,
-                CompanyTypes=new CompanyTypeClass() { Id=(int)x.Type.ToEnum<CompanyType>(),Name=x.Type.ToEnum<CompanyType>().GetDisplayName()},
-            });//.ProjectTo<CompanyViewModel>(_mapper.ConfigurationProvider);
+            var companies = _context.tbl_Company.ProjectTo<CompanyViewModel>(_mapper.ConfigurationProvider);
+              //  .Select(x=>new CompanyViewModel
+            //{
+            //    Address=x.Address,
+            //    CompanyRegistrationNumber=x.CompanyRegistrationNumber,
+            //    CompanyType=x.Type,
+            //    CompanyTypes=new CompanyTypeClass() { Id=(int)x.Type.ToEnum<CompanyType>(),Name=x.Type.ToEnum<CompanyType>().GetDisplayName()},
+            //});//.ProjectTo<CompanyViewModel>(_mapper.ConfigurationProvider);
             return companies;
         }
 
@@ -78,15 +79,25 @@ namespace SoltaniWeb.Models.Services.Company
 
         }
 
-        //public IEnumerable<CompanySectionViewModel> GetCompanySections(int? companyId)
-        //{
-        //    IEnumerable<CompanySectionViewModel> result;
-            
+        public IEnumerable<CompanySectionViewModel> GetCompanySections(int? companyId)
+        {
+            var result = _context.tbl_CompanySection.Select(x => new CompanySectionViewModel
+            {
+                Id=x.Id,
+                CompanyId=x.CompanyId,
+                CompanyName=x.tbl_Company.Name,
+                SectionKeywords=x.tbl_section.keywords,
+                SectionName=x.tbl_section.name,
+                SectionShortName=x.tbl_section.shortname,
+                SectionStatus=x.tbl_section.status,
+                SectionNameEn=x.tbl_section.name_EN,
+                CompanySectionDescription=x.Description
+               
+            });
 
-            
-        //    return result;
+            return result;
 
-        //}
+        }
 
         public int Create(CompanyViewModel model)
         {
@@ -124,12 +135,12 @@ namespace SoltaniWeb.Models.Services.Company
 
             return op;
         }
-        public ResultStatus DeletPersonsFromCompany(int companyId, int personId)
+        public ResultStatus DeletPersonsFromCompany(int id)
         {
             var op = new ResultStatus();
             try
             {
-                var per = _context.tbl_CompanyPerson.FirstOrDefault(x => x.CompanyId == companyId && x.PersonId == personId);
+                var per = _context.tbl_CompanyPerson.FirstOrDefault(x => x.Id==id);
                 if (per == null)
                 {
                     op.IsSuccessed = false;
@@ -179,12 +190,12 @@ namespace SoltaniWeb.Models.Services.Company
 
             return op;
         }
-        public ResultStatus DeletSectionsFromCompany(int companyId, int sectionId)
+        public ResultStatus DeletSectionsFromCompany(int id)
         {
             var op = new ResultStatus();
             try
             {
-                var per = _context.tbl_CompanySection.FirstOrDefault(x => x.CompanyId == companyId && x.SectionId == sectionId);
+                var per = _context.tbl_CompanySection.FirstOrDefault(x => x.Id==id);
                 if (per == null)
                 {
                     op.IsSuccessed = false;
@@ -217,7 +228,7 @@ namespace SoltaniWeb.Models.Services.Company
                 per.Phone2 = model.Phone2;
                 per.Phone3 = model.Phone3;
                 per.CompanyRegistrationNumber = model.CompanyRegistrationNumber;
-                per.Type = model.CompanyType;
+                per.Type = ((CompanyType)model.CompanyTypes.Id).ToString();
                 _context.SaveChanges();
             }
         }

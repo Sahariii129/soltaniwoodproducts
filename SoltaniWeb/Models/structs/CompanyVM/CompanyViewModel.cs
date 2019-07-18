@@ -22,11 +22,7 @@ namespace SoltaniWeb.Models.structs.CompanyVM
         public string CompanyType { get; set; }
 
         [UIHint("_ClientCompanyTypes")]
-        public CompanyTypeClass CompanyTypes
-        {
-            get;
-            set;
-        }
+        public CompanyTypeClass CompanyTypes{get;set;}
        
 
         [Display(Name = "شماره تماس")]

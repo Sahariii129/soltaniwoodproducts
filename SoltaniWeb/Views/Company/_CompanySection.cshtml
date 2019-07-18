@@ -1,0 +1,88 @@
+﻿<div class="k-rtl">
+    @(Html.Kendo().Grid<CompanySectionViewModel>()
+                  .Name("gridCompanySection")
+                  .Columns(columns =>
+                  {
+                      columns.Bound(c => c.CompanyId)
+                          .ClientTemplate("<div style='text-align:center;width:70%;'><button class='btn btn-danger' onclick='delCompanySection(\"#=Id#\")'  type='button'>حذف</button></div>")
+                          .Title("مورد")
+                          .Width(120)
+                          .Filterable(false)
+                          .Sortable(false)
+                          .Groupable(false);
+
+                      columns.Bound(p => p.CompanyName).Filterable(filter =>
+                      {
+                          filter.Operators(op =>
+                          {
+                              op.ForString(str =>
+                              {
+                                  str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                              });
+
+
+                          });
+                      }).Width(130).Title("نام شرکت");
+                      columns.Bound(p => p.SectionName).Filterable(filter =>
+           {
+                          filter.Operators(op =>
+                          {
+                              op.ForString(str =>
+                              {
+                                  str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                              });
+
+
+                          });
+                      }).Width(130).Title("نام Section");
+                      columns.Bound(p => p.SectionShortName).Filterable(filter =>
+                      {
+                          filter.Operators(op =>
+                          {
+                              op.ForString(str =>
+                              {
+                                  str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                              });
+
+
+                          });
+                      }).Width(130).Title("مخفف");
+                      columns.Bound(p => p.SectionKeywords).Filterable(filter =>
+                      {
+                          filter.Operators(op =>
+                          {
+                              op.ForString(str =>
+                              {
+                                  str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                              });
+
+
+                          });
+                      }).Width(130).Title("کیبورد");
+                    
+                      columns.Bound(p => p.CompanySectionDescription).Width(400).Title("توضیحات");
+
+                  })
+                  .Pageable(pageable => pageable
+                      .Refresh(true)
+                      .PageSizes(new int[] { 10, 20, 50, 100 })
+                      .ButtonCount(10))
+                  .Sortable()
+                  .Groupable()
+                  .Scrollable()
+                  .Filterable()
+                  .Resizable(resizable => resizable.Columns(true))
+                  .DataSource(dataSource => dataSource
+                              .Ajax()
+                      .ServerOperation(false)
+                              // .Group(groups => groups.Add(p => p.SentMessagId))
+                              .PageSize(10)
+                              .Read(read => read.Action("CompanySection_Read", "Company"))
+
+                  ))
+</div>
+

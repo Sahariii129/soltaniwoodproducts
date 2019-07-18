@@ -98,13 +98,12 @@
 
                       });
                   }).Title("تلفن");
-              columns.Command(command => { command.Edit(); }).Width(172);
+            //  columns.Command(command => { command.Edit(); }).Width(172);
               //    columns.Bound(p => p.Id).Width(120).Title("ویرایش کاربر").ClientTemplate("<a  class='btn btn-success' href='company/Create/#=Id#'>ویرایش</a>");
               //columns.Bound(p => p.Id).Width(120).Title("ویرایش کاربر").ClientTemplate("<a  class='btn btn-success' href='company/Peron/#=Id#'>اضافه مشتری</a>");
           })
           .ToolBar(toolBar =>
           {
-              toolBar.Create();
               toolBar.Save();
           })
           .Pageable(pageable => pageable

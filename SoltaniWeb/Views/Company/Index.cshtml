@@ -22,9 +22,15 @@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#addPerson" role="tab">اضافه کردن مشتری به شرکت</a>
                 <li>
-
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#addCompany" role="tab">اضافه کردن گروه شرکت</a>
+                <a class="nav-link" data-toggle="tab" href="#lstCompanySection" role="tab">لیست Section های شرکت</a>
+                <li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#addSection" role="tab">اضافه کردن Section به شرکت</a>
+                <li>
+               
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#addCompany" role="tab">اضافه کردن شرکت</a>
                 <li>
             </ul>
             <div class="tab-content mt-2">
@@ -35,7 +41,7 @@
 
                 </div>
                 <div class="tab-pane fade" id="lstCompanyPerson" role="tabpanel">
-                    <div id="divCompanyPerson" >
+                    <div id="divCompanyPerson">
                         @Html.Partial("_CompanyPerson")
                     </div>
 
@@ -55,6 +61,26 @@
                         @Html.Partial("_Person")
                     </div>
                 </div>
+                <div class="tab-pane fade" id="lstCompanySection" role="tabpanel">
+                    <div id="divlstCompanySection">
+                        @Html.Partial("_CompanySection")
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="addSection" role="tabpanel">
+                    <div class="row btn-next-tab" style="text-align: right;">
+
+                        <button class="btn btn-info" id="btnaddSectionToCompany">اضافه کردن به شرکت</button>
+                    </div>
+                    <h4></h4>
+                    <div class="row col-md-12" id="lstCompanyDropSection">
+                        @Html.Partial("_ListCompanyForDropSection")
+                    </div>
+                    <h4></h4>
+                    <div class="tab-pane fade show active" id="lstSectionInCompany" role="tabpanel">
+                        @Html.Partial("_Section")
+                    </div>
+                </div>
                 <div class="tab-pane fade" id="addCompany" role="tabpanel">
                     @Html.Partial("_Create", new CompanyViewModel())
                 </div>
@@ -71,11 +97,15 @@
 
 </script>
 <script>
-
+    
     var selectedDropDownValue = 0;
     var checkedValuesTemp = [];
     var checkedValuesTempNotMap = [];
     function AddFilter()
+    {
+        return { companyId: selectedDropDownValue};
+    }
+    function AddFilterSection()
     {
         return { companyId: selectedDropDownValue};
     }
@@ -85,20 +115,48 @@
         var gridDataSource = $("#gridPerson").data("kendoGrid").dataSource;
         gridDataSource.read();
     }
-
+    function searchGridSection()
+    {
+        var gridListFilter = { filters: [] };
+        var gridDataSource = $("#gridSection").data("kendoGrid").dataSource;
+        gridDataSource.read();
+    }
 
     function onChange(arg) {
 
             checkedValuesTemp = this.selectedKeyNames();
     }
+    function onChangeSection(arg) {
+
+        checkedValuesTemp = this.selectedKeyNames();
+    } 
     function change() {
         var dropdownListCompany = $("#dropdownListCompany").data("kendoDropDownList");
         selectedDropDownValue = dropdownListCompany.value();
         searchGrid();
     };
-    function delPersonGroup(companyId,personId) {
+    function changeSection() {
+        var dropdownListCompany = $("#dropdownListCompanyForSection").data("kendoDropDownList");
+        selectedDropDownValue = dropdownListCompany.value();
+        searchGridSection();
+    };
+    function delCompanySection(id) {
+        $.post('@Url.Action("SectionCompanyDestroy")',
+            { id: id},
+            function(data) {
+                if (data.IsSuccessed) {
+                    $("#divlstCompanySection").load('@Url.Action("CompanySection", "Company")');
+                }
+                alert(data.Message);
+                checkedValuesTemp = [];
+            }).fail(function() {
+
+            alert('خطا  در بروز عملیات');
+        });
+    }
+    function delPersonGroup(id) {
         $.post('@Url.Action("PersonCompanyDestroy")',
-            { companyId: companyId, personId: personId},
+            { id: id},
             function(data) {
                 if (data.IsSuccessed) {
                     $("#divCompanyPerson").load('@Url.Action("CompanyPerson", "Company")');
@@ -130,5 +188,24 @@
             alert('خطا  در بروز عملیات');
         });
     });
-   
+    $("#btnaddSectionToCompany").click( function() {
+
+        if (checkedValuesTemp.length === 0 || (selectedDropDownValue === 0 || selectedDropDownValue === "")) {
+            alert("انتخاب گروه و مشتری های اجباری می باشد");
+            return false;
+        }
+        $.post('@Url.Action("AddSectionToCompany")',
+            { companyId: selectedDropDownValue , personId: checkedValuesTemp},
+            function(data) {
+                if (data.IsSuccessed) {
+                    $("#lstSectionInCompany").load('@Url.Action("Section", "Company")');
+                    $("#divlstCompanySection").load('@Url.Action("CompanySection", "Company")');
+                }
+                alert(data.Message);
+                checkedValuesTemp = null;
+            }).fail(function() {
+
+            alert('خطا  در بروز عملیات');
+        });
+    });
 </script>
