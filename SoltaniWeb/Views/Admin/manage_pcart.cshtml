@@ -3,210 +3,213 @@
 @using SoltaniWeb.Models.Extensions
 @using Newtonsoft.Json;
 @using SoltaniWeb.Models.utility
-
+@inject IUserServices _user
 @{
     ViewBag.Title = "مدیریت سبدهای خربد";
-   Layout = "~/Views/shared/_layoutbootstarp.cshtml";
-   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext(); ;
     var today = DateTime.Now.ToPersianDate();
 
 
 
 }
-
-<style>
-    .loading-image {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 10;
-    }
-
-    .loader {
-        display: none;
-        width: 200px;
-        height: 200px;
-        position: absolute;
-        top: 65%;
-        left: 50%;
-        text-align: center;
-        margin-left: -50px;
-        margin-top: -100px;
-        z-index: 2;
-        overflow: auto;
-    }
-</style>
-
-
-
-<div class="col-md-12" id="cartmanagement">
-    <div class="col-md-3">
-
-        <div class="panel myfont">
-            <div class="panel-heading sheading" id="searchpanel" style="background-color:#06497a; color:#ffffff;cursor:pointer;">پانل جستجو سبدهای خرید</div>
-            <div id="searchdiv" class="panel-body hidden-xs hidden-sm">
-                @Html.Partial("_searchboxcarts")
-
+<link href="~/soltanistatic/style/manage-cart.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="row mt-4" id="cartmanagement" userid="@_user.GetUseridByUsername(User.Identity.Name)">
+        <div class="col-lg-3 col-12 partright">
+            <div class="card myfont">
+                <div class="card-header sheading" id="searchpanel" style="background-color:#332b3a; color:#ffffff;cursor:pointer;">بررسی سبدهای خرید</div>
+                <div id="searchdiv" class="card-body hidden-xs hidden-sm">
+                    @Html.Partial("~/Views/Shared/PartialCarts/_searchboxcarts.cshtml")
+                </div>
             </div>
-
+            <div class="card myfont mt-4">
+                <div class="card-header sheading" id="searchpanel" style="background-color:#332b3a; color:#ffffff;cursor:pointer;">پانل جستجو</div>
+                <div id="" class="card-body">
+                    @Html.Partial("~/Views/Shared/PartialCarts/_searchboxcart2.cshtml")
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col-md-9">
-
-        <div class="panel myfont">
-            <div class="panel-heading panel-danger" style="background-color:#06497a; color:#ffffff; cursor:pointer;">
-                مدیریت سبدهای خرید
-                <span id="searchbasedon" style="font-weight:800">
-
-
-
-
-                </span>
-
-
-
-            </div>
-            <div class="panel-body ">
-                <div id="panelbodyforcarts" style="min-height:300px;">
-
+        <div class="col-lg-9 col-12 partleft" purchasestatus>
+            <div class="card myfont">
+                <div class="card-header" style="background-color:#332b3a; color:#ffffff; cursor:pointer;">
+                    مدیریت سبدهای خرید
+                    <span id="searchbasedon" style="font-weight:800">
+                    </span>
                 </div>
+                <div class="card-body ">
+                    <div id="mymodalform" data-aos="zoom-in" class="myform2" style="z-index:1045">
 
-                <div class=" loader">
-                    <center>
-                        <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
-                    </center>
+                    </div>
+                    <div id="panelbodyforcarts" style="min-height:800px;">
+                    </div>
+                    <div class=" loader">
+                        <center>
+                            <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
+                        </center>
+                    </div>
                 </div>
-
-            </div>
-            <div class="panel-footer">
-                <div class="input-group col-md-3">
-                    <span class="input-group-addon" id="basic-addon2">تعداد سبد</span>
-                    <select id="numberinpage" class="form-control">
-                        <option value="6">6</option>
-                        <option value="12">12</option>
-                        <option value="18">18</option>
-                        <option value="24">24</option>
-                        <option value="30">30</option>
-                    </select>
-
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="input-group col-12 col-lg-3 align-items-center">
+                            <span class="input-group-addon" id="basic-addon2">تعداد سبد</span>
+                            <select id="numberinpage" class="form-control">
+                                <option value="9">9</option>
+                                <option value="12">12</option>
+                                <option value="15">15</option>
+                                <option value="18">18</option>
+                                <option value="21">21</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-
-
-
-
             </div>
         </div>
     </div>
 </div>
 
-<script src="~/Scripts/jquery-2.1.4.js"></script>
-<script>
-    $(panelbodyforcarts).on('click', '.vertificationofdeliver', function () {
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
 
+<script>
+        var userid = $('#cartmanagement').attr('userid')
+    var connectionid = ""
+    updatenumberstatus()
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        connection.start().catch(err => console.error(err.toString())).then(function () {
+            connection.invoke('getConnectionId')
+                .then(function (connectionId) {
+                    // Send the connectionId to controller
+
+                    connection.invoke("registerindb", userid,0, connectionId)
+
+                })
+        })
+
+
+
+    $(panelbodyforcarts).on('click', '.vertificationofdeliver', function () {
 
         jQuery.post('/admin/addvertificationofdeliver', { cartid: $(this).val() }, function (result) {
             $(messageokheader).html('فرم ثبت تحویل سفارش')
             $(messageokbody).html(result)
         $(messageok).modal();
 
-
-
-        })
-    })
-    $(function () {
-        var status = $('#status').val()
-        var take = $(numberinpage).val()
-
-        $('.loader').show()
-        jQuery.post('/admin/filtercartsbyispaid', { status: status, take: take }, function (result) {
-            $('.loader').hide()
-
-            $('#panelbodyforcarts').html(result)
-
         })
     })
 
 
+        // click to show carts in different status
+    $('#searchdiv').on('click', '.card-header', function () {
+        $('#searchdiv .card-header').removeClass('selected')
+        $(this).addClass('selected')
+        $('#panelbodyforcarts').html('')
+            var status = $(this).attr('purchasestatus')
+        var headertext = $(this).html()
+        $('.partleft .card-header').html(headertext)
+            $('.partleft').attr('purchasestatus', status)
 
-    $('#searchdiv').on('click', '#searchbyusername', function () {
-        var username = $('#username').val()
-        var status = $('#status').val()
-        var take = $(numberinpage).val()
+            var take = $(numberinpage).val()
+             $('.loader').show()
 
-        $('.loader').show()
-        jQuery.post('/admin/searchcartbyusername', { username: username, status: status, take: take }, function (result) {
-            $('.loader').hide()
+            jQuery.post('/admin/getCartsinCertainStatus', { take: take, status: status }, function (result) {
+                $('.loader').hide()
 
-            $('#panelbodyforcarts').html(result)
+                $('#panelbodyforcarts').html(result)
+
+            })  
+        })
+
+    // a function for updating number of each status
+
+    function updatenumberstatus() {
+        jQuery.post('/admin/updatenumberstatus', {}, function (result) {
+            var rinjson = JSON.stringify(result)
+            $(result).each(function (idx, p) {
+                $('#searchdiv .card-header[purchasestatus="' + p.statusid + '"]').children('span').html(p.number)
+
+            })
+
+        })
+    }
+
+
+    // show onecart online
+    connection.on("showthiscartonline", function (msg, cartid, userid, status) {
+
+        var currentstatus = $('.partleft').attr('purchasestatus')
+        if (status == currentstatus) {
+            var html = ''
+            html += '<div class="col-12 col-lg-4 mb-3">'
+            html += '<div class="card">'
+            html += '<div class="card-header demandprice" cartid="' + cartid + '">سبد : ' + cartid
+            html += '</div>'
+            html += ' <div class="card-body" cartid="' + cartid + '" style="background-color:#f8eec9; color:#000;font-weight:800;display:none">'
+            html += '</div>'
+            html += '<div class="card-footer">'
+            html += '</div>'
+            html += '</div>'
+            html += '</div>'
+
+            $('#panelbodyforcarts').html(html)
+            updatenumberstatus()
+        } else {
+            var purchasestatuscard = $('#searchdiv .card-header[purchasestatus="' + status + '"]')
+            //purchasestatuscard.children('span').html('new')
+            purchasestatuscard.children('span').addClass('new')
+            updatenumberstatus()
+        }          
+    })
+
+        // show details of carts whose sataus is DemandPrice
+        $('body').on('click', '.demandprice', function (e) {
+            var cartid = $(this).attr('cartid')
+            jQuery.post('/admin/showdetailsofCart', { cartid: cartid }, function (r) {
+
+                $('.card-body[cartid="' + cartid + '"]').html(r)
+            })
+        })
+
+
+        // click in button of onlinecart
+        $('body').on('click', '.sendprice', function (e) {
+            var cartid = $(this).attr('cartid')
+            var userid = $(this).attr('userid')
+           
+            updatenumberstatus()
+            connection.invoke("sendpricetoclient",cartid,userid)
+
 
         })
 
-    })
 
-    //
-    $('#searchdiv').on('click', '#searchbyfinalstatus', function () {
-        var finalstatus = $('#finalstatus').val()
-        var status = $('#status').val()
-        var take = $(numberinpage).val()
+    //$('#searchdiv').on('click', '#searchbyusername', function () {
+    //    var username = $('#username').val()
+    //    var status = $('#status').val()
+    //    var take = $(numberinpage).val()
+    //    $('.loader').show()
+    //    jQuery.post('/admin/searchcartbyusername', { username: username, status: status, take: take }, function (result) {
+    //        $('.loader').hide()
+    //        $('#panelbodyforcarts').html(result)
+    //    })
+    //})
 
-        $('.loader').show()
-        jQuery.post('/admin/searchbyfinalstatus', { finalstatus: finalstatus, status: status, take: take }, function (result) {
-            $('.loader').hide()
 
-            $('#panelbodyforcarts').html(result)
+    ////
+    //$('#searchdiv').on('click', '#searchbyfinalstatus', function () {
+    //    var finalstatus = $('#finalstatus').val()
+    //    var status = $('#status').val()
+    //    var take = $(numberinpage).val()
+    //    $('.loader').show()
+    //    jQuery.post('/admin/searchbyfinalstatus', { finalstatus: finalstatus, status: status, take: take }, function (result) {
+    //        $('.loader').hide()
 
-        })
+    //        $('#panelbodyforcarts').html(result)
+    //    })
+    //})
+    ////
 
-    })
-    //
-    $('#searchdiv').on('click', '#searchbypaydate', function () {
-        var paydate = $('#paydate').val()
-        var status = $('#status').val()
-        var take = $(numberinpage).val()
 
-        $('.loader').show()
-        jQuery.post('/admin/searchbypaydate', { paydate: paydate, status: status, take: take }, function (result) {
-            $('.loader').hide()
-
-            $('#panelbodyforcarts').html(result)
-
-        })
-
-    })
-    //
-    $('#searchdiv').on('click', '#searchbypaydaterange', function () {
-        var paydatefrom = $('#paydatefrom').val()
-        var paydateto = $('#paydateto').val()
-        var status = $('#status').val()
-        var take = $(numberinpage).val()
-
-        $('.loader').show()
-
-        jQuery.post('/admin/searchbypaydaterange', { paydatefrom: paydatefrom, paydateto: paydateto, status: status, take: take }, function (result) {
-            $('.loader').hide()
-
-            $('#panelbodyforcarts').html(result)
-
-        })
-
-    })
-    //
-    $('#searchdiv').on('click', '#searchbyDemandtransportation', function () {
-
-        var Demandtransportation = $('#Demandtransportation').val()
-        var status = $('#status').val()
-        var take = $(numberinpage).val()
-
-        $('.loader').show()
-        jQuery.post('/admin/searchbyDemandtransportation', { Demandtransportation: Demandtransportation, status: status, take: take }, function (result) {
-            $('.loader').hide()
-
-            $('#panelbodyforcarts').html(result)
-
-        })
-
-    })
-    //
+    ////
 
     $('#panelbodyforcarts').on('click', '.details', function () {
 
@@ -225,44 +228,164 @@
         $('#tcost' + id).toggle(100)
     })
 
-  
-
-    $(paydate).click(function () {
-
-        PersianDatePicker.Show(this, '@today')
-    })
-    $(paydatefrom).click(function () {
-
-        PersianDatePicker.Show(this, '@today')
-    })
-    $(paydateto).click(function () {
-
-        PersianDatePicker.Show(this, '@today')
-    })
-
-    $('#cartmanagement').on('click', '.panel-heading', function () {
 
 
 
+    $('#cartmanagement').on('click', '.card-header', function () {
         var q = $(this).next()
 
-        if (q.hasClass('hidden-xs hidden-sm')) {
+        if (q.hasClass('headeritem')) {
 
-
-            q.removeClass('hidden-xs hidden-sm')
+            var cardbody = $(this).parent().find('.card-body')
+            cardbody.toggleClass('hidden')
         } else {
+            if ($(this).hasClass('open')) {
+                $(this).removeClass('open')
 
+            }
+            else {
+                $(this).addClass('open')
+
+            }
             q.toggle(200)
         }
-
-
     })
 
 
+    //to edit cart by admin
+    $('body').on('click', '.editprice', function (s) {
+        var cartid = $(this).attr('cartid')
+       
+        jQuery.post('/admin/showcartform', { cartid: cartid }, function (e) {
+            //alert(e)
+            $('#mymodalform').html(e)
+            $('#mymodalform').css('display','block')
+            //$('#mymodalform').finish().show(100).css({ "width": 90 + '%', "max-width": "1200px" })
+            dragElement(document.getElementById("mymodalform"));
+        })
+    })
+
+    //to close form
+    $('body').on('click', '.closeform', function () {
+        if (confirm('آیا می خواهید فرم را ببندید؟')) {         
+                $('#mymodalform').html('')             
+        }
+    })
+
+    $('body').on('click', '.minimize', function () {
+        var cartid = $(this).attr('cartid')
+        var html = ''
+        $('.myformcontent').hide(100);
+        html += '<button class="btn minimizedformbtn" cartid="' + cartid + '">ویرایش سبد ' + cartid + '</button>'        
+        $('.toolband').append(html)
+    })
+
+    // to maximize minimized form
+    $('.panelbox').delegate('#minimizedformbtn', 'click', function () {
+        $(this).hide(100)     
+        var cartid = $(this).attr('cartid')
+            jQuery.post('/admin/showcartform', { cartid: cartid }, function (e) {
+                $('#mymodalform').html(e)
+                $('#mymodalform').css('display', 'block')
+                //$('#mymodalform').finish().show(100).css({ "width": 90 + '%', "max-width": "1200px" })
+                dragElement(document.getElementById("mymodalform"));
+            })    
+    })
+
+    function dragElement(elmnt) {
+
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById("myheadingpanel")) {
+
+            /* if present, the header is where you move the DIV from:*/
+            document.getElementById("myheadingpanel").onmousedown = dragMouseDown;
 
 
+        }
+        else {
+            
+            /* otherwise, move the DIV from anywhere inside the DIV:*/
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            /* stop moving when mouse button is released:*/
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+
+    }
+    //function dragElement2(elmnt) {
+
+    //    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    //    if (document.getElementById("myheadingpaneltoedit")) {
+    //        /* if present, the header is where you move the DIV from:*/
+    //        document.getElementById("myheadingpaneltoedit").onmousedown = dragMouseDown;
 
 
+    //    }
+    //    else {
 
+    //        /* otherwise, move the DIV from anywhere inside the DIV:*/
+    //        elmnt.onmousedown = dragMouseDown;
+    //    }
+
+    //    function dragMouseDown(e) {
+    //        e = e || window.event;
+    //        e.preventDefault();
+
+    //        // get the mouse cursor position at startup:
+    //        pos3 = e.clientX;
+    //        pos4 = e.clientY;
+    //        document.onmouseup = closeDragElement;
+    //        // call a function whenever the cursor moves:
+    //        document.onmousemove = elementDrag;
+    //    }
+
+    //    function elementDrag(e) {
+    //        e = e || window.event;
+    //        e.preventDefault();
+    //        // calculate the new cursor position:
+    //        pos1 = pos3 - e.clientX;
+    //        pos2 = pos4 - e.clientY;
+    //        pos3 = e.clientX;
+    //        pos4 = e.clientY;
+    //        // set the element's new position:
+    //        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    //        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    //    }
+
+    //    function closeDragElement() {
+    //        /* stop moving when mouse button is released:*/
+    //        document.onmouseup = null;
+    //        document.onmousemove = null;
+    //    }
+
+    //}
 </script>
 

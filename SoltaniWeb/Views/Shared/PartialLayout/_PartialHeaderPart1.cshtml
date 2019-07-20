@@ -1,4 +1,14 @@
-﻿<div class="part1 px-4 py-4 py-lg-2">
+﻿@inject IPurchaseCart _Purchasecart
+@inject IUserServices _user
+@{ 
+    int cartnumber = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        cartnumber = _Purchasecart.GetCartAbstractinfo(_user.GetUseridByUsername(User.Identity.Name)).totalnumber;
+
+    }
+}
+<div class="part1 px-4 py-4 py-lg-2">
     <div class="d-flex align-items-center justify-content-between ">
         <button class="navbar-toggler d-inline-block d-lg-none order-1 menubarpart" type="button" data-toggle="collapse" data-target="#menu"><i class="fas fa-bars"></i></button>
         <div class="d-flex justify-content-between align-items-center order-lg-4 order-2 userloginandcard">
@@ -26,8 +36,32 @@
 
 
             <div class="purchasecardpart">
-                <a href="" class="btn btn-cart d-none d-lg-inline">سبد خرید <span class="badge badge-pill">0</span><i class="fas fa-shopping-cart mx-2"></i></a>
-                <a href="" class="btn-cart d-inline d-lg-none"><i class="fas fa-shopping-cart mx-5"></i></a>
+                <a href="#" data-toggle="collapse" data-target="#cartCollapse" class="btn btn-cart d-none d-lg-inline">سبد خرید <span class="badge badge-pill">@cartnumber</span><i class="fas fa-shopping-cart mx-2"></i></a>
+                <a href="#" data-toggle="collapse" data-target="#cartCollapse" class="btn-cart d-inline d-lg-none"><i class="fas fa-shopping-cart mx-5"></i></a>
+                <div class="collapseCart collapse" id="cartCollapse">
+                    <div class="collapseCartBox">
+
+
+                    </div>
+                </div>
+                <div class="modal fade" tabindex="-1" id="modalsuccess">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <h6>کالای موردنظر به سبد خرید شما افزوده شد.<span><i class="fas fa-check px-2"></i></span></h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" tabindex="-1" id="modalwarning">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="d-none d-lg-inline-block order-lg-3 sitesearchpartindesktop">

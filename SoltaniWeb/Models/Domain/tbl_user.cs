@@ -19,7 +19,8 @@ namespace SoltaniWeb.Models.Domain
             tbl_newsimages = new HashSet<tbl_newsimages>();
             tbl_orderdone_user = new HashSet<tbl_order>();
             tbl_orderuser = new HashSet<tbl_order>();
-            tbl_purchasekart = new HashSet<tbl_purchasekart>();
+            tbl_purchasekartuser = new HashSet<tbl_purchasekart>();
+            tbl_purchasekartpersonel = new HashSet<tbl_purchasekart>();
             tbl_samples = new HashSet<tbl_samples>();
             tbl_searchproducts = new HashSet<tbl_searchproducts>();
             tbl_signalRmsgfrom_user = new HashSet<tbl_signalRmsg>();
@@ -71,8 +72,9 @@ namespace SoltaniWeb.Models.Domain
        public virtual ICollection<tbl_newsimages> tbl_newsimages { get; set; }
        public virtual ICollection<tbl_order> tbl_orderdone_user { get; set; }
        public virtual ICollection<tbl_order> tbl_orderuser { get; set; }
-       public virtual ICollection<tbl_purchasekart> tbl_purchasekart { get; set; }
-       public virtual ICollection<tbl_samples> tbl_samples { get; set; }
+        public virtual ICollection<tbl_purchasekart> tbl_purchasekartuser { get; set; }
+        public virtual ICollection<tbl_purchasekart> tbl_purchasekartpersonel { get; set; }
+        public virtual ICollection<tbl_samples> tbl_samples { get; set; }
        public virtual ICollection<tbl_searchproducts> tbl_searchproducts { get; set; }
        public virtual ICollection<tbl_signalRmsg> tbl_signalRmsgfrom_user { get; set; }
        public virtual ICollection<tbl_signalRmsg> tbl_signalRmsgto_user { get; set; }

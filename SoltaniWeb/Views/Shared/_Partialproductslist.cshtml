@@ -14,6 +14,7 @@
     string username = User.Identity.Name;
     var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
     var q = Model.ToList();
+    var catg = Model.FirstOrDefault().category;
 }
 
 
@@ -21,7 +22,7 @@
 @foreach (var item in Model)
 {
     <div class="col-12 col-lg-3">
-        <div class="card text-center">
+        <div class="card text-center" productid="@item.idproduct">
             <div class="card-body p-0">
                 <div class="imgProduct">
                     <img class="img-fluid" src="@(item.thumbnail_image == null ?  "/Content/img/icon/img-na.png" :    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.thumbnail_image)))" data-aos="zoom-in" alt="@(item.category.categoryname + "| "+   item.name +"| "+ item.codename)" style="width:100%;" />
@@ -29,14 +30,14 @@
                         <div>وضعیت:<span> @entityrep.getexistproducts(item.idproduct)</span></div>
                         <div>کلاس:<span>@item.grade</span></div>
                         <div>ابعاد:<span>@item.dimension</span></div>
-                        @if(item.image !=null)
+                        @if (item.image != null)
                         {
 
 
-                        <div><a href="/products/getimage?id=@item.idproduct" data-title="@(item.category.categoryname + " " + item.name + " کد:" + item.codename)" data-lightbox="vahid-majidi" class="btn btn-view">مشاهده</a></div>
+                            <div><a href="/products/getimage?id=@item.idproduct" data-title="@(item.category.categoryname + " " + item.name + " کد:" + item.codename)" data-lightbox="vahid-majidi" class="btn btn-view">مشاهده</a></div>
                         }
-                       
-                        
+
+
                         <div>
                             <a href="../samples/samples?id01=@item.idproduct&key=@item.keywords" class="btn btn-samples">
                                 نمونه کارها
@@ -46,8 +47,13 @@
                     </div>
                 </div>
                 <h6 class="my-lg-3 my-4">کد<span class="productCode mx-2">@item.codename</span>@item.name</h6>
-                <div class="my-2"><a class="btn btn-addToCart mb-2">افزودن به سبد خرید<i class="fas fa-shopping-cart fa-lg mx-2"></i></a></div>
-            </div>
+
+
+                @if (catg.purchaseonline == true)
+                {
+                    <div class="my-2"><a class="btn btn-addToCart mb-2">افزودن به سبد خرید<i class="fas fa-shopping-cart fa-lg mx-2"></i></a></div>
+                }
+                </div>
         </div>
     </div>
 }

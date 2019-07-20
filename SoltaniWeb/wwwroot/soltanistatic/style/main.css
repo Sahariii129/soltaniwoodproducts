@@ -17,9 +17,9 @@
     border-radius: 0;
     background: #7d7c7e;
 }
-    ::-webkit-scrollbar-thumb:hover {
-        background: #332b3a;
-    }
+::-webkit-scrollbar-thumb:hover {
+    background: #332b3a;
+}
 body {
     direction: rtl;
     text-align: right;
@@ -57,11 +57,9 @@ p, h1, h2, h3, h4, h5, h6 {
 .bold {
     font-weight: bold;
 }
-
 .blue {
     color: #6a95cc;
 }
-
 .yellow {
     color: #ffca01;
 }
@@ -69,7 +67,7 @@ p, h1, h2, h3, h4, h5, h6 {
     display:none;
 }
 .sectionclass {
-    animation: openWithAnimation .5s ease;
+    animation: openWithAnimation .8s ease;
 }
 .sectionclass.hidden{
     transition:all .8s ease-out;
@@ -80,11 +78,9 @@ p, h1, h2, h3, h4, h5, h6 {
     color: #132666;
     font-weight: bold;
 }
-
 .btn:focus {
     box-shadow: unset !important;
 }
-
 .displayNone {
     display: none;
 }
@@ -114,13 +110,11 @@ p, h1, h2, h3, h4, h5, h6 {
     border: 1px solid #6a95cc;
     margin-bottom: 5px;
 }
-
     .keyword .btn:hover {
         background-color: #ffca01;
         color: #fff;
         border-color: #ffca01;
     }
-
 .keyword p {
     position: relative;
     background-color: #6195cc;
@@ -140,12 +134,10 @@ p, h1, h2, h3, h4, h5, h6 {
         left: -11px;
         border-radius: 3px;
     }
-
 .lb-container {
     background-color: #332b3a;
     border-color: #332b3a !important;
 }
-
 .lb-dataContainer {
     background-color: #332b3a;
     color: #fff;
@@ -153,7 +145,6 @@ p, h1, h2, h3, h4, h5, h6 {
     padding-bottom: 10px;
     border-color: #332b3a !important;
 }
-
 .lb-data .lb-number {
     color: #fff !important;
 }
@@ -172,6 +163,30 @@ p, h1, h2, h3, h4, h5, h6 {
 .prenext {
     border-radius: 50% !important;
 }
+.contactTitle {
+    text-align: center;
+    font-weight: bolder;
+    color: #6a95cc;
+    position: relative;
+}
+.contactTitle:after {
+        position: absolute;
+        content: " ";
+        right: 0;
+        top: 20px;
+        width: 10%;
+        height: 4px;
+        background-color: #6a95cc;
+}
+.contactTitle:before {
+        position: absolute;
+        content: " ";
+        left: 0;
+        top: 20px;
+        width: 10%;
+        height: 4px;
+        background-color: #6a95cc;
+}
 /*-----------------header----------------*/
 header {
     position: sticky;
@@ -181,43 +196,36 @@ header {
     z-index: 1030;
     animation: openWithAnimation .4s ease-in-out;
 }
-
-    header .part1 {
-        background-color: #fff;
-    }
-
-        header .part1 .btn-outline-secondary {
-            background-color: #132666;
-            color: #f6efed;
-            border-color: #132666;
-        }
-
-            header .part1 .btn-outline-secondary:hover {
-                background-color: #6a95cc;
-                color: #f6efed;
-                border-color: #6a95cc;
+header .part1 {
+    background-color: #fff;
+}
+header .part1 .btn-outline-secondary {
+    background-color: #132666;
+    color: #f6efed;
+    border-color: #132666;
+}
+header .part1 .btn-outline-secondary:hover {
+    background-color: #6a95cc;
+    color: #f6efed;
+    border-color: #6a95cc;
             }
-
-            header .part1 .btn-outline-secondary:focus {
-                box-shadow: unset;
+header .part1 .btn-outline-secondary:focus {
+    box-shadow: unset;
             }
-
-        header .part1 .form-control {
-            border-color: #3a4d8f;
-            color: #3a4d8f;
-        }
-
-            header .part1 .form-control::placeholder {
-                color: #6a95cc;
-                font-size: 12px;
-            }
-
-            header .part1 .form-control:focus {
-                border-color: #6a95cc;
-            }
-    header .UserMenudiv .btn, header .ContactBTNholder .btn, header .purchasecardpart .btn {
-        padding: 10px 7px;
-    } 
+ header .part1 .form-control {
+    border-color: #3a4d8f;
+    color: #3a4d8f;
+}
+header .part1 .form-control::placeholder {
+    color: #6a95cc;
+    font-size: 12px;
+}
+ header .part1 .form-control:focus {
+    border-color: #6a95cc;
+}
+header .UserMenudiv .btn, header .ContactBTNholder .btn, header .purchasecardpart .btn {
+    padding: 10px 7px;
+} 
     header .part1 .ContactBTNholder {
         position: relative;
     }
@@ -246,7 +254,7 @@ header {
             }
 
             header .part1 .btn-cart .badge {
-                color: #ffca01;
+                color: #332b3a;
                 background-color: #fff;
             }
 
@@ -258,10 +266,10 @@ header {
             font-size: 27px;
         }
 
-    header .part2 {
-        background-color: #332b3a;
-        padding: 2px 16px !important;
-    }
+        header .part2 {
+            background-color: #332b3a;
+            padding: 2px 16px !important;
+        }
 
         header .part2 .dropdown-toggle::after {
             visibility: hidden;
@@ -271,16 +279,9 @@ header {
             color: #fff !important;
             font-size: 14px;
         }
-        /*header .part2 .nav-item:hover .nav-link:before{
-    content: " ";
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    border-bottom: 2px solid #83a4b6;
-    background-color: #213953;
-
-}*/
+            header .part2 .nav-item:hover .nav-link {
+                color: #f8e5a1 !important;
+            }
         header .part2 .dropdown-menu {
             text-align: right;
             border: none;
@@ -335,8 +336,7 @@ header .part2 .productDropdown h6 {
 
             header .part2 .productDropdown .dropdown-menu img {
                 width: 140px !important;
-                height: 100px !important;
-                align-items: flex-end;
+                height: auto !important;
             }
 
         header .part2 .productDropdown ul {
@@ -406,7 +406,6 @@ header .modal-header {
 }
 
 header #modalLogin .modal-body {
-    /*height: 400px;*/
     padding: 0;
 }
 
@@ -421,7 +420,6 @@ header .modal .nav-tabs {
         margin-left: auto;
         position: relative;
     }
-
     header .modal .nav-tabs .nav-link {
         border: none;
         color: #ffca01;
@@ -448,7 +446,7 @@ header .modal .form-control {
         border-color: #6a95cc;
     }
 
-header .modal .btn-register {
+header .modal .btn-register, .signin .btn-register, .signup .btn-register {
     font-size: 13px;
     border-radius: 0;
     color: #fff;
@@ -459,26 +457,10 @@ header .modal .btn-register {
     transition: all .4s ease;
 }
 
-    header .modal .btn-register:hover {
+    header .modal .btn-register:hover, .signin .btn-register:hover, .signup .btn-register:hover {
         filter: brightness(80%);
     }
-
-header .modal .btn-remember {
-    font-size: 13px;
-    border-radius: 0;
-    color: #fff;
-    background-color: #ffca01;
-    padding: 10px 20px;
-    margin-top: 10px;
-    min-width: 250px;
-    transition: all .4s ease;
-}
-
-    header .modal .btn-remember:hover {
-        filter: brightness(80%);
-    }
-
-header .modal .containercheckbox {
+header .modal .containercheckbox,.signin .containercheckbox {
     text-align: center;
     display: block;
     position: relative;
@@ -493,12 +475,12 @@ header .modal .containercheckbox {
     user-select: none;
 }
 
-header .modal label.containercheckbox {
+header .modal label.containercheckbox, .signin label.containercheckbox {
     font-size: 13px;
     color: #332b3a;
 }
 
-header .modal .containercheckbox input {
+header .modal .containercheckbox input,.signin .containercheckbox input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
@@ -506,7 +488,7 @@ header .modal .containercheckbox input {
     width: 0;
 }
 
-header .modal .checkmark {
+header .modal .checkmark,.signin .checkmark {
     position: absolute;
     top: 0;
     left: 150px;
@@ -515,25 +497,25 @@ header .modal .checkmark {
     background-color: #fce181;
 }
 
-header .modal .containercheckbox:hover input ~ .checkmark {
+header .modal .containercheckbox:hover input ~ .checkmark, .signin .containercheckbox:hover input ~ .checkmark {
     background-color: #fcd752;
 }
 
-header .modal .containercheckbox input:checked ~ .checkmark {
+header .modal .containercheckbox input:checked ~ .checkmark, .signin .containercheckbox input:checked ~ .checkmark {
     background-color: #332b3a;
 }
 
-header .modal .containercheckbox .checkmark:after {
+header .modal .containercheckbox .checkmark:after, .signin .containercheckbox .checkmark:after {
     content: "";
     position: absolute;
     display: none;
 }
 
-header .modal .containercheckbox input:checked ~ .checkmark:after {
+header .modal .containercheckbox input:checked ~ .checkmark:after, .signin .containercheckbox input:checked ~ .checkmark:after {
     display: block;
 }
 
-header .modal .containercheckbox .checkmark:after {
+header .modal .containercheckbox .checkmark:after, .signin .containercheckbox .checkmark:after {
     left: 8px;
     top: 4px;
     width: 5px;
@@ -653,6 +635,114 @@ header .collapseProfileBox a {
     header .collapseProfileBox a:hover {
         color: #ffca01;
     }
+    header .collapseCart {
+    position: absolute;
+    top: 67px !important;
+    left: 28px;
+    opacity: 1;
+    visibility: visible;
+}
+
+    header .collapseCart.show {
+        visibility: visible;
+        opacity: 1;
+        z-index: 1000;
+        top: 67px;
+    }
+
+header .collapseCartBox {
+    height:auto;
+    width:300px;
+    position: relative;
+    margin: 0;
+    z-index: 1000;
+    box-shadow: 0 3px 5px #3e3546;
+    background-color:#fff;
+}
+.collapseCartBox .media {
+    padding: 15px 10px;
+    transition: all .4s ease-out;
+    position: relative;
+    font-size: 12px;
+    border-bottom: 1px solid #faefc9;
+}
+
+    .collapseCartBox .media .code {
+        color: #6a95cc;
+    }
+    .collapseCartBox .media:hover {
+        background-color:#faefc9;
+    }
+    /*.collapseCartBox .media:hover:before {
+        position: absolute;
+        content: " ";
+        top: 0;
+        height: 100%;
+        right: 0;
+        width: 8px;
+        background-color: #ffca01;
+    }*/
+
+.collapseCartBox img {
+    width: 60px;
+    box-shadow: 0 2px 3px #c7c7c7;
+}
+
+.collapseCartBox .media .close span {
+    border-radius: 50%;
+    background-color: #b7c9e1;
+    font-size: 15px;
+    padding: 5px;
+}
+
+.collapseCartBox .media .close:focus {
+    box-shadow: unset !important;
+    outline: unset !important;
+}
+.collapseCartBox .btn-viewcart{
+    background-color:#6a95cc;
+    color:#fff;
+    border-radius:0;
+}
+.collapseCartBox .mediasCollapse{
+    max-height:300px;
+    overflow-y:scroll;
+} 
+.collapseCartBox .mediasCollapse::-webkit-scrollbar {
+    width: 10px;
+}
+.collapseCartBox .mediasCollapse::-webkit-scrollbar-track {
+        border-radius: 0;
+        background-color: #bcbabd;
+}
+    .collapseCartBox .mediasCollapse::-webkit-scrollbar-thumb {
+        border-radius: 0;
+        background: #7d7c7e;
+    }
+
+        .collapseCartBox .mediasCollapse::-webkit-scrollbar-thumb:hover {
+            background: #332b3a;
+        }
+header #modalsuccess .modal-body {
+    background-color: #d5ebbe;
+    border: unset !important;
+    text-align: center;
+    color: #53970b;
+    border-radius: 5px;
+}
+
+header #modalsuccess .modal-dialog, #modalwarning .modal-dialog {
+    margin: 200px auto !important;
+    border: unset !important;
+}
+
+header #modalwarning .modal-body {
+    background-color: #f6c8c8;
+    border: unset !important;
+    text-align: center;
+    color: #c61515;
+    border-radius: 5px;
+}
 /*-----------------footer---------------*/
 footer {
     margin-top: 100px;
@@ -1060,7 +1150,6 @@ footer {
     header .modal-dialog {
         margin: 90px auto 30px 0;
     }
-
     header .part1 .Searchinputbox .form-control {
         min-width: 200px;
     }
@@ -1209,12 +1298,31 @@ footer {
     .contactTitle, .aboutTitle, .productsTitle {
         padding: 30px;
     }
-
-    #messageok .modal-dialog, #messagenotok .modal-dialog, #sendingfilemodal .modal-dialog, header .modal-dialog,.modal-dialog {
+    header .collapseCart{
+        top:150px !important;
+        left:14%;
+    }
+    header .collapseCartBox {
+        width: 700px;
+    }
+    .collapseCartBox .mediasCollapse {
+        max-height: 600px;
+    }
+        .collapseCartBox .media,.btn-viewcart{
+        font-size:25px;
+        padding: 20px !important;
+    }
+    header #modalsuccess .modal-dialog, #modalwarning .modal-dialog {
+        margin: 400px auto !important;
+    }
+    header #modalsuccess .modal-body, #modalwarning .modal-body {
+        padding:30px;
+    }
+        #messageok .modal-dialog, #messagenotok .modal-dialog, #sendingfilemodal .modal-dialog, header .modal-dialog, .modal-dialog {
         max-width: none !important;
         margin-top: 260px;
-        margin-right:0 !important;
-        margin-left:0 !important;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
     }
     .modal .close{
         font-size:50px !important;
@@ -1233,7 +1341,7 @@ footer {
         width: 40px;
     }
 
-    header .modal .containercheckbox .checkmark:after {
+    header .modal .containercheckbox .checkmark:after, .signin .containercheckbox .checkmark:after {
         left: 13px;
         width: 11px;
         height: 25px;
@@ -1326,7 +1434,6 @@ footer {
         header .part2 .navbar-nav {
             padding-right: 0 !important;
         }
-
         header .part2 .dropdown-menu {
             box-shadow: unset;
         }
@@ -1370,18 +1477,6 @@ footer {
         font-size: 30px !important;
     }
 
-    /*header #menu .nav-item.active{
-		background-color:#4e4c4d;
-	}
-	header #menu .nav-item.active:before{
-		position: absolute;
-		content: " ";
-		height: 100%;
-		width: 4px;
-		background-color: #ffcc00 !important;
-		top: 0;
-		right: 5px;
-	}*/
     header #menu {
         position: fixed !important;
         top: 0;
@@ -1621,6 +1716,22 @@ footer {
         width: 950px !important;
         right: -260px !important;
     }
+    header .nav-item{
+        position:relative;
+    }
+    header .navbar-nav .nav-item:hover:after {
+        position: absolute;
+        top: 100%;
+        right: 15px;
+        height: 4px;
+        background-color: #f8e5a1;
+        content: "";
+        -webkit-animation: moveBorder .7s;
+        animation: moveBorder .7s;
+    }
+    header .navbar-nav .nav-item.active .nav-link{
+        color: #f8e5a1 !important;
+    }
 }
 
 @keyframes openWithAnimation {
@@ -1645,5 +1756,24 @@ footer {
     100% {
         opacity: 1;
         transform: translate3d(0, -50%, 0);
+    }
+}
+
+@-webkit-keyframes moveBorder {
+    from {
+        left: calc(100% - 10px);
+    }
+    to{
+        left:15px;
+    }
+}
+
+@keyframes moveBorder {
+    from {
+        left: calc(100% - 10px);
+    }
+
+    to {
+        left: 15px;
     }
 }

@@ -1,0 +1,166 @@
+﻿@using SoltaniWeb.Models.Domain
+@using SoltaniWeb.Models.structs
+@model  cartsitemtoeditviewmodel
+@{
+   _4820_soltaniwebContext db = new _4820_soltaniwebContext();;
+}
+<style>
+    /*.classfont{
+        font-weight:800;
+
+    }*/
+</style>
+<div id="formbody" mode="add" class="form-horizontal classfont">
+
+
+
+    <div class="form-group">
+        <div class="row">
+            <label class="control-label col-sm-3 ">نام : </label>
+            <div class="col-sm-9">
+                <input id="productnameinmodalid" type="text" autofocus tabindex=0 class="form-control" value="@(Model.productname)" placeholder="نام محصول را وارد کنید">
+
+            </div>
+            <input id="productnameinmodalid_id" type="hidden" class="form-control" value="@Model.itemproductid">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <label id="itemnumberinmodalid_lbl" class="control-label col-sm-3 ">تعداد : </label>
+            <div class="col-sm-9">
+                <input id="itemnumberinmodalid" type="text" class="form-control" placeholder="" value="@Model.itemnumber">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="row">
+            <label id="itemnumberinmodalid_lbl" class="control-label col-sm-3 ">قیمت واحد : </label>
+            <div class="col-sm-9">
+                <input id="ppriceidinmodel" type="text" class="form-control number" placeholder="" value="@string.Format("{0:#,##0.##}",Model.pprice)" purevalue="@Model.pprice">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <label id="itemnumberinmodalid_lbl" class="control-label col-sm-3 ">قیمت کل : </label>
+            <div class="col-sm-9">
+                <input id="ptotalpriceidinmodal" type="text" class="form-control" placeholder="" purevalue="@(Model.pprice*Model.itemnumber)" value="@string.Format("{0:#,##0.##}",Model.pprice*Model.itemnumber)">
+            </div>
+        </div>
+    </div>
+    <div class="text-left"><button class="btn" style="background-color:#ffca01;color:#fff" id="btn_edititemmodalid" selectedrow="@Model.row">ویرایش</button></div>
+
+</div>
+
+<script type="text/javascript">
+     setTimeout(function () {
+         $("#productnameinmodalid").filter(':visible').focus();
+    }, 500);
+
+    //Add commas
+    $('input.number').keyup(function (event) {
+        var stringvalue = $(this).val();
+        var purevalue = stringvalue.replace(/,/g, '')
+
+
+        $(this).attr('purevalue', purevalue)
+
+
+
+        var totalcost = purevalue * $(itemnumberinmodalid).val()
+
+
+        $(ptotalpriceidinmodal).attr('purevalue', totalcost)
+
+        $(ptotalpriceidinmodal).val(totalcost)
+        $(ptotalpriceidinmodal).val(function (index, value) {
+
+            return value
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ;
+        });
+
+
+        // skip for arrow keys
+        if (event.which >= 37 && event.which <= 40) return;
+
+        // format number
+        $(this).val(function (index, value) {
+
+            return value
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ;
+        });
+
+
+
+
+
+    });
+
+    //
+    $(itemnumberinmodalid).keyup(function (event) {
+        if (event.which >= 37 && event.which <= 40) return;
+        var totalpure = $(this).val() * $(ppriceidinmodel).attr('purevalue')
+        $(ptotalpriceidinmodal).val(totalpure)
+        $(ptotalpriceidinmodal).val(function (index, value) {
+
+            return value
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ;
+        });
+
+
+
+
+    })
+
+
+
+    // autocomplete products name
+    $("#productnameinmodalid").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    dataType: "json",
+                    type: 'Post',
+                    url: '@Url.Action("searchproduct", "admin")',
+                    data: { text: request.term },
+                    success: function (data) {
+                        $("#productnameinmodalid").removeClass('ui-autocomplete-loading');
+                        // hide loading image
+
+                        response($.map(data, function (item) {
+                            return {
+                                id: item.id,
+
+                                value: item.value,
+                                lable: item.lable
+                                //val: item.split('-')[1]
+                            }
+                        }));
+                    },
+
+
+                    error: function (data) {
+                        $("#productnameinmodalid").removeClass('ui-autocomplete-loading');
+                    }
+                });
+            },
+
+            minLength: 1,
+            select: function (event, result) {
+                $("#productnameinmodalid_id").val(result.item.id);
+
+            },
+            open: function () { },
+            close: function () { },
+            focus: function (event, ui) { },
+
+        });
+</script>

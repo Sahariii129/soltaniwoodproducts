@@ -85,6 +85,7 @@ namespace SoltaniWeb
             services.AddTransient<IViewRenderService, RenderViewToString>();
             services.AddTransient<IProductsServices, ProductsServices>();
             services.AddTransient<IUserServices, UserServices>();
+            services.AddTransient<IPurchaseCart, PurchaseCart>();
             services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IArchiveSmsService, ArchiveSmsService>();

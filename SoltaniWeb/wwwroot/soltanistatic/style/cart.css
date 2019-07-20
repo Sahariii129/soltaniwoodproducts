@@ -1,0 +1,113 @@
+﻿.nav-tabs {
+    position: relative;
+    border-bottom: 3px dashed #dad1e1;
+}
+    .nav-tabs:after {
+        position: absolute;
+        top: 98%;
+        width: 50px;
+        height: 6px;
+        right: 0;
+        background-color: #f8e494;
+        border-radius:3px;
+        content: " ";
+        transition:width .5s linear;
+    }
+    .nav-tabs.width1:after{
+        width:25%;
+    }
+    .nav-tabs.width2:after {
+        width: 49%;
+    }
+    .nav-tabs.width3:after {
+        width: 75%;
+    }
+    .nav-tabs.width4:after {
+        width: 100%;
+    }
+.nav-tabs .nav-link:after {
+    background-color: #dad1e1;
+    width: 20px;
+    height: 20px;
+    border-radius:50%;
+    position: absolute;
+    top: 120%;
+    right: 40%;
+    content: "";
+    transition:all .5s linear;
+}
+.nav-tabs .nav-link {
+    color: #fff !important;
+    border: unset !important;
+    position: relative;
+}
+.nav-tabs .nav-link:hover {
+    border: unset !important;
+}
+.nav-tabs .nav-link.active {
+    color:#f8e494 !important;
+    background-color: #332b3a;
+    border: unset !important;
+}
+.nav-tabs .nav-link.active:after {
+    background-color: #f8e494;
+}
+table{
+    min-width:100%;
+    display:table !important;
+    margin-bottom:0 !important;
+}
+table tr:hover {
+    background-color: rgb(252, 247, 228);
+}
+table thead {
+    background-color: rgb(248, 238, 201);
+}
+table thead td{
+    padding:1rem .75rem;
+}
+.table-bordered td {
+    border-right: unset !important;
+    border-left: unset !important;
+}
+table .imgProduct {
+    width: 120px;
+}
+.itemnumber {
+    width:50%;
+    margin:auto;
+}
+.card-body .btn {
+    background-color: #332b3a;
+    color: #fff;
+}
+.container .row{
+    padding-top:20px;
+    padding-bottom:20px;
+    color:#132666;
+}
+.container span{
+    background-color:#fff;
+    padding:5px 10px;
+    color:#132666;
+    border-radius:3px;
+    margin:0 10px;
+}
+.flip-clock-wrapper ul li a div div.inn {
+    color:rgb(251, 238, 186);
+    background-color:#332b3a;
+}
+@media(max-width:991.98px) {
+    .card-body .btn {
+        font-size: 30px;
+        padding: 10px 20px;
+    }
+
+    .container .col-12 {
+        margin: 15px auto;
+    }
+
+    .container span {
+        padding: 10px 15px;
+    }
+}

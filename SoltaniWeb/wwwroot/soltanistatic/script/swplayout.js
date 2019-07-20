@@ -118,11 +118,7 @@ $('body').on('click', '#btnLogInNewUser', function (e) {
     } else {
         return;
     }
-
-
 })
-
-
 
 // open usermenu
 $('body').on('click', '.UserMenu', function () {
@@ -131,24 +127,18 @@ $('body').on('click', '.UserMenu', function () {
     if (contain.length == 0) {
 
         $.post('/admin/UserPanel', {}, function (e) {
-           
+
             $('.usermeupan').html(e)
             return
 
         })
-       
     }
     else {
-        
-       $('.usermeupan').collapse('show')
+
+        $('.usermeupan').collapse('show')
 
     }
-
-
-
 })
-
-
 
 
 AOS.init({
@@ -157,6 +147,14 @@ AOS.init({
 })
 
 $(document).ready(function () {
+   
+    $('body').addClass('persianumber');
+    $('.persianumber').persiaNumber();
+
+    $('header .part2 .nav-item').on('click', function () {
+        $('header .part2 .nav-item').removeClass('active')
+        $(this).addClass('active')
+    })
 
     $('.dropdown').on('show.bs.dropdown', function () {
         $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
@@ -207,15 +205,15 @@ $(document).ready(function () {
 
 // to hide usermenu by clicking
 $(document).click(function () {
-    $('header #collapseProfile').collapse('hide'); 
+    $('header #collapseProfile').collapse('hide');
 });
 $(".usermeupan").click(function (e) {
-    e.stopPropagation(); 
+    e.stopPropagation();
 });
 
 //click on product in dropdown-menu 
 $('header .part2 .dropdown-menu').on('click', function (e) {
-    e.stopPropagation();  
+    e.stopPropagation();
     var objClicked = e.target.tagName.toLowerCase()
     if (objClicked === 'h6') {
         var thisObj = e.target.parentElement
@@ -224,7 +222,7 @@ $('header .part2 .dropdown-menu').on('click', function (e) {
         } else {
             $('.sectionclass').addClass('hidden')
             thisObj.querySelector('.sectionclass').classList.remove('hidden')
-        }  
+        }
     }
 })
 
@@ -242,70 +240,142 @@ $(function () {
 });
 
 // Google Analytics
-(function (i, s, o, g, r, a, m) {
-    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-        (i[r].q = i[r].q || []).push(arguments)
-    }, i[r].l = 1 * new Date(); a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-ga('create', 'UA-49610253-3', 'auto');
-ga('send', 'pageview');
+//(function (i, s, o, g, r, a, m) {
+//    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+//        (i[r].q = i[r].q || []).push(arguments)
+//    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+//        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+//})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+//ga('create', 'UA-49610253-3', 'auto');
+//ga('send', 'pageview');
+
+
+
 // to add product to card
 
 $('body').on('click', '.btn-addToCart', function (e) {
 
     e.preventDefault();
-    
     var p_id = $(this).parents('[productid]').attr('productid')
-   
 
     jQuery.post('/purchasecart/addnewitem', { product_id: p_id }, function (result) {
         if (result.preselected == '1') {
-            $(messagenotokbody).html(' این کالا در سبد خرید شما قبلاً اضافه شده است. ')
-            $(messagenotok).modal()
+            $('#modalwarning .modal-body').html(' این کالا در سبد خرید شما قبلاً اضافه شده است. ')
+            $(modalwarning).modal()
+            setTimeout(function () {
+                $('#modalwarning').modal('hide');
+            }, 2000);
             return
         }
-
         if (result.userid == '0') {
-            var html = '<div class="row">'
-            html += ' <div class="col-md-12">'
-            html += '<div class="col-md-6">'
-            html += ' <center>'
-            html += '<p> عضو سایت می باشید؟</p>'
-            html += '<p style="font-size:8pt;"> برای تکمیل فرآیند خرید خود وارد شوید</p>'
-            html += '<a href="/home/login" class="btn btn-success">ورود به سایت</a>'
-            html += ' </center>'
-            html += ' </div>'
-            html += ' <div class="col-md-6">'
-            html += ' <center>'
-            html += ' <p>  هنوز عضو سایت نشده اید؟</p>'
-            html += ' <p style="font-size:8pt;"> برای تکمیل فرآیند خرید خود ثبت نام کنید</p>'
-            html += ' <a href="/home/register" class="btn btn-primary">ثبت نام در سایت</a>'
-            html += ' </center>'
-            html += '</div>'
-            html += ' </div>'
-            html += ' </div>'
-            $(messagenotokbody).html(html)
-            $(messagenotokheader).html('عدم ورود به سایت')
-            $(messagenotok).modal()
+            //var html = '<div class="row">'
+            //html += '<div class="col-lg-6 col-12 py-3">'
+            //html += ' <center>'
+            //html += '<p> عضو سایت می باشید؟</p>'
+            //html += '<p style="font-size:8pt;"> برای تکمیل فرآیند خرید خود وارد شوید</p>'
+            //html += '<a href="#" class="btn" style="background-color:#6a95cc;color:#fff">ورود </a>'
+            //html += ' </center>'
+            //html += ' </div>'
+            //html += ' <div class="col-lg-6 col-12 py-3">'
+            //html += ' <center>'
+            //html += ' <p>  هنوز عضو سایت نشده اید؟</p>'
+            //html += ' <p style="font-size:8pt;"> برای تکمیل فرآیند خرید خود ثبت نام کنید</p>'
+            //html += ' <a href="#" class="btn" style="background-color:#6a95cc;color:#fff">ثبت نام </a>'
+            //html += ' </center>'
+            //html += '</div>'
+            //html += ' </div>'
+            //$(messagenotokbody).html(html)
+            //$(messagenotokheader).html('عدم ورود به سایت')
+            $(modalLogin).modal()
 
         } else {
 
-
             if (result.numberitemexist <= 0) {
-                $(messagenotokbody).html(' این کالا در حال حاضر در فروشگاه موجود نمی باشد ')
-                $(messagenotok).modal()
+                $('#modalwarning .modal-body').html(' این کالا در حال حاضر در فروشگاه موجود نمی باشد. ')
+                $(modalwarning).modal()
+                setTimeout(function () {
+                    $('#modalwarning').modal('hide');
+                }, 2000);
 
             } else {
-
-                $('.badge-pill').html(result.number)
-
-                $(messageokbody).html('کالای مورد نظر به سبد کالای شما افزوده شد')
-                $(messageok).modal()
+                var imgis = document.querySelectorAll('.mediasCollapse .emptycart').length
+                if (imgis == 1) {
+                    $('.mediasCollapse').html(result)
+                } else {
+                    $('.mediasCollapse').prepend(result)                 
+                }
+                var numberitem = document.querySelectorAll('.mediasCollapse .media').length;
+                //alert(numberitem)
+                
+                $('#modalsuccess').modal();
+                updatenumberitemsincart()
+                setTimeout(function () {
+                    $('#modalsuccess').modal('hide');
+                }, 1500);
             }
-
         }
-
     })
 
 })
+
+// to show cart in dropdown mode
+$('body').on('click', '.btn-cart', function (e) {
+    jQuery.post('/purchasecart/toshowcardinabstractview', {}, function (msg) {
+        if (msg == false) {
+            //var html = '<div class="row">'
+            //html += '<div class="col-lg-6 col-12 py-3">'
+            //html += ' <center>'
+            //html += '<p> عضو سایت می باشید؟</p>'
+            //html += '<p style="font-size:8pt;"> برای مشاهده سبد خرید خود وارد شوید</p>'
+            //html += '<a href="#" class="btn" style="background-color:#6a95cc;color:#fff">ورود </a>'
+            //html += ' </center>'
+            //html += ' </div>'
+            //html += ' <div class="col-lg-6 col-12 py-3">'
+            //html += ' <center>'
+            //html += ' <p>  هنوز عضو سایت نشده اید؟</p>'
+            //html += ' <p style="font-size:8pt;"> برای مشاهده سبد خرید خود ثبت نام کنید</p>'
+            //html += ' <a href="#" class="btn" style="background-color:#6a95cc;color:#fff">ثبت نام </a>'
+            //html += ' </center>'
+            //html += '</div>'
+            //html += ' </div>'
+            //$(messagenotokbody).html(html)
+            //$(messagenotokheader).html('عدم ورود به سایت')
+            $(modalLogin).modal()
+        }
+        else {
+            $('.collapseCartBox').html(msg)
+        }      
+    })
+})
+
+// to remove cart item in cartdropdown list
+
+$('body').on('click', '.media .close.removecartitem span', function () {
+    var cartitemmedia = $(this).parents('[purchasecartid]')
+    var id = cartitemmedia.attr('purchasecartid')
+    jQuery.post('/purchasecart/removecartitem', { cartid: id }, function (result) {
+        if (result == 'false') {
+            alert('خطایی رخ داده است')
+        }
+        else {
+            $('.purchasecardpart .badge-pill').html(result)
+            cartitemmedia.remove();
+            if ($('.purchasecardpart .badge-pill').html() == '0') {
+                $('.mediasCollapse').html('<img src="/soltanistatic/pictures/shopping-cart-emptyy.jpg" class="w-100 emptycart"/>')
+            }
+        }
+    })
+ 
+})
+
+
+// update number items in cart
+function updatenumberitemsincart() {
+    jQuery.post('/purchasecart/updatenumberitemsincart', {}, function (result) {
+        $('.purchasecardpart .badge-pill').html(result.totalnumber)
+        
+
+
+
+    })
+}

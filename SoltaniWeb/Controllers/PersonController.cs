@@ -15,7 +15,7 @@ using SoltaniWeb.Models.Services.Person;
 
 namespace SoltaniWeb.Controllers
 {
-    // [SWPAuthorizeIdentityController]
+    [SWPAuthorizeIdentityController]
     public class PersonController : Controller
     {
         private readonly IPersonService _personService;

@@ -887,10 +887,16 @@ namespace SoltaniWeb.Models.Domain
                     .HasConstraintName("FK_tbl_purchasekart_tbl_discount");
 
                 entity.HasOne(d => d.user)
-                    .WithMany(p => p.tbl_purchasekart)
-                    .HasForeignKey(d => d.userid)
+                 .WithMany(p => p.tbl_purchasekartuser)
+                 .HasForeignKey(d => d.userid)
+                 .OnDelete(DeleteBehavior.ClientSetNull)
+                 .HasConstraintName("FK_tbl_purchasekart_tbl_user");
+
+                entity.HasOne(d => d.personel)
+                    .WithMany(p => p.tbl_purchasekartpersonel)
+                    .HasForeignKey(d => d.personelid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tbl_purchasekart_tbl_user");
+                    .HasConstraintName("FK_tbl_purchasekart_tbl_user2");
             });
 
             modelBuilder.Entity<tbl_purchasekartitemlist>(entity =>

@@ -1,47 +1,93 @@
-﻿.panelbox {
+﻿#mymodalform {
+    height:auto;
+}
+#mymodalform .tabledit {
+    display:block;
+}
+#mymodalform td,#mymodalform th {
+    text-align: center;
+}
+#mymodalform table thead {
+    display: table;
+    overflow: auto;
+    width:100% !important;
+}
+#mymodalform table tbody {
+    display: block;
+    overflow: auto;
+    max-height:250px;
+}
+#mymodalform table tfoot {
+    display: table;
+    width:100%;
+}
+#mymodalform table tbody::-webkit-scrollbar {
+    width: 7px;
+}
+th.prow{
+    width:9%;
+}
+th.pname{
+    width:40%;
+}
+th.pprice{
+    width:20%;
+}
+th.pnumber{
+    width:12%;
+}
+td.prow {
+    width: 8%;
+}
+td.pname {
+    width: 42%;
+}
+td.pprice {
+    width: 20%;
+}
+td.ptotalprice {
+    width: 20%;
+}
+td.pnumber {
+    width: 10%;
+}
+.totalpnumberlbl {
+    width:49%;
+}
+.totalpnumber {
+    width:10%
+}
+.totalptotalprice {
+    width:40%;
+    padding-left:40px !important;
+    text-align:left !important;
+}
+.panelbox {
     position: relative;
 }
-
 .myform2 {
     display: none;
-    /*z-index: 1000;*/
     position: absolute;
 }
-
 .myform3 {
     display: none;
     z-index: 1001;
     position: absolute;
 }
-
-
 .column {
     float: right;
     width: 50px;
     padding: 5px;
 }
-
-.myrow {
-    width: 180px !important;
-}
-    /* Clearfix (clear floats) */
-    .myrow::after {
-        content: "";
-        clear: both;
-        display: table;
-    }
-
 .imgbtn {
     cursor: pointer;
 }
-
 .loading-image {
     position: absolute;
     top: 50%;
     left: 50%;
     z-index: 10;
 }
-
 .loader {
     display: none;
     width: 200px;
@@ -55,13 +101,11 @@
     z-index: 2;
     overflow: auto;
 }
-
 #panelbodyfororders {
     height: 600px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
-
 .toolband {
     position: absolute;
     bottom: 30px;
@@ -69,19 +113,15 @@
     height: 40px;
     width: 98%;
     padding: 5px;
-    /*display: none;*/
 }
-
     .toolband button {
         float: left;
         font-weight: 600;
         color: #000000;
     }
-
 .hidden {
     display: none;
 }
-
 .psearch {
     position: absolute;
     top: 0px;
@@ -92,47 +132,22 @@
     margin-right: 3px;
     margin-top: 3px;
 }
-
-.sheadingH .sheading:before {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    height: 100%;
-    width: 5px;
-    content: " ";
-    background-color: #ffca01;
-}
-
-.sheadingH .sheading.open {
-    background-color: #f8eeca !important;
-    border-top: 4px solid #ffca01 !important;
-    border-left: 4px solid #ffca01 !important;
-}
-
-    .sheadingH .sheading.open:before {
-        display: none;
-    }
 .validationrequired {
     border: 3px solid red;
 }
-
 .headerorderrow {
     border: 3px solid blue;
-    /*height: 70 px;*/
     padding: 10px;
 }
 .orderinfo1.col-lg-4 {
     border-left: 3px solid #ffca01;
 }
 .myformcontent .fright {
-    /*float: right !important;*/
     font-family: 'Iranian Sans';
     color: #000000;
     font-weight: 900;
     font-size: 16px !important;
 }
-
 .myblock {
     width: 30%;
     margin: 2px 2px 2px 20px;
@@ -140,169 +155,98 @@
     border: 3px solid #1c9808;
     padding: 5px;
 }
-
 .myformcontent .orderinfo1 {
     margin: 0px !important;
     border-radius: 5px;
-    /*height:560px;*/
-    min-height: 540px;
+    min-height: 460px;
 }
-
-.myformcontent .pricetable thead {
-    display: block;
-    overflow: auto;
+ .pricetable tbody {
+    max-height: 300px;
+    overflow-y: scroll !important;
 }
-
-.myformcontent .pricetable tfoot {
-    display: block;
-    overflow: auto;
-}
-
-.myformcontent .pricetable tbody {
-    display: block;
-    height: 300px;
-    overflow: auto;
-}
-
-.myformcontent .pricetable th, td {
-    padding: .5em 1em;
-    text-align: center;
-    vertical-align: top;
-}
-
-.pname {
-    width: 400px;
-}
-
-.pnumber {
-    width: 50px;
-}
-
-.pdesc {
-    width: 400px;
-}
-
-.prow {
-    width: 30px;
-}
-
 .totalpnumberlbl {
-    width: 430px;
     font-weight: 900;
     color: red;
 }
 
 .totalpnumber {
-    width: 50px;
     font-weight: 900;
     color: red;
 }
-
 .myimgefrm {
     margin: 5px;
 }
-
 .img1 {
     width: 24px;
     height: 24px;
     cursor: pointer;
 }
-
 .descriptionp {
     margin-top: 2px;
     position: relative;
     height: 20px;
 }
-
 .myformcontent input[type="text"], .myselect, textarea {
     font-weight: 800 !important;
     color: red !important;
-    font-size: 16px !important;
 }
-
 .myformcontent tr {
     font-weight: 800 !important;
     color: darkblue !important;
-    font-size: 16px !important;
     cursor: pointer;
 }
-
 .trfooter {
     background-color: #be0f0f !important;
     height: 25px !important;
 }
-
     .trfooter td {
         color: #ffffff !important;
         font-weight: 900;
     }
-/*.form-horizontal lable{
-        font-size:14px !important;
-        font-weight :900 !important;
-    }*/
-/*label {
-        font-weight: 900 !important;
-    }*/
 .ui-menu-item, option {
     font-weight: 700 !important;
     color: blue !important;
     font-family: 'Iranian Sans';
 }
-
 .m {
     font-weight: 700 !important;
 }
-
 .valid {
     color: red;
     display: none;
 }
-
 .controltools {
-    /*float : left;*/
     position: absolute;
     left: 10px;
     top: 10px;
     cursor: pointer;
 }
-
 .contorltoolsimg {
     width: 32px;
     height: 32px;
 }
-
 .rowselected {
     background-color: #9abce7 !important;
     color: #ffffff !important;
-}
-.myformcontent .card-body {
-    height: 570px;
-    overflow-y: scroll;
-    overflow-x: hidden;
 }
 .done {
     position: absolute;
     top: 50px;
     left: 30px;
 }
-
     .done img {
         width: 40px;
         height: 40px;
     }
-
 .orderselected {
     border: 5px solid red;
 }
-
 .daftar {
     background-color: #6a95cc !important;
 }
-
 .shahrak {
     background-color: #6a95cc !important;
 }
-
 .torderinfo td {
     text-align: right !important;
 }
@@ -317,7 +261,6 @@
 .torderdetails tbody td {
     text-align: right !important;
 }
-
 .torderdetails:before {
     position: absolute;
     top: -10px;
@@ -355,42 +298,51 @@
 
     .myform2 {
         width: 100% !important;
-        max-width:none !important;
+        max-width: none !important;
     }
 
     .contorltoolsimg {
         width: 50px;
         height: 50px;
     }
+
     #panelbodyfororders {
         height: 800px;
     }
+
     .myformcontent .card-body {
         height: 800px;
         overflow-y: scroll;
         overflow-x: hidden;
     }
+
     .myformcontent .fright {
         font-size: 25px !important;
     }
+
     .myformcontent input[type="text"], .myselect, textarea {
         font-size: 25px !important;
     }
+
     .myformcontent tr {
         font-size: 25px !important;
     }
+
     .orderinfo1.col-lg-4 {
-        border-left:unset !important;
+        border-left: unset !important;
     }
-    .img1{
-        width:50px;
-        height:50px;
-        margin:0 10px;
+
+    .img1 {
+        width: 50px;
+        height: 50px;
+        margin: 0 10px;
     }
-    #add_tools{
-        width:75px;
-        height:75px;
+
+    #add_tools {
+        width: 75px;
+        height: 75px;
     }
+
     .sheading {
         padding: 1.25rem 1.25rem;
     }
@@ -404,10 +356,110 @@
             width: 70px;
             height: 70px;
         }
+
     #panelbodyfororders .card-footer {
         height: 100px;
     }
+
     #panelbodyfororders .torderdetails tbody, .torderdetails tfoot {
         font-size: 23px;
+    }
+}
+.form-group .btn {
+    background-color: #332b3a;
+    border-color:#332b3a;
+    color: #ffca01;
+}
+#searchdiv .card-body{
+    display:none;
+}
+#searchdiv .card-header {
+    border: 2px solid transparent;
+    position:relative;
+}
+#searchdiv .card-header:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -2px;
+    height: 100%;
+    width: 5px;
+    content: " ";
+    background-color: #ffca01;
+}
+#searchdiv .card-header.selected:before{
+    display:none;
+}
+#searchdiv .card-header .badge{
+    background-color:#6a95cc;
+    color:#fff;
+    position:absolute;
+    top:2px;
+    left:2px;
+}
+    #searchdiv .card-header .badge.new {
+        background-color: #fd7e14;
+    }
+#panelbodyforcarts .card-header {
+    background-color: #6a95cc;
+    color: #fff;
+    cursor: pointer;
+}
+#panelbodyforcarts table {
+    font-size: 12px;
+    display: table;
+}
+#panelbodyforcarts .date {
+    font-size:12px;
+}
+#panelbodyforcarts .imgStatus {
+    position:absolute;
+    top:60px;
+    left:30px;
+}
+#panelbodyforcarts .imgStatus img{
+    width:40px;
+    height:40px;
+}
+#panelbodyforcarts .card-footer {
+    background-color:#f8eec9;
+    color:#fff;
+    height:70px;
+}
+#searchdiv .card{
+    cursor:pointer!important;
+}
+#searchdiv .card-header.selected {
+    background-color: rgb(252, 247, 228);
+    border: 2px solid #ffca01 !important;
+    border-right: 2px solid transparent !important;
+}
+@media(max-width:991.99px) {
+    #cartmanagement #searchdiv .btn {
+        font-size: 25px;
+        padding: 10px 20px;
+    }
+    #panelbodyforcarts .btn{
+        font-size:25px;
+    }
+    #panelbodyforcarts table {
+        font-size: 20px;
+    }
+    #panelbodyforcarts .date {
+        font-size: 20px;
+    }
+    #searchdiv .card-header{
+        padding:25px 10px ;
+    }
+    #panelbodyforcarts .imgStatus {
+        top: 80px;
+        left: 50px;
+    }
+    #panelbodyforcarts .imgStatus img {
+        width: 70px;
+        height: 70px;
+    }
+    #panelbodyforcarts .card-footer {
+        height: 100px;
     }
 }

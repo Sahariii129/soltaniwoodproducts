@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using SoltaniWeb.Models.Domain;
 using SoltaniWeb.Models.Extensions;
 using SoltaniWeb.Models.Authorize_swp;
+using SoltaniWeb.Models.structs;
 
 namespace SoltaniWeb.Hubs
 {
-    public class ChatHub :Hub
+    public class ChatHub : Hub
     {
         _4820_soltaniwebContext db = new _4820_soltaniwebContext();
         public async Task SendMessage2(string user, string message)
@@ -48,8 +49,8 @@ namespace SoltaniWeb.Hubs
                 tbl_signalRmsg msg = new tbl_signalRmsg { from_userid = from_userid, msg_text = message, msg_textpure = messagetextpure, datetime_send = DateTime.Now, visibleforall = true, visibletofrom = true, visibletoto = true };
                 db.tbl_signalRmsg.Add(msg);
                 db.SaveChanges();
-                await Clients.All.SendAsync("addNewMessage", msg.id, from_userid, from_user.username, message, thisdatetime, status, branch , messagetextpure);
-              
+                await Clients.All.SendAsync("addNewMessage", msg.id, from_userid, from_user.username, message, thisdatetime, status, branch, messagetextpure);
+
             }
             else
             {
@@ -79,14 +80,14 @@ namespace SoltaniWeb.Hubs
             var currentuser = db.tbl_signalrUsers.Where(a => a.userid == currentuserid).SingleOrDefault();
             if (msgpinned.Count() >= 8)
             {
-                await Clients.Client(currentuser.connectionId).SendAsync("errorinpinopperation","بیش از 8 پیام مهم نمی توان تعریف کرد");
+                await Clients.Client(currentuser.connectionId).SendAsync("errorinpinopperation", "بیش از 8 پیام مهم نمی توان تعریف کرد");
             }
             else
             {
                 var msg = db.tbl_signalRmsg.Where(a => a.id == msgid).SingleOrDefault();
                 if (msg.pin == true)
                 {
-                 await   Clients.Client(currentuser.connectionId).SendAsync("errorinpinopperation","این پیام قبلاً پین شده است");
+                    await Clients.Client(currentuser.connectionId).SendAsync("errorinpinopperation", "این پیام قبلاً پین شده است");
                 }
                 else
                 {
@@ -95,7 +96,7 @@ namespace SoltaniWeb.Hubs
                     msg.topic_pin = topic;
                     db.SaveChanges();
                     string persianpindate = msg.datetime_pin.Value.ToPersianDate() + "  " + DateTime.Now.ToString("HH:mm");
-                 await   Clients.All.SendAsync("topinmsg",msgid, persianpindate, topic);
+                    await Clients.All.SendAsync("topinmsg", msgid, persianpindate, topic);
                 }
 
             }
@@ -108,7 +109,7 @@ namespace SoltaniWeb.Hubs
             var user = db.tbl_signalrUsers.Where(a => a.username.ToLower() == username.ToLower()).SingleOrDefault();
             if (user == null)
             {
-                tbl_signalrUsers newuser = new tbl_signalrUsers { fullname = name, username = username, connectionId = connectionid , userid =int.Parse(userid) };
+                tbl_signalrUsers newuser = new tbl_signalrUsers { fullname = name, username = username, connectionId = connectionid, userid = int.Parse(userid) };
 
                 db.tbl_signalrUsers.Add(newuser);
 
@@ -116,7 +117,7 @@ namespace SoltaniWeb.Hubs
             else
             {
                 user.connectionId = connectionid;
-              await  Clients.Client(user.connectionId).SendAsync("setonline", " is Online");
+                await Clients.Client(user.connectionId).SendAsync("setonline", " is Online");
                 //Clients.Client(user.connectionId).setonline(" is Online");
             }
             db.SaveChanges();
@@ -128,8 +129,75 @@ namespace SoltaniWeb.Hubs
             //shamsi.ToShamsi(DateTime.Now).ToString("yyyy/MM/dd  hh:mm:ss");
             //Clients.All.SendSystemMessage(thisdatetime, user.username + " آنلاین شد.");
         }
+        public async Task registerindb(int userid, int cartid, string connectionid)
+        {
+
+            var user = db.tbl_signalrUsers.Where(a => a.userid == userid).SingleOrDefault();
+            if (user == null)
+            {
+                tbl_signalrUsers newuser = new tbl_signalrUsers { connectionId = connectionid, userid = userid };
+
+                db.tbl_signalrUsers.Add(newuser);
+
+            }
+            else
+            {
+                user.connectionId = connectionid;
+
+            }
+            db.SaveChanges();
 
 
+          
+
+        }
+
+        public async Task sendpricebyclient(int userid, int cartid, string connectionid)
+        {
+
+            var user = db.tbl_signalrUsers.Where(a => a.userid == userid).SingleOrDefault();
+            tbl_purchasekart p = db.tbl_purchasekart.Find(cartid);
+            // change purchase staus to DemandPrice
+            if (cartid != 0)
+            {
+                p.status = (int)purchasestatus.DemandPrice;
+                db.SaveChanges();
+            }
+
+            await Clients.Client(user.connectionId).SendAsync("setDemandPriceStepInClient", p.status.Value);
+
+            // find alireza is online
+            var alireza = db.tbl_signalrUsers.Where(a => a.userid == 78).SingleOrDefault();
+            if (alireza.connectionId != null && user.userid != 78)
+            {
+
+
+
+                string msg = $"یک سبد خرید توسط کاربر : {user.fullname} هم اکنون ثبت گردید. ";
+                await Clients.Client(alireza.connectionId).SendAsync("showthiscartonline", msg, cartid, userid, p.status.Value);
+            }
+
+        }
+
+        public async Task sendpricetoclient(int cartid = 0, int userid = 0)
+        {
+            var userclient = db.tbl_signalrUsers.Where(a => a.userid == userid).SingleOrDefault();
+            var userclientconnectionid = userclient.connectionId;
+
+
+            // change purchase staus to DemandPrice
+            tbl_purchasekart p = db.tbl_purchasekart.Find(cartid);
+            p.status = (int)purchasestatus.GetPrice;
+            db.SaveChanges();
+            if (userclientconnectionid != null)
+            {
+                await Clients.Client(userclientconnectionid).SendAsync("getPricefromServer", cartid,p.status.Value);
+
+            }
+
+
+
+        }
         public async Task toeditmsg(int msgid = 0, int currentuserid = 0, string msgtext = "")
         {
             var msg = db.tbl_signalRmsg.Where(a => a.id == msgid).SingleOrDefault();
@@ -141,7 +209,7 @@ namespace SoltaniWeb.Hubs
             int dtspan = (DateTime.Now - msg.datetime_send.Value).Days;
             if (dtspan > 1)
             {
-              await  Clients.Client(currentuser.connectionId).SendAsync("errorinpinopperation","این پیام دیگر قابل ویرایش نمی باشد.");
+                await Clients.Client(currentuser.connectionId).SendAsync("errorinpinopperation", "این پیام دیگر قابل ویرایش نمی باشد.");
             }
             else
             {
@@ -149,7 +217,7 @@ namespace SoltaniWeb.Hubs
                 //msg.msg_text.Replace(msg.msg_textpure, msgtext);
                 msg.msg_textpure = msgtext;
                 db.SaveChanges();
-              await  Clients.All.SendAsync("toeditmsg",msgid, msgtext);
+                await Clients.All.SendAsync("toeditmsg", msgid, msgtext);
 
 
 
@@ -169,11 +237,11 @@ namespace SoltaniWeb.Hubs
                 msg.pin = false;
                 msg.datetime_pin = null;
                 db.SaveChanges();
-             await   Clients.All.SendAsync("delpinmsg",msgid);
+                await Clients.All.SendAsync("delpinmsg", msgid);
             }
             else
             {
-             await   Clients.Client(currentuser.connectionId).SendAsync("errorinpinopperation","شما مجاز به انجام این عملیات نیستید");
+                await Clients.Client(currentuser.connectionId).SendAsync("errorinpinopperation", "شما مجاز به انجام این عملیات نیستید");
             }
 
         }
@@ -217,9 +285,9 @@ namespace SoltaniWeb.Hubs
                 db.SaveChanges();
                 var fromconnectionid = db.tbl_signalrUsers.Where(a => a.userid == from).SingleOrDefault().connectionId;
 
-             await   Clients.Client(fromconnectionid).SendAsync("deleteMessage",msgid);
+                await Clients.Client(fromconnectionid).SendAsync("deleteMessage", msgid);
 
-              await  Clients.All.SendAsync("deleteMessage",msgid);
+                await Clients.All.SendAsync("deleteMessage", msgid);
 
             }
 
@@ -234,7 +302,7 @@ namespace SoltaniWeb.Hubs
 
         public async Task stoptypingmessageforall(int from_userid)
         {
-            await Clients.All.SendAsync("stoptypingmsgforall", from_userid); 
+            await Clients.All.SendAsync("stoptypingmsgforall", from_userid);
 
         }
 
@@ -248,16 +316,16 @@ namespace SoltaniWeb.Hubs
                 var to_id = to_userid;
                 var to_idname = "public";
 
-            await    Clients.All.SendAsync("stoptypingmsg",from_userid, from_user.username, to_id, to_idname);
+                await Clients.All.SendAsync("stoptypingmsg", from_userid, from_user.username, to_id, to_idname);
             }
             else
             {
                 var to_id = to_userid;
                 var to_user = db.tbl_signalrUsers.Where(a => a.userid == to_userid).SingleOrDefault();
-                if (to_user.connectionId!=null)
+                if (to_user.connectionId != null)
                 {
 
-             await   Clients.Client(to_user.connectionId).SendAsync("stoptypingmsg",from_userid, from_user.username, to_id, to_user.username);
+                    await Clients.Client(to_user.connectionId).SendAsync("stoptypingmsg", from_userid, from_user.username, to_id, to_user.username);
                 }
             }
 
@@ -273,15 +341,15 @@ namespace SoltaniWeb.Hubs
                 var to_id = to_userid;
                 var to_idname = "public";
 
-              await  Clients.All.SendAsync("typingmsg",from_userid, from_user.username, to_id, to_idname);
+                await Clients.All.SendAsync("typingmsg", from_userid, from_user.username, to_id, to_idname);
             }
             else
             {
                 var to_id = to_userid;
                 var to_user = db.tbl_signalrUsers.Where(a => a.userid == to_userid).SingleOrDefault();
-                if (to_user.connectionId!=null)
+                if (to_user.connectionId != null)
                 {
-              await  Clients.Client(to_user.connectionId).SendAsync("typingmsg",from_userid, from_user.username, to_id, to_user.username);
+                    await Clients.Client(to_user.connectionId).SendAsync("typingmsg", from_userid, from_user.username, to_id, to_user.username);
 
                 }
             }
@@ -448,14 +516,39 @@ namespace SoltaniWeb.Hubs
                 user.connectionId = null;
                 db.SaveChanges();
                 string thisdatetime = DateTime.Now.ToPersianDate() + "  " + DateTime.Now.ToString("HH:mm:ss");
-               Clients.All.SendAsync("SendSystemMessage",thisdatetime, user.username + " left.");
+                Clients.All.SendAsync("SendSystemMessage", thisdatetime, user.username + " left.");
                 var onlineusers = db.tbl_signalrUsers.Where(x => x.connectionId != null).Select(x => x.userid).ToList();
-                Clients.All.SendAsync("addonlineusers",onlineusers);
+                Clients.All.SendAsync("addonlineusers", onlineusers);
             }
             return null;
         }
 
- 
 
+        //public async Task registerinpurchasecartsignalr(int userid, string connectionid)
+        //{
+        //    //_4820_soltaniwebContext db = new _4820_soltaniwebContext();
+        //    var user = db.tbl_purchasecartSignalR.Where(a => a.userid.Value == userid).SingleOrDefault();
+        //    if (user == null)
+        //    {
+        //        tbl_purchasecartSignalR newuser = new tbl_purchasecartSignalR { userid = userid, connectionid_cart = connectionid };
+
+        //        db.tbl_purchasecartSignalR.Add(newuser);
+
+        //    }
+        //    else
+        //    {
+        //        user.connectionid_cart = connectionid;
+        //        await Clients.Client(user.connectionid_cart).SendAsync("showtimertoclient", "please wait at least 1 hr ...");
+        //        //Clients.Client(user.connectionId).setonline(" is Online");
+        //    }
+        //    db.SaveChanges();
+        //    //var onlineusers = db.tbl_signalrUsers.Where(x => x.connectionId != null).Select(x => x.userid).ToList();
+        //    //await Clients.All.SendAsync("addonlineusers", onlineusers);
+        //    //Clients.All.addonlineusers(onlineusers);
+        //    //string thisdatetime = DateTime.Now.ToPersianDate() + "  " + DateTime.Now.ToString("HH:mm:ss");
+
+        //    //shamsi.ToShamsi(DateTime.Now).ToString("yyyy/MM/dd  hh:mm:ss");
+        //    //Clients.All.SendSystemMessage(thisdatetime, user.username + " آنلاین شد.");
+        //}
     }
 }

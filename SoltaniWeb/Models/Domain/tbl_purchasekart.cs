@@ -26,9 +26,17 @@ namespace SoltaniWeb.Models.Domain
         public bool? isdeleverd { get; set; }
         public int? discount_id { get; set; }
         public string transId { get; set; }
+        public int? status { get; set; }
+        public string pcartDesc { get; set; }
+        public DateTime? GetPricedate { get; set; }
+        public int? personelid { get; set; }
+        public int? discountamount { get; set; }
+        public int? transportationcost { get; set; }
+
 
         public virtual tbl_discount discount_ { get; set; }
         public virtual tbl_user user { get; set; }
+        public virtual tbl_user personel { get; set; }
         public virtual ICollection<tbl_purchasekartitemlist> tbl_purchasekartitemlist { get; set; }
         public virtual ICollection<tbl_transaction> tbl_transaction { get; set; }
         public virtual ICollection<tbl_transportaiondetails> tbl_transportaiondetails { get; set; }

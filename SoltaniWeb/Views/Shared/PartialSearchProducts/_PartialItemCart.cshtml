@@ -1,0 +1,17 @@
+﻿@model cartindropdown
+
+
+<div class="media" data-aos="zoom-in" productid="@Model.productid" purchasecartid="@Model.purchasecartid" >
+    <img src="@(Model.pimage==null ? "~/Content/img/icon/img-na.png" : (string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.pimage))))" />
+    <div class="media-body d-flex justify-content-between align-items-start">
+        <div>
+            <p class="pr-1 mb-0">@Model.catgname</p>
+            <p class="pr-2 mb-0">@Model.pname<span class="code"> @Model.pcode</span></p>
+            <p class="mb-0 pr-2">تعداد : <span style="color:#e8701b">@Model.numberincart</span></p>
+        </div>
+
+        <button type="button" class="close removecartitem">
+            <span style="color:#132666;" aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</div>

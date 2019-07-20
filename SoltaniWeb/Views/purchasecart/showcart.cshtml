@@ -1,5 +1,6 @@
 ﻿@using SoltaniWeb.Models.Domain
 @using SoltaniWeb.Models.repository
+@inject IUserServices _user;
 @model IEnumerable<tbl_purchasekartitemlist>
 @{
     ViewBag.Title = "showcart";
@@ -16,686 +17,239 @@
     var vehicletypes = db.tbl_vehicletype.ToList();
     var translocationinfo = db.tbl_transportaiondetails.Where(a => a.cartid == cartid);
     var qtranscost = db.tbl_transportationcost.Where(a => a.cart_id == cartid);
-
+    var userid = _user.GetUseridByUsername(User.Identity.Name);
+    var status = Model.FirstOrDefault().perchasekart_.status.Value;
+    string resultclass = "width" + status;
 
 }
 
-
-<div class="container-fluid">
-    <br />
-    <div class="col-md-12 myfont">
-
-        <div class="panel">
-            <div class="panel-heading" style=" background-color: #11cf1c;">
-                <h3>
-
-                    سبد خرید شما
-                </h3>
-
-            </div>
-            <div class="panel-body">
-                <p>افزودن کالاها به سبد خرید به معنی رزرو کالا برای شما نیست. برای ثبت سفارش باید مراحل بعدی خرید را تکمیل نمایید.</p>
-
-                <table class="table table-responsive table-bordered table-hover sortable" id="@cartid">
-                    <thead>
-                        <tr>
-
-                            <td> شرح محصول </td>
-                            <td width="100px;"> تعداد </td>
-                            <td>قیمت کل</td>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @foreach (var item in Model)
-                        {
-                            i++;
-                            <tr id="@("item" + @item.id)">
-
-                                <td>
-                                    <div> @(item.product_.category.categoryname + " " + item.product_.name + " " + item.product_.codename)</div>
-                                    <div style="float:left; font-size:12px; color:#b200ff; ">قیمت واحد: @string.Format("{0:#,##0.##}", item.product_.lastcellcost) ریال </div><br />
-                                    <div style="float:left; font-size:12px; color:#b200ff; ">وزن واحد: @string.Format("{0:#,##0.##}", item.product_.weight) Kg </div>
-
-                                </td>
-                                <td>
-                                    <input class="form-control itemnumber" type="number" id="@item.id" value="@item.number" min="0" max="@entityrep.getentityitem(item.product_id)" />
-                                </td>
-                                <td id="@("totalpriceitem" + item.id)">@string.Format("{0:#,##0.##}", item.product_.lastcellcost * item.number) ریال   </td>
-                                <td><a href="#" class="deleteitem" id="@item.id"><img src="~/Content/img/icon/delete.png" class="img-responsive" alt="Alternate Text" /></a></td>
-                            </tr>
-                        }
-
-
-                    </tbody>
-                    <tfoot>
-                        <tr>
-
-                            <td>
-                                جمع کل
-                                <div style="float:left; font-size:12px; color:#b200ff; ">وزن کل :<span id="totalweight"> @string.Format("{0:#,##0.##}", ViewBag.totalweigth) Kg </span></div>
-
-
-                            </td>
-                            <td id="totalnumber" width="100px;">   @ViewBag.totalnumber </td>
-                            <td id="totalpriceintable">@string.Format("{0:#,##0.##}", ViewBag.totalprice) ریال</td>
-                            <td></td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <br />
-
-
-            </div>
-
-        </div>
-
-
-
-
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel">
-                    <div class="panel-heading bg-success" style=" background-color: #11cf1c;">
-                        <div id="transcostquestion" class="form-group">
-                            <input type="checkbox" id="chk_transprotaioncost" @(transportationrecord == null ? "" : "checked") />
-                            <label class="control-label" style="margin-right:3px;">  حمل کالا توسط خود فروشگاه انجام شود</label>
-
-                        </div>
-                    </div>
-                    <div id="trans_body" class="panel-body" style="display:@(transportationrecord==null?"none":"normal");">
-                        <br />
-                        @*//*@
-
-
-
-
-                        <br />
-                        <div>
-                            <div class="col-md-12 hidden" id="dvDistance">
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-
-                            <p><span style="color:red;font-size:20px;">توجه! </span>  جهت تعیین نرخ دقیق کرایه حمل و یافتن راحت محل مورد نظر توسط راننده می بایست آدرس دقیق محل مورد نظر را روی نقشه زیر نشان دهید. </p>
-                            <br />
-                            <div id="dvMap" style="min-height:500px; display:@(transportationrecord==null?"none":"normal");"></div>
-                        </div>
-                        <hr />
-                        <div id="transportationpartial">
-
-
-                            @Html.Partial("_transportation", qtranscost)
-
-
-
-
-                        </div>
-
-                        <div id="savetransinfo">
-
-                            @Html.Partial("_formtransportationsave", new tbl_transportaiondetails { })
-
-
-
-                        </div>
-
-                        <div id="showtransinfo">
-                            @Html.Partial("_transportationdetailsinfo", translocationinfo)
-
-
-                        </div>
-
-                    </div>
-                    <div id="trans_footer" class="panel-footer" style="display:@(transportationrecord==null?"none":"normal");">
-
-                    </div>
-
-
-                </div>
-                <br />
-                <div class="panel">
-                    <div class="panel-heading" style=" background-color: #11cf1c;">
-                        <h3>تخفیفات شما</h3>
-                    </div>
-                    <div class="panel-body">
-                        <br />
-                        <div class="col-md-6">
-                            <div class="form-horizontal">
-
-
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label">کد تخفیف  : </label>
-                                    <input type="text" class="col-md-4 form-control" id="yourdiscountcode" />
-                                    <input type="button" class="col-md-4 form-control btn-primary" id="discountapply" value="اعمال تخفیف" />
-
-
-                                </div>
-
-
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-horizontal">
-
-                                <div class="form-group">
-
-                                    <label class="col-md-4  control-label" id="discountvalue">@(ViewBag.discount != 0 ? string.Format("{0:#,##0.##}", ViewBag.discount) + " ریال " : "0 ریال") </label>
-                                    <label class="col-md-4 control-label" style="color:red;" id="discountcode">کد تخفیف: @ViewBag.discountcode </label>
-                                    <input type="button" class="col-md-4 form-control btn-danger" id="discountdelete" value="حذف تخفیف" />
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <br />
-                <div class="panel">
-                    <div class="panel-heading" style=" background-color: #11cf1c;">
-                        <h3>فرایند تکمیل خرید</h3>
-                    </div>
-                    <div class="panel-body">
-                        <br />
-                        <div class="col-md-6" style="margin-bottom:5px;">
-                            <p>جهت تکمیل فرایند سفارش خود و امکان پرداخت وجه به صورت اینترنتی روی دکمه زیر کلیک فرمایید:</p>
-                            <button id="finishorder" class="btn btn-primary">تکمیل فرایند سفارش</button>
-                        </div>
-                        <div id="tabletotalcostforpay" class="col-md-6">
-
-                            <table class="table table-responsive table-bordered table-hover" style="float:left;">
-                                <tr>
-                                    <td>جمع کل خرید شما :</td>
-                                    <td id="totalprice">@string.Format("{0:#,##0.##}", ViewBag.totalprice) ریال</td>
-                                </tr>
-                                <tr>
-                                    <td>هزینه حمل  :</td>
-                                    <td id="transportationcost">@string.Format("{0:#,##0.##}", ViewBag.totalcosttransportation) ریال</td>
-                                </tr>
-                                <tr>
-                                    <td>جمع تخفیف :</td>
-                                    <td id="Discount">@string.Format("{0:#,##0.##}", ViewBag.discount) ریال</td>
-                                </tr>
-                                <tr>
-                                    <td>مبلغ قابل پرداخت :</td>
-                                    <td id="payableprice">@string.Format("{0:#,##0.##}", ViewBag.payableprice) ریال</td>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-
-
-                        <a id="onlinepay" style="display:none;" class="btn btn-success" href="/pay/PaymentAction?purchasecartid=@Model.FirstOrDefault().perchasekart_.id">پرداخت اینترنتی</a>
-
-
-                    </div>
-                </div>
-
+<link href="~/soltanistatic/style/flipclock.css" rel="stylesheet" />
+<link href="~/soltanistatic/style/cart.css" rel="stylesheet" />
+<div class="container-fluid" data-aos="fade-up">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 contactTitle">سبد خرید شما</h5>
             </div>
         </div>
+        <div class="col-12 myfont">
+            @if (Model.Count()>0)
+            {
+            <div class="card">
+                <div class="card-header text-center py-0" style=" background-color: #332b3a;color:#fff">
+                    <div class="container">
+                        <ul class="nav nav-tabs mt-2 pb-3 pr-0 justify-content-between @(resultclass)" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link @(status>=0?"active":"disabled")" purchasestatus=0 data-toggle="tab" href="#step1" role="tab" aria-selected="true">انتخاب کالا</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(status>=1?"active":"disabled")" purchasestatus=1 data-toggle="tab" href="#step2" role="tab" aria-selected="false">درخواست قیمت</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(status>=2?"active":"disabled")" purchasestatus=2 data-toggle="tab" href="#step3" role="tab" aria-selected="false">دریافت قیمت</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(status>=3?"active":"disabled")" purchasestatus=3 data-toggle="tab" href="#step4" role="tab" aria-selected="false">تایید سبد خرید</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(status>=4?"active":"disabled")" purchasestatus=4 data-toggle="tab" href="#step5" role="tab" aria-selected="false">پرداخت و تحویل</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body text-center">
+                    <p class="blue bold mb-4 mt-3">افزودن کالاها به سبد خرید به معنی رزرو کالا برای شما نیست. برای ثبت سفارش باید مراحل بعدی خرید را تکمیل نمایید.</p>
+                    <div class="tab-content">
+                        <div class="tab-pane @(status==0?"active":"")" purchasestatus=0 id="step1" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-bordered sortable purchasecart" id="@cartid" cartid="@cartid" userid="@userid">
+                                    <thead>
+                                        <tr>
+                                            <td>ردیف </td>
+                                            <td>تصویر </td>
+                                            <td> شرح محصول </td>
+                                            <td> تعداد </td>
+                                            <td>قیمت واحد</td>
+                                            <td>قیمت کل</td>
+                                            <td>حذف محصول</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
+                                        @foreach (var item in Model)
+                                        {
+                                            i++;
+                                            <tr id="@("item" + @item.id)">
+                                                <td>@i</td>
+                                                <td><img class="imgProduct img-fluid" src="@(item.product_.thumbnail_image==null ? "~/Content/img/icon/img-na.png" : (string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.product_.thumbnail_image))))" alt="تصویر محصول" /></td>
+                                                <td>
+                                                    <div> @(item.product_.category.categoryname + " " + item.product_.name + " " + item.product_.codename)</div>
+                                                    @*<div style="float:left; font-size:12px; color:#b200ff; ">وزن واحد: @string.Format("{0:#,##0.##}", item.product_.weight) Kg </div>*@
+                                                </td>
+                                                <td>
+                                                    <input class="form-control itemnumber" type="number" id="@item.id" value="@item.number" min="0" max="@entityrep.getentityitem(item.product_id)" />
+                                                </td>
+                                                <td>
+                                                    <div style="color:#eaa01b ; "><span class="unitprice">منتظر باشید ... </span> </div>
+                                                </td>
+                                                <td id="@("totalpriceitem" + item.id)">0.0 ریال </td>
+                                                <td><a href="#" class="deleteitem" id="@item.id"><img src="~/Content/img/icon/delete.png" class="img-responsive" alt="Alternate Text" /></a></td>
+                                            </tr>
+                                        }
 
+                                        <tr style="background-color: rgb(248, 238, 201);color:red">
+                                            <td>جمع کل</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><span id="totalnumber" class="form-control totalnumber" style="width:50%;margin:auto;color:red">@Model.Sum(a => a.number)</span></td>
+                                            <td></td>
+                                            <td>0.0 ریال </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="saveandsentorder" class="btn mt-5">ثبت و ارسال گزارش</button>
+                        </div>
+                        <div class="tab-pane @(status==1?"active":"")" purchasestatus=1 id="step2" role="tabpanel">
+                            <div class="pt-5 d-flex justify-content-between align-items-center">
+                                <div class="blue"><h5>لطفا جهت دریافت قیمت از سوی کارشناسان ما منتظر بمانید...</h5></div>
+                                <div class=""><div class="your-clock"></div></div>
+                            </div>
+                        </div>
+                        <div class="tab-pane @(status==2?"active":"")" purchasestatus=2 id="step3" role="tabpanel">
+
+                            <partial name="~/Views/Shared/PartialCarts/_partialcartforclient.cshtml" model="@Model.FirstOrDefault().perchasekart_" />
+
+                        </div>
+                        <div class="tab-pane @(status==3?"active":"")" purchasestatus=3 id="step4" role="tabpanel">تایید سبد خرید</div>
+                        <div class="tab-pane @(status==4?"active":"")" purchasestatus=4 id="step5" role="tabpanel">پرداخت و تحویل</div>
+                    </div>
+                </div>
+            </div>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    <center>
+                        سبد خرید شما خالی است!
+                    </center>
+                </div>
+            }
+            </div>
     </div>
 </div>
 
+        <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+        <script src="~/soltanistatic/script/flipclock.min.js"></script>
+        <script>
+            var clock = $('.your-clock').FlipClock({
+                // ... your options here
+            });
 
+            var userid = $('.purchasecart').attr('userid')
+            var cartid = $('.purchasecart').attr('cartid')
+            var connectionid = ""
+            var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+            connection.start().catch(err => console.error(err.toString())).then(function () {
+                connection.invoke('getConnectionId')
+                    .then(function (connectionId) {
+                        // Send the connectionId to controller
+                        connectionid = connectionId;
+                        connection.invoke("registerindb", userid, cartid, connectionid)
+                    })
+            })
 
+            $(saveandsentorder).click(function () {
+                $('#myTab').toggleClass('width1')
+                connection.invoke("sendpricebyclient", userid, cartid, connectionid)
+                $(this).attr("disabled", true);
+            })
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false&key=AIzaSyDwApPFv170dE9ZUyWt59zrC30lW4cbTRk&language=fa"></script>
+            connection.on("setDemandPriceStepInClient", function (pstatus) {
+                for (var i = 0; i <= pstatus; i++) {
+                    $('.nav-link[purchasestatus="' + i + '"]').addClass('active')
+                }
+                $('.tab-pane').removeClass('active')
+                $('.tab-pane[purchasestatus="' + pstatus + '"]').addClass('active')
+            })
 
+            connection.on("getPricefromServer", function (cartid, pstatus) {  
+                $('#myTab').toggleClass('width2')
+                jQuery.post('/admin/getpurchasecart', { cartid: cartid }, function (result) {
+                    $('.tab-pane[purchasestatus="2"]').html(result)
+                    for (var i = 0; i <= 2; i++) {
 
-
-<script>
-    var map = new google.maps.Map(document.getElementById('dvMap'), {
-        center: { lat: 29.591768, lng: 52.583698 },
-        zoom: 12,
-        mapTypeId: 'roadmap'
-    });
-
-    google.maps.event.addDomListener(window, 'load', function () {
-
-        //new google.maps.places.SearchBox(document.getElementById('travelfrom'));
-        //new google.maps.places.SearchBox(document.getElementById('travelto'));
-        directionsDisplay = new google.maps.DirectionsRenderer({ 'draggable': true });
-
-    })
-    function placeMarker(map, location) {
-        //marker.setMap(null);
-
-        var marker = new google.maps.Marker({
-            position: location,
-            map: map
-        });
-        var infowindow = new google.maps.InfoWindow({
-            content: 'مقصد مورد نظر: <br>Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
-        });
-        //infowindow.open(map,marker);
-    }
-       // loading page
-    var source, destination;
-
-    var directionsDisplay;
-    var directionsService = new google.maps.DirectionsService();
-    var lat, lng, distance, address;
-    var destlat, destlng;
-    jQuery.post('/purchasecart/getlatlngdest', { cartid: $('#@cartid').attr('id') }, function (result) {
-
-
-        destlat = result.lat
-        destlng = result.lng
-        if (destlat > 0) {
-
-            source = new google.maps.LatLng(29.480392289, 52.5640221835);
-            destination = new google.maps.LatLng(destlat, destlng);
-            placeMarker(map, destination);
-        }
-    })
-
-      $('#transcostquestion').on('change', '#chk_transprotaioncost', function () {
-        $(onlinepay).hide()
-
-
-
-        if ($(this).prop('checked') == true) {
-            $(trans_body).slideToggle(200)
-            $(trans_footer).slideToggle(200)
-            $(dvMap).slideToggle(200)
-
-
-        } else {
-            if (confirm("آیا جهت دریافت کالا خود به فروشگاه مراجعه می فرمایید؟")) {
-
-                jQuery.post('/purchasecart/transportationdel', { cartid: $('#@cartid').attr('id') }, function (result) {
-
-                    if (result == true) {
-                        $('.mytranscost').remove();
-                        $(totalcostintable).html('')
-                        $('#tabledetailsinfo td').html('')
+                        $('.nav-link[purchasestatus="' + i + '"]').addClass('active')
                     }
-
+                    $('.tab-pane').removeClass('active')
+                    $('.tab-pane[purchasestatus="' + 2 + '"]').addClass('active')
                 })
-                $(trans_body).slideToggle(2)
-                $(trans_footer).slideToggle(2)
-                $(dvMap).slideToggle(2)
-
-            }
-
-
-        }
-
-    })
-
-    // کلیک روی نقشه
-     google.maps.event.addDomListener(map, 'click', function (event) {
-        //
-
-        $(onlinepay).hide()
-
-        destination = event.latLng;
-
-        GetAddress(destination.lat(), destination.lng())
-
-
-
-        //
-
-        placeMarker(map, event.latLng);
-        directionsDisplay.setMap(map)
-
-        source = new google.maps.LatLng(29.480392289, 52.5640221835);
-
-
-
-        var request = {
-            origin: source,
-            destination: destination,
-            travelMode: google.maps.TravelMode.DRIVING
-        };
-
-        directionsService.route(request, function (response, status) {
-
-            if (status == google.maps.DirectionsStatus.OK) {
-
-                directionsDisplay.setDirections(response);
-                directionsDisplay.setOptions({
-                    suppressMarkers: true,
-                    preserveViewport: true
-                });
-                //var polyline = getPolyline(response);
-                //map.setCenter(polyline.getPath().getAt(polyline.getPath().getLength() - 1));
-                map.setZoom(19);
-            }
-        })
-
-        var service = new google.maps.DistanceMatrixService();
-        service.getDistanceMatrix({
-            origins: [source],
-            destinations: [destination],
-            travelMode: google.maps.TravelMode.DRIVING,
-            unitSystem: google.maps.UnitSystem.METRIC,
-            avoidHighways: false,
-            avoidTolls: false
-        }, function (response, status) {
-
-            if (status == google.maps.DistanceMatrixStatus.OK &&
-                          response.rows[0].elements[0].status != "ZERO_RESULTS") {
-
-                distance = response.rows[0].elements[0].distance.text;
-                distancevalue = response.rows[0].elements[0].distance.value;
-
-                var duration = response.rows[0].elements[0].duration.value;
-                var dvDistance = document.getElementById("dvDistance");
-                duration = parseFloat(duration / 60).toFixed(2);
-                dvDistance.innerHTML = "";
-                dvDistance.innerHTML += "مسافت: " + distance + "<br />";
-                dvDistance.innerHTML += "مدت زمان تخمینی:" + duration + " min";
-
-                if (distancevalue/1000>50) {
-
-                    var html = 'مقصد مورد نظر خارج از محدوده سرویس می باشد. '
-
-                    html += '<br/>'
-                    html += '<br/>'
-                    html += 'توجه !  چنانچه مقصد نهایی همین نقطه می باشد می بایست تیک مخصوص "حمل کالا توسط خود فروشگاه انجام شود" برداشته شود. '
-                    html += '<br/>'
-                    html += '<br/>'
-                    html += 'نکته ! در صورتیکه تمایل دارید حمل بار توسط خود فروشگاه انجام شود پس از اتمام فرایند سفارش جهت هماهنگی در این خصوص  با دفتر فروشگاه تماس حاصل فرمایید.'
-                    html += '<br/>'
-                    html += '<br/>'
-                    html += 'تلفن فروشگاه : 07138219110    ----   تلفن انبار : 07137742067'
-                    $(messagenotokheader).html('خطای خارج از محدوده ')
-                    $(messagenotokbody).html(html)
-                    $(messagenotok).modal()
-
-
-                }
-
- else {
-
-                //
-                jQuery.post('/purchasecart/transportation', { distance: distancevalue, cartid: $('#@cartid').attr('id'), lat: destination.lat(), lng: destination.lng() }, function (result) {
-
-                    $(transportationpartial).html(result)
-
-                })
-
-                }
-
-
-            }
-        })
-
-    });
-
-    
-    var destinationaddresstext;
-    $('#transportationpartial').on('click', '#transportationcostdel', function () {
-       
-
-        if (confirm("آیا مطمئن هستید")) {
-
-            jQuery.post('/purchasecart/transportationdel', { cartid: $('#@cartid').attr('id') }, function (result) {
-
-                if (result == true) {
-                    $('.mytranscost').remove();
-                    $(totalcostintable).html('')
-                }
-
-            })
-        }
-
-    })
-
-    // to update
-    $('#transportationpartial').on('click', '#transportationcostupdate', function () {
-      
-        jQuery.post('/purchasecart/getupdatetransportcost', { cartid: $('#transprotion_table').attr('cartid') }, function (data) {
-            if (data.status == true) {
-
-                jQuery.post('/purchasecart/transportation2', { distance: $('#transprotion_table').attr('distance'), cartid: $('#transprotion_table').attr('cartid'), lat: data.lat, lng: data.lng }, function (result) {
-
-
-                    $('#messageokbody').html('هزینه کرایه به روز رسانی گردید.')
-                    $('#messageok').modal();
-                    $('#transportationpartial').html(result)
-
-                })
-            } else {
-                $(messagenotokbody).html('آدرسی روی نقشه جهت حمل کالا تعیین نشده است')
-                $(messagenotok).modal();
-            }
-
-
-
-        })
-
-
-
-    })
-
-
-
-
-
-
-
-    // تابع GetAddress
-    function GetAddress(lat, lng) {
-
-        var latlng = new google.maps.LatLng(lat, lng);
-        var geocoder = geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                if (results[1]) {
-                    destinationaddresstext = results[1].formatted_address
-                    //alert("Location: " + results[1].formatted_address);
-                    //$('#addressname').val($('#addressname').val()+results[1].formatted_address)
-                    //$('#addressname').val(results[1].formatted_address)
-                }
-            }
-        });
-    }
-
-
-
-</script>
-
-<script>
-
-
-
-
-    $('#myform').on('click', '#savetransdetails', function (e) {
-
-        e.preventDefault();
-
-        var _this = $(this);
-        var _form = _this.closest("form");
-        var indata = _form.serializeArray();
-
-        indata.push({ lat: lat, lng: lng })
-
-        jQuery.post(_form.attr("action"), indata, function (data) {
-
-            var isSuccessful = (data['success']);
-            var htmls = ""
-            $(data.errors).each(function (idx, item) {
-
-                htmls = htmls + '<li>' + item + '</li>'
             })
 
+            $('body').on('click', '#getPriceBtn', function (e) {
+                var cartid = $(this).attr('cartid')
+                $('#myTab').toggleClass('width2')
+                jQuery.post('/admin/getpurchasecart', { cartid: cartid }, function (result) {
+                    $('.tab-pane[purchasestatus="2"]').html(result)
+                    for (var i = 0; i <= 2; i++) {
 
-            $(validationerrors).html(htmls)
-            //check the result and do whatever you want
-
-
-
-        })
-
-    })
-
-
-
-
-
-
-</script>
-
-
-
-
-
-
-
-
-
-<script>
-    $('.itemnumber').change(function () {
-
-        var id = $(this).attr('id')
-        var itemnumber = $(this).val()
-        jQuery.post('/purchasecart/editnumber', { id: id, itemnumber: itemnumber }, function (result) {
-
-            if (result.status == 'false') {
-
-                var html = 'سفارش شما بیش از موجودی انبار وب سایت می باشد.'
-
-                html += '<br/>'
-                html += '<br/>'
-                html += 'نام کالا: ' + result.productname
-                html += '<br/>'
-                html += '<br/>'
-                html += 'موجودی : ' + result.maxcount
-                html += '<br/>'
-                html += '<br/>'
-                html += 'چنانچه واقعا بیش از این مقدار قصد خرید دارید با دفتر فروشگاه تماس حاصل فرمایید'
-                html += '<br/>'
-                html += '<br/>'
-                html += 'تلفن فروشگاه : 07138219110    ----   تلفن انبار : 07137742067'
-                $(messagenotokheader).html('سفارش بیش از موجودی ')
-                $(messagenotokbody).html(html)
-                $(messagenotok).modal()
-            } else {
-
-
-            $("#price" + id).html(result.newprice)
-            $("#totalpriceitem" + id).html(result.totalpriceitem)
-            $("#totalprice").html(result.totalprice)
-            $('#totalpriceintable').html(result.totalprice)
-            $("#discount").html(result.discount)
-            $("#payableprice").html(result.payableprice)
-            $('#totalnumber').html(result.totalnumber)
-            $('#totalweight').html(result.totalweight)
-            $(onlinepay).hide()
-            }
-
-        })
-    })
-    //
-
-    $('.deleteitem').click(function (e) {
-        e.preventDefault()
-        if (confirm('آیا اطمینان به حذف این محصول دارید')) {
-
-            var id = $(this).attr('id')
-            jQuery.post('/purchasecart/deleteitem', { id: id }, function (result) {
-
-
-                $("#item" + id).remove()
-                $("#totalprice").html(result.totalprice)
-                $('#totalpriceintable').html(result.totalprice)
-                $("#discount").html(result.discount)
-                $("#payableprice").html(result.payableprice)
-                $('#totalnumber').html(result.totalnumber)
-                $('#totalweight').html(result.totalweight)
-                $(onlinepay).hide()
-
-
-
-
+                        $('.nav-link[purchasestatus="' + i + '"]').addClass('active')
+                    }
+                    $('.tab-pane').removeClass('active')
+                    $('.tab-pane[purchasestatus="' + 2 + '"]').addClass('active')
+                })
             })
-        }
 
-    })
-    $(finishorder).click(function () {
-
-        jQuery.post('/purchasecart/updatedatacost', { cartid: $('#@cartid').attr('id') }, function (result) {
-
-            if (result.details == false) {
-                $(onlinepay).hide()
-
-                $(messagenotokbody).html('فرم مشخصات حمل سفارش می بایست تکمیل گردد')
-                $(messagenotok).modal()
+            // to click in tab
+            $('.nav-link').click(function (e) {
                 return;
-            }
-            if (result.status == false) {
-                $(onlinepay).hide()
+            })
 
-                $(messagenotokbody).html('هزینه حمل باید به روز رسانی گردد')
-                $(messagenotok).modal()
-            } else {
-                $(totalprice).html(result.totalprice)
-                $(transportationcost).html(result.totalcosttransportation)
-                $(Discount).html(result.discount)
-                $(payableprice).html(result.payableprice)
-                $(discountvalue).html(result.discount)
-                $(discountcode).html(result.discountcode)
-                $(onlinepay).show()
+            $('.itemnumber').change(function () {
+                var id = $(this).attr('id')
+                var itemnumber = $(this).val()
+                jQuery.post('/purchasecart/editnumber', { id: id, itemnumber: itemnumber }, function (result) {
 
-            }
-
-
-        })
-
-
-
-    })
-
-    $(discountapply).click(function () {
-        jQuery.post('/purchasecart/applydiscount', { cartid: $('#@cartid').attr('id'), discountcode: $(yourdiscountcode).val() }, function (result) {
-
-            $(onlinepay).hide()
-            if (result.status == false) {
-                $(messagenotokbody).html('چنین کد تخفیفی در سیستم وجود ندارد')
-                $(messagenotok).modal()
-            } else {
-                $(totalprice).html(result.totalprice)
-                $(transportationcost).html(result.totalcosttransportation)
-                $(Discount).html(result.discount)
-                $(payableprice).html(result.payableprice)
-                $(discountvalue).html(result.discount)
-                $(discountcode).html('کد تخفیف :' + result.discountcode)
-
-            }
-
-        })
-
-
-    })
-
-    $(discountdelete).click(function () {
-        jQuery.post('/purchasecart/deletediscount', { cartid: $('#@cartid').attr('id'), }, function (result) {
-
-            $(onlinepay).hide()
-            if (result == true) {
-                $(Discount).html('0 ریال')
-                $(discountvalue).html('0 ریال')
-                $(discountcode).html('')
-
-            } else {
-                alert('خطایی رخ داده است')
-
-            }
-
-        })
-
-
-    })
-
-
-
-
-
-</script>
+                    if (result.status == 'false') {
+                        var html = 'سفارش شما بیش از موجودی انبار وب سایت می باشد.'
+                        html += '<br/>'
+                        html += '<br/>'
+                        html += 'نام کالا: ' + result.productname
+                        html += '<br/>'
+                        html += '<br/>'
+                        html += 'موجودی : ' + result.maxcount
+                        html += '<br/>'
+                        html += '<br/>'
+                        html += 'چنانچه واقعا بیش از این مقدار قصد خرید دارید با دفتر فروشگاه تماس حاصل فرمایید'
+                        html += '<br/>'
+                        html += '<br/>'
+                        html += 'تلفن فروشگاه : 07138219110    ----   تلفن انبار : 07137742067'
+                        $(messagenotokheader).html('سفارش بیش از موجودی ')
+                        $(messagenotokbody).html(html)
+                        $(messagenotok).modal()
+                    } else {
+                        $("#price" + id).html(result.newprice)
+                        $('#totalnumber').html(result.totalnumber)
+                    }
+                })
+            })
+           
+            $('body').on('click', '.deleteitem', function (e) {
+                e.preventDefault()
+                if (confirm('آیا اطمینان به حذف این محصول دارید')) {
+                    var id = $(this).attr('id')
+                    var itemtodelete = $(this).parents('tr')
+                   
+                    jQuery.post('/purchasecart/deleteitem', { id: id }, function (result) {
+                        alert(JSON.stringify(result))
+                        itemtodelete.remove()
+                        $(".totalprice").html(result.totalprice)
+                        $(".discount").html(result.discount)
+                        $(".payableprice").html(result.payableprice)
+                        $('.totalnumber').html(result.totalnumber)
+                                          
+                    })
+                }
+            })
+        </script>

@@ -19,7 +19,18 @@ namespace SoltaniWeb.Models.structs
 
     }
  
-
+    public class cartindropdown
+    {
+        public int purchasecartid { get; set; }
+        public int productid { get; set; }
+        public string catgname { get; set; }
+        public string pname { get; set; }
+        public string  pcode { get; set; }
+        public byte[] pimage  { get; set; }
+        public int numberincart { get; set; }
+        public int userid { get; set; }
+        //public int totalitemnumberincart { get; set; }
+    }
 
    public class editnumberiteminpurchasecart
    {
@@ -97,6 +108,7 @@ namespace SoltaniWeb.Models.structs
         public string pdesc { get; set; }
         public string itemname { get; set; }
         public int row { get; set; }
+        
 
     }
 
@@ -127,7 +139,61 @@ namespace SoltaniWeb.Models.structs
     }
 
 
-      
+    public class cartsitemtoeditviewmodel
+    {
+        public int itemproductid { get; set; }
+        public int itemnumber { get; set; }
+        public int pprice { get; set; }
+        public int row { get; set; }
+        public string productname { get; set; }
+    }
+
+
+    public class cartitemlistviewmodel
+    {
+        public int productid { get; set; }
+        public int itemnumber { get; set; }
+        public int price  { get; set; }
+         public int totalprice { get; set; }
+
+
+    }
+
+    public class EditCartsViewModel
+    {
+        public int cartid { get; set; }
+        public List<cartitemlistviewmodel> itemlist { get; set; }
+
+
+    }
+
+
+    public class cartabstractinfo
+    {
+       
+        public int totalnumber { get; set; }
+        public int totalprice { get; set; }
+        public int transportationcost { get; set; }
+        public int discount { get; set; }
+        public int payableprice { get; set; }
+
+
+
+
+    }
+
+    public   enum purchasestatus 
+    {
+        Null,
+        PurchaseIsStart =0,
+        DemandPrice=1,
+        GetPrice=2,
+        ConfirmByClient=3,
+        ConfirmByAdmin=4,
+        PurchaseIsCancelled=5,
+        PurchaseIsDone=6,
+
+    }
 
 }
 

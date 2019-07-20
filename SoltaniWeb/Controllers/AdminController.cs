@@ -3187,6 +3187,126 @@ namespace SoltaniWeb.Controllers
         }
 
 
+     
+
+        [AllowAnonymous]
+        public ActionResult manage_orderajax(List<int> model, int take = 6, int skip = 0)
+        {
+
+            var q = db3.tbl_order.Where(a => model.Contains(a.id)).OrderByDescending(a => a.id);
+            int number = model.Count();
+
+            var totalPages = (int)Math.Ceiling(number / (float)take);
+            ViewBag.pagesize = take;
+            ViewBag.totalpages = totalPages;
+            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
+            ViewBag.pagenumber = pagenumber;
+            ViewBag.skip = skip;
+            TempData["search"] = "1";
+            return PartialView("_partialorders", q);
+
+
+
+
+        }
+
+
+
+     
+
+        public ActionResult searchordersbyfrombranch(int frombranch_id, int take = 6, int skip = 0)
+        {
+            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
+            var myorder = Allorder.Where(a => a.from_branchid == frombranch_id).Select(g => g);
+            var q = (frombranch_id == 0 ? Allorder : myorder);
+            int number = q.Count();
+            var totalPages = (int)Math.Ceiling(number / (float)take);
+            ViewBag.totalpages = totalPages;
+            ViewBag.pagesize = take;
+            ViewBag.skip = skip;
+            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
+            ViewBag.pagenumber = pagenumber;
+            return PartialView("_partialorders", q);
+            //return PartialView("_Partialtest");
+        }
+        // search by orderid
+        [AllowAnonymous]
+        public ActionResult searchordersbyorderid(int orderid, int take = 6, int skip = 0)
+        {
+            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
+            var myorder = Allorder.Where(a => a.id == orderid).Select(g => g);
+            var q = myorder;
+            int number = q.Count();
+            var totalPages = (int)Math.Ceiling(number / (float)take);
+            ViewBag.totalpages = totalPages;
+            ViewBag.pagesize = take;
+            ViewBag.skip = skip;
+            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
+            ViewBag.pagenumber = pagenumber;
+            return PartialView("_partialorders", q);
+        }
+        // search orders by sodoordate
+        [AllowAnonymous]
+        public ActionResult searchorderbysodoordate(string sodoordate, int frombranch_id, int take = 6, int skip = 0)
+        {
+            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
+            DateTime thisdate = (sodoordate == null ? DateTime.Now : shamsi.PersianDateToGregorianDate(sodoordate));
+            var myorder = Allorder.Where(a => a.sodoor_date.Date == thisdate.Date).Select(g => g);
+            IEnumerable<tbl_order> q = null;
+            q = (frombranch_id == 0 ? myorder : myorder.Where(a => a.from_branchid == frombranch_id));
+
+            int number = q.Count();
+            var totalPages = (int)Math.Ceiling(number / (float)take);
+            ViewBag.totalpages = totalPages;
+            ViewBag.pagesize = take;
+            ViewBag.skip = skip;
+            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
+            ViewBag.pagenumber = pagenumber;
+            return PartialView("_partialorders", q);
+        }
+        // search orders by sodoordaterange
+        [AllowAnonymous]
+        public ActionResult searchordersbysodoordaterange(string sodoordatefrom, string sodoordateto, int frombranch_id, int take = 6, int skip = 0)
+        {
+            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
+            DateTime fromdate = (sodoordatefrom == null ? DateTime.Now.AddYears(-1000).Date : shamsi.PersianDateToGregorianDate(sodoordatefrom));
+            DateTime todate = (sodoordateto == null ? DateTime.Now.AddDays(1).Date : shamsi.PersianDateToGregorianDate(sodoordateto));
+            var myorder = Allorder.Where(a => a.sodoor_date.Date >= fromdate.Date && a.sodoor_date.Date < todate.Date).Select(g => g);
+            IEnumerable<tbl_order> q = null;
+            q = (frombranch_id == 0 ? myorder : myorder.Where(a => a.from_branchid == frombranch_id));
+
+            int number = q.Count();
+            var totalPages = (int)Math.Ceiling(number / (float)take);
+            ViewBag.totalpages = totalPages;
+            ViewBag.pagesize = take;
+            ViewBag.skip = skip;
+            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
+            ViewBag.pagenumber = pagenumber;
+            return PartialView("_partialorders", q);
+        }
+        // search orders based on Done status
+        [AllowAnonymous]
+        public ActionResult searchordersbydone(string orderdone, int frombranch_id, int take = 6, int skip = 0)
+        {
+            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
+            var myorder = (orderdone == "0" ? Allorder.Select(g => g) : Allorder.Where(a => a.done == bool.Parse(orderdone)).Select(g => g));
+
+            IEnumerable<tbl_order> q = null;
+            q = (frombranch_id == 0 ? myorder : myorder.Where(a => a.from_branchid == frombranch_id));
+
+            int number = q.Count();
+            var totalPages = (int)Math.Ceiling(number / (float)take);
+            ViewBag.totalpages = totalPages;
+            ViewBag.pagesize = take;
+            ViewBag.skip = skip;
+            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
+            ViewBag.pagenumber = pagenumber;
+            return PartialView("_partialorders", q);
+        }
+
+
+
+        #region purchasecart
         public ActionResult manage_pcart(int take = 6, int skip = 0)
         {
 
@@ -3214,27 +3334,33 @@ namespace SoltaniWeb.Controllers
 
         }
 
-        [AllowAnonymous]
-        public ActionResult manage_orderajax(List<int> model, int take = 6, int skip = 0)
+        public ActionResult updatenumberstatus()
         {
-
-            var q = db3.tbl_order.Where(a => model.Contains(a.id)).OrderByDescending(a => a.id);
-            int number = model.Count();
-
-            var totalPages = (int)Math.Ceiling(number / (float)take);
-            ViewBag.pagesize = take;
-            ViewBag.totalpages = totalPages;
-            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
-            ViewBag.pagenumber = pagenumber;
-            ViewBag.skip = skip;
-            TempData["search"] = "1";
-            return PartialView("_partialorders", q);
+            var q = db3.tbl_purchasekart.ToList().GroupBy(a => a.status).Select(g => new
+            {
+                statusid = g.Key,
+                number = g.Count()
 
 
 
 
+            });
+
+            return Json(q.ToList());
         }
 
+
+        public IActionResult getpurchasecart(int cartid = 0)
+        {
+            var cart = db3.tbl_purchasekart.Find(cartid);
+            return PartialView("~/Views/Shared/PartialCarts/_partialcartforclient.cshtml", cart);
+        }
+        public IActionResult toshowpartialeditpriceincart(cartsitemtoeditviewmodel datarowtoedit)
+        {
+
+            return PartialView("~/Views/Shared/PartialCarts/_partialeditpriceincart.cshtml", datarowtoedit);
+
+        }
         public ActionResult filtercartsbyispaid(int status = 0, int take = 6, int skip = 0, int userid = 0)
         {
             if (userid == 0)
@@ -3323,6 +3449,81 @@ namespace SoltaniWeb.Controllers
         }
 
 
+
+        public ActionResult getCartsinCertainStatus(int status, int take = 6, int skip = 0)
+        {
+
+            var q = db3.tbl_purchasekart.OrderByDescending(a => a.id)
+                .Where(a => a.status == status)
+                .Select(g => g);
+            int number = q.Count();
+            var totalPages = (int)Math.Ceiling(number / (float)take);
+            ViewBag.totalpages = totalPages;
+            ViewBag.pagesize = take;
+            ViewBag.skip = skip;
+            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
+            ViewBag.pagenumber = pagenumber;
+            return PartialView("_partialcarts", q);
+        }
+
+        public ActionResult showdetailsofCart(int cartid = 0)
+        {
+            var cart = db3.tbl_purchasekart.Find(cartid);
+            return PartialView("~/Views/Shared/PartialCarts/_Partialcart.cshtml", cart);
+        }
+
+        public IActionResult editpriceofcart([FromBody] EditCartsViewModel model)
+        {
+            try
+            {
+                var s = db3.tbl_purchasekart.Where(a => a.id == model.cartid).SingleOrDefault();
+
+                var sitemlist = db3.tbl_purchasekartitemlist.Where(a => a.perchasekart_id == model.cartid);
+                db3.tbl_purchasekartitemlist.RemoveRange(sitemlist);
+                db3.SaveChanges();
+                List<tbl_purchasekartitemlist> lstitem = new List<tbl_purchasekartitemlist>();
+                if (model.itemlist != null)
+                {
+
+                    foreach (var item in model.itemlist)
+                    {
+                        tbl_purchasekartitemlist t = new tbl_purchasekartitemlist();
+                        t.perchasekart_id = s.id;
+                        t.product_id = item.productid;
+                        t.number = item.itemnumber;
+                        t.price = item.price;
+                        t.totalprice = item.totalprice;
+                        t.purchase_datetime = DateTime.Now;
+                        lstitem.Add(t);
+                    }
+                    db3.tbl_purchasekartitemlist.AddRange(lstitem);
+                }
+
+
+                //
+                db3.SaveChanges();
+                s.personelid = _userServices.GetUseridByUsername(User.Identity.Name);
+                s.GetPricedate = DateTime.Now;
+                s.status = (int)purchasestatus.GetPrice;
+                db3.SaveChanges();
+                var userclient = db3.tbl_signalrUsers.Where(a => a.userid == s.userid).SingleOrDefault();
+                var userclientconnectionid = userclient.connectionId;
+
+                if (userclientconnectionid != null)
+                {
+
+                    _hub.Clients.Client(userclientconnectionid).SendAsync("getPricefromServer", s.id, s.status);
+                }
+
+                return Json(new { message = "سبد کالا با موفقیت به روز رسانی گردید" });
+            }
+            catch (Exception e)
+            {
+
+                return Json(new { message = e.InnerException });
+            }
+            //return json(true);
+        }
 
 
 
@@ -3623,98 +3824,6 @@ namespace SoltaniWeb.Controllers
 
 
         }
-        // to search orderds
-
-        public ActionResult searchordersbyfrombranch(int frombranch_id, int take = 6, int skip = 0)
-        {
-            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
-            var myorder = Allorder.Where(a => a.from_branchid == frombranch_id).Select(g => g);
-            var q = (frombranch_id == 0 ? Allorder : myorder);
-            int number = q.Count();
-            var totalPages = (int)Math.Ceiling(number / (float)take);
-            ViewBag.totalpages = totalPages;
-            ViewBag.pagesize = take;
-            ViewBag.skip = skip;
-            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
-            ViewBag.pagenumber = pagenumber;
-            return PartialView("_partialorders", q);
-            //return PartialView("_Partialtest");
-        }
-        // search by orderid
-        [AllowAnonymous]
-        public ActionResult searchordersbyorderid(int orderid, int take = 6, int skip = 0)
-        {
-            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
-            var myorder = Allorder.Where(a => a.id == orderid).Select(g => g);
-            var q = myorder;
-            int number = q.Count();
-            var totalPages = (int)Math.Ceiling(number / (float)take);
-            ViewBag.totalpages = totalPages;
-            ViewBag.pagesize = take;
-            ViewBag.skip = skip;
-            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
-            ViewBag.pagenumber = pagenumber;
-            return PartialView("_partialorders", q);
-        }
-        // search orders by sodoordate
-        [AllowAnonymous]
-        public ActionResult searchorderbysodoordate(string sodoordate, int frombranch_id, int take = 6, int skip = 0)
-        {
-            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
-            DateTime thisdate = (sodoordate == null ? DateTime.Now : shamsi.PersianDateToGregorianDate(sodoordate));
-            var myorder = Allorder.Where(a => a.sodoor_date.Date == thisdate.Date).Select(g => g);
-            IEnumerable<tbl_order> q = null;
-            q = (frombranch_id == 0 ? myorder : myorder.Where(a => a.from_branchid == frombranch_id));
-
-            int number = q.Count();
-            var totalPages = (int)Math.Ceiling(number / (float)take);
-            ViewBag.totalpages = totalPages;
-            ViewBag.pagesize = take;
-            ViewBag.skip = skip;
-            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
-            ViewBag.pagenumber = pagenumber;
-            return PartialView("_partialorders", q);
-        }
-        // search orders by sodoordaterange
-        [AllowAnonymous]
-        public ActionResult searchordersbysodoordaterange(string sodoordatefrom, string sodoordateto, int frombranch_id, int take = 6, int skip = 0)
-        {
-            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
-            DateTime fromdate = (sodoordatefrom == null ? DateTime.Now.AddYears(-1000).Date : shamsi.PersianDateToGregorianDate(sodoordatefrom));
-            DateTime todate = (sodoordateto == null ? DateTime.Now.AddDays(1).Date : shamsi.PersianDateToGregorianDate(sodoordateto));
-            var myorder = Allorder.Where(a => a.sodoor_date.Date >= fromdate.Date && a.sodoor_date.Date < todate.Date).Select(g => g);
-            IEnumerable<tbl_order> q = null;
-            q = (frombranch_id == 0 ? myorder : myorder.Where(a => a.from_branchid == frombranch_id));
-
-            int number = q.Count();
-            var totalPages = (int)Math.Ceiling(number / (float)take);
-            ViewBag.totalpages = totalPages;
-            ViewBag.pagesize = take;
-            ViewBag.skip = skip;
-            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
-            ViewBag.pagenumber = pagenumber;
-            return PartialView("_partialorders", q);
-        }
-        // search orders based on Done status
-        [AllowAnonymous]
-        public ActionResult searchordersbydone(string orderdone, int frombranch_id, int take = 6, int skip = 0)
-        {
-            var Allorder = db3.tbl_order.ToList().OrderByDescending(a => a.id);
-            var myorder = (orderdone == "0" ? Allorder.Select(g => g) : Allorder.Where(a => a.done == bool.Parse(orderdone)).Select(g => g));
-
-            IEnumerable<tbl_order> q = null;
-            q = (frombranch_id == 0 ? myorder : myorder.Where(a => a.from_branchid == frombranch_id));
-
-            int number = q.Count();
-            var totalPages = (int)Math.Ceiling(number / (float)take);
-            ViewBag.totalpages = totalPages;
-            ViewBag.pagesize = take;
-            ViewBag.skip = skip;
-            int pagenumber = (int)Math.Floor(skip / (float)take) + 1;
-            ViewBag.pagenumber = pagenumber;
-            return PartialView("_partialorders", q);
-        }
-
         public ActionResult addvertificationofdeliver(int cartid = 0)
         {
             ViewBag.cartid = cartid;
@@ -3845,6 +3954,17 @@ namespace SoltaniWeb.Controllers
             var q = db3.tbl_transportationdeliverinfo.Where(a => a.id == id).ToList().Select(g => g).SingleOrDefault();
             return PartialView("_showimagereceipt", q);
         }
+
+
+        public ActionResult showcartform(int cartid = 0)
+        {
+            var cart = db3.tbl_purchasekart.Find(cartid);
+
+
+            return PartialView("~/Views/Shared/PartialCarts/_partialcartform.cshtml", cart);
+
+        }
+        #endregion
 
 
         public ActionResult manage_mypcart(int take = 6, int skip = 0)
@@ -4045,79 +4165,6 @@ namespace SoltaniWeb.Controllers
 
         }
 
-
-        //[HttpGet]
-        //public ActionResult Gettransaction(JqGridRequest request)
-        //{
-
-
-
-        //    var list = db3.tbl_transaction.ToList().Select(g => new
-        //    {
-
-        //        id = g.id,
-        //        cartid = g.cartid,
-        //        amount = g.amount,
-        //        sharh = g.sharh,
-        //        transid = g.transid,
-        //        userid = g.user_id,
-        //        username = g.user_.username,
-        //        varizdate = g.varizdate.ToPersianDate(),
-        //        transtime = g.varizdate.ToString("HH:mm:ss")
-
-        //    }).ToList();
-
-
-
-
-        //    //
-
-
-
-        //    var pageIndex = request.page - 1;
-        //    var pageSize = request.rows;
-        //    var totalRecords = list.Count;
-        //    var totalPages = (int)Math.Ceiling(totalRecords / (float)pageSize);
-
-
-        //    var productsQuery = list.AsQueryable();
-
-        //    productsQuery = new JqGridSearch(request, this.Request.Form, DateTimeType.Persian).ApplyFilter(productsQuery);
-
-        //    var productsList = productsQuery.OrderBy(request.sidx + " " + request.sord)
-        //                                    .Skip(pageIndex * pageSize)
-        //                                    .Take(pageSize)
-        //                                    .ToList();
-
-        //    var productsData = new JqGridData
-        //    {
-        //        Total = totalPages,
-        //        Page = request.page,
-        //        Records = totalRecords,
-        //        Rows = (productsList.Select(product => new JqGridRowData
-        //        {
-        //            Id = product.id,
-        //            RowCells = new List<string>
-        //                       {
-
-        //                           product.id.ToString(CultureInfo.InvariantCulture),
-        //                            product.cartid.ToString(),
-        //                           product.varizdate.ToString(),
-        //                           product.transtime,
-        //                            product.amount.ToString() ,
-        //                            product.sharh,
-        //                            product.transid.ToString(),
-        //                            product.userid.ToString(),
-        //                            product.username
-
-
-
-
-        //                        }
-        //        })).ToArray()
-        //    };
-        //    return Json(productsData);
-        //}
 
 
         public ActionResult addnewtransaction(tbl_transaction t)

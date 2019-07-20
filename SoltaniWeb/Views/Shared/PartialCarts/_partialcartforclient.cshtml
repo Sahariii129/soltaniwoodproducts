@@ -1,0 +1,61 @@
+﻿@model tbl_purchasekart
+
+@{ 
+
+    SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
+    var cartid = Model.id;
+    //_4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    int i = 0;
+    decimal totalpriceofthiscart = Model.tbl_purchasekartitemlist.Sum(a => a.totalprice);
+
+
+}
+<div class="table-responsive">
+    <table class="table table-bordered sortable purchasecart" id="@cartid" cartid="@cartid">
+        <thead>
+            <tr>
+                <td>ردیف </td>
+                <td>تصویر </td>
+                <td> شرح محصول </td>
+                <td> تعداد </td>
+                <td>قیمت واحد(ریال)</td>
+                <td>قیمت کل(ریال)</td>
+                <td>حذف محصول</td>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.tbl_purchasekartitemlist)
+            {
+                i++;
+                <tr id="@("item" + @item.id)">
+                    <td>@i</td>
+                    <td><img class="imgProduct img-fluid" src="@(item.product_.thumbnail_image==null ? "~/Content/img/icon/img-na.png" : (string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.product_.thumbnail_image))))" alt="تصویر محصول" /></td>
+                    <td>
+                        <div> @(item.product_.category.categoryname + " " + item.product_.name + " " + item.product_.codename)</div>
+                        @*<div style="float:left; font-size:12px; color:#b200ff; ">وزن واحد: @string.Format("{0:#,##0.##}", item.product_.weight) Kg </div>*@
+                    </td>
+                    <td>
+                        <input class="form-control itemnumber" type="number" id="@item.id" value="@item.number" min="0" max="@entityrep.getentityitem(item.product_id)" />
+                    </td>
+                    <td>
+                        <div style="color:#eaa01b ; "><span class="unitprice"> @string.Format("{0:#,##0.##}", item.price)</span> </div>
+                    </td>
+                    <td id="@("totalpriceitem" + item.id)">@string.Format("{0:#,##0.##}", item.totalprice) </td>
+                    <td><a href="#" class="deleteitem" id="@item.id"><img src="~/Content/img/icon/delete.png" class="img-responsive" alt="Alternate Text" /></a></td>
+                </tr>
+            }
+
+            <tr style="background-color: rgb(248, 238, 201);color:red">
+                <td>جمع کل</td>
+                <td></td>
+                <td></td>
+                <td><span id="totalnumber" class="form-control totalnumber" style="width:50%;margin:auto;color:red">@Model.tbl_purchasekartitemlist.Sum(a=>a.number)</span></td>
+                <td></td>
+                <td>@string.Format("{0:#,##0.##}", totalpriceofthiscart)</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+

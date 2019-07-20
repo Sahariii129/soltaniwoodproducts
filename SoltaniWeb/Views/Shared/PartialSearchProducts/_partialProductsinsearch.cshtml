@@ -29,6 +29,7 @@
             @foreach (var item in Model)
             {
                 <div class="col-lg-3 col-12 pading1px my-2 my-lg-0">
+
                     <div class="card" style="position:relative">
                         <div class="status">
                             <button class="btn btn-status btn-sm @(entityrep.getexistproducts(item.idproduct)=="موجود"?"green":(entityrep.getexistproducts(item.idproduct)=="محدود"?"orange":"red"))">
@@ -41,6 +42,7 @@
                             </button>
                         </div>
                         <div class="card-body p-1">
+                           
                             <div class="productimage">
                                 @{
                                     if (item.thumbnail_image != null)
@@ -65,7 +67,7 @@
 
                                 <div class="text-center @(item.category.purchaseonline!=true? "d-none":"")" productid="@item.idproduct" id="addToCart"><div><span class="btn btn-addToCart">افزودن به سبد خرید<i class="fas fa-shopping-cart px-1"></i></span></div></div>
 
-
+                    
                             </div>
                             <div class="productinfo p-1">
                                 <div class="section text-center">

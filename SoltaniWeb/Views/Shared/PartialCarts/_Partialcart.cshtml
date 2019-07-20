@@ -1,0 +1,68 @@
+﻿@model tbl_purchasekart
+@inject IUserServices _user
+
+@{ 
+    int userid = _user.GetUseridByUsername(User.Identity.Name);
+    _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+    var access = db.tbl_accesslevels.Where(a => a.userid == userid && a.accessid == 32 && a.accessvalue == true).SingleOrDefault();
+
+}
+
+<table class="table table-responsive table-bordered">
+    <tr>
+        <td>نام کاربری :</td>
+        <td> @(Model.user.username + "  [" + Model.userid + "]")</td>
+    </tr>
+    <tr>
+        <td>نام و نام خانوادگی :</td>
+        <td> @(Model.user.name + "  " + Model.user.Lname)</td>
+    </tr>
+    <tr>
+        <td>وضعیت پرداخت :</td>
+        <td>@(Model.ispaid == true ? "تسویه شده" : "عدم تسویه")</td>
+    </tr>
+    <tr>
+        <td>تاریخ پرداخت :</td>
+        <td>@(Model.purchasedateend == null ? "" : @shamsi.ToShamsi(Model.purchasedateend.Value).ToString("yyyy/MM/dd"))</td>
+    </tr>
+
+    <tr>
+        <td>تقاضای حمل :</td>
+        <td>@(Model.tbl_transportationcost.Count() == 0 ? "ندارد" : "دارد")</td>
+    </tr>
+    <tr>
+        <td>وضعیت نهایی سبد :</td>
+        <td>@(Model.isdeleverd == true ? "تحویل مشتری داده" : "تحویل مشتری نداده")</td>
+    </tr>
+</table>
+
+<hr />
+
+<button class="btn btn-sm my-1 btn-primary details" value="@Model.id">اقلام سبد</button>
+@if (Model.tbl_transportationcost.Count() != 0)
+{
+
+    <button class="btn my-1 btn-sm btn-success transportaiondetails" value="@Model.id">محل حمل </button>
+    <button class="btn my-1  btn-sm btn-danger transportaioncost" value="@Model.id">کرایه</button>
+}
+
+<button class="btn my-1 btn-sm btn-danger sendprice" cartid="@Model.id" userid="@Model.userid">ارسال قیمت</button>
+<button class="btn my-1 btn-sm btn-warning editprice" cartid="@Model.id" userid="@Model.userid">ویرایش</button>
+@if (access != null)
+{
+
+    <button class="btn my-1 btn-sm btn-warning vertificationofdeliver" value="@Model.id"> تحویل</button>
+}
+
+<div id="@("p"+Model.id)" style="display:none;">
+    @Html.Partial("_pcartdetails", Model)
+
+</div>
+<div id="@("t"+Model.id)" style="display:none;">
+
+    @Html.Partial("_transportationdetails", Model)
+</div>
+<div id="@("tcost"+Model.id)" style="display:none;">
+
+    @Html.Partial("_transportationcost", Model)
+</div>

@@ -1,0 +1,37 @@
+﻿@using SoltaniWeb.Models.structs
+@model IEnumerable<cartindropdown>
+
+@{ 
+    var user = Model.FirstOrDefault().userid;
+}
+
+<div class="mediasCollapse">
+    @if (Model.Count() == 0)
+    {
+        <img src="/soltanistatic/pictures/shopping-cart-emptyy.jpg" class="w-100 emptycart" />
+    }
+    else
+    {
+
+        @foreach (var item in Model)
+        {
+            <div class="media" productid="@item.productid" purchasecartid="@item.purchasecartid">
+                <img src="@(item.pimage==null ? "~/Content/img/icon/img-na.png" : (string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.pimage))))" />
+                <div class="media-body d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="px-3 px-lg-1 mb-0">@item.catgname</p>
+                        <p class="px-3 px-lg-1 mb-0">@item.pname<span class="code"> @item.pcode</span></p>
+                        <p class="mb-0 px-3 px-lg-1">تعداد : <span style="color:#e8701b">@item.numberincart</span></p>
+                    </div>
+
+                    <button type="button" class="close removecartitem">
+                        <span style="color:#132666;" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        }
+    }
+
+
+</div>
+<a class="btn btn-block btn-viewcart" href="/purchasecart/showcart?userid=@user">مشاهده سبد خرید<i class="fas fa-shopping-cart mx-2"></i></a>

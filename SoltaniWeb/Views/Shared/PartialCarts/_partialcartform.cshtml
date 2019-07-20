@@ -1,0 +1,369 @@
+﻿
+
+@using SoltaniWeb.Models.Extensions
+@using SoltaniWeb.Models.Domain
+@model tbl_purchasekart
+@{
+    _4820_soltaniwebContext db4 = new _4820_soltaniwebContext();
+    var brancheslist = db4.tbl_branches.ToList();
+    var i = 1;
+    var today = DateTime.Now.ToPersianDate();
+}
+
+<link href="~/soltanistatic/style/manage-cart.css" rel="stylesheet" />
+<div class="card myfont myformcontent"  style="border:2px ridge #6a95cc;">
+    <div class="controltools">
+        <img class="contorltoolsimg minimize mx-2" id="minimizeaddform"  cartid=@Model.id src="~/Content/img/icon/minimize-icon.png" />
+        <img class="contorltoolsimg closeform" id="closeaddform" src="~/Content/img/icon/Button-Close-icon.png" />
+    </div>
+    <div class="card-header paneltomove" id="myheadingpanel" style="background-color: @(Model!=null ?"#6a95cc" : "#6a95cc"); color:white; font-weight:900;">
+        <h6>
+          فرم ثبت قیمت فروش 
+
+        </h6>
+
+    </div>
+    <div class="card-body py-0">
+        <div class="row">
+            <div class="col-12 col-lg-4 orderinfo1 pt-4" id="oinfo1">
+                <div class="form-horizontal pl-2">
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 control-label fright">شماره سبد:</label>
+                            <div class="col-sm-8">
+                                <input type="text" disabled class="form-control" id="cartid" value=@Model.id  >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 control-label fright">نام مشتری:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control " userid=@Model.userid style="color:red;" disabled id="orderuser" value="@(Model.user.name + " " + Model.user.Lname)" placeholder="...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 control-label fright">تاریخ ثبت سبد:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="orderdateid" value="@(Model.purchasedatestart.ToPersianDate())" placeholder="...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 control-label fright "> شعبه : </label>
+                            <div class=" col-sm-8">
+                               <select id="branchid" class="form-control">
+                                   @foreach (var item in brancheslist)
+                                   {
+                                   <option value="@item.id" selected=@(Model.user.branches_id==item.id)>@item.branch_name</option>
+                                   }
+
+
+                               </select>
+
+                            </div>
+                        </div>
+                    </div>             
+                
+                    <div class="form-group">
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 control-label fright">شرح : </label>
+                            <div class="col-sm-8">
+                                <textarea rows="5" class="form-control" style="overflow-y:scroll;" id="orderdesc">@(Model.pcartDesc)</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-8 orderinfo1 p-0" id="oinfo1">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" style="border:unset">
+                            <div class="card-header" style="background-color:#f8eec9; color:black;font-weight:900;border-bottom:2px solid #ffca01"> لیست کالاهای درخواستی</div>
+                            <div class="card-body p-0">
+                                <div class="row">
+                                    <div class="col-12 col-lg-11 order-2 order-lg-1">
+                                        
+                                            <table class="table table-hover tabledit">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="prow hidden-xs">ردیف</th>
+                                                        <th class="pname">نام کالا</th>
+                                                        <th class="pnumber">تعداد</th>
+                                                        <th class="pprice">قیمت واحد</th>
+                                                        <th class="ptotalprice">قیمت کل</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tabletbody">
+                                                    @if (Model != null)
+                                    {
+
+                                        foreach (var item in Model.tbl_purchasekartitemlist)
+                                        {
+                                                            <tr class="ptrclass " pnumber="@item.number" productid="@item.product_id" row="@(i)" pprice="@item.price" ptotalprice="@item.totalprice" productname="@(item.product_.category.categoryname + " | " + item.product_.name + " | " + item.product_.codename + " | " + item.product_.dimension )">
+                                                                <td class="prow hidden-xs">@(i)</td>
+                                                                <td class="pname" productid="@item.product_id">@(item.product_.category.categoryname + " | " + item.product_.name + " | " + item.product_.codename + " | " + item.product_.dimension )</td>
+                                                                <td class="pnumber">@item.number</td>
+                                                                <td class="pprice" purevalue=@item.price>@string.Format("{0:#,##0.##}", item.price)</td>
+                                                                <td class="ptotalprice" purevalue=@item.totalprice>@string.Format("{0:#,##0.##}", item.totalprice)</td>
+                                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr class="trfooter">                                               
+                                                        <td class="totalpnumberlbl">جمع کل</td>
+                                                        <td class="totalpnumber" id="totalpnumber">@(Model != null ? (Model.tbl_purchasekartitemlist.Sum(a => a.number)) : 0)</td>
+                                                        <td class="totalptotalprice">@(string.Format("{0:#,##0.##}",Model.tbl_purchasekartitemlist.Sum(a=>a.totalprice)))</td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                       
+                                    </div>
+                                    <div class="col-12 col-lg-1 order-1 order-lg-2">
+                                        <div class="d-flex flex-row flex-lg-column my-3 my-lg-0">
+                                            <div class=" myimgefrm">
+                                                <img accesskey="a" id="additem" class="img1" src="~/Content/img/icon/Button-Add-icon.png" />
+                                            </div>
+                                            <div class=" myimgefrm">
+                                                <img id="edititem" class="img1" rowtoedit="" src="~/Content/img/icon/edit.png" />
+                                            </div>
+                                            <div class=" myimgefrm">
+                                                <img id="deleteitem" class="img1" rowtodelete="" src="~/Content/img/icon/delete.png" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                           
+                        </div>
+                    </div>
+                    <div class="col-12 descriptionp">
+                        <div class="row">
+                            <div class="col-12 pr-4">
+                                <button id="btn_savecart" class="btn btn-sm btn-success">ثبت </button>
+                                <a href="/Reports/orderreport?orderid=@(Model!=null ?  Model.id : 0)" class="btn btn-sm btn-primary btn_printer" target="_blank">پرینت</a>
+                                <button class="btn btn-sm btn-warning" id="orderexporttopdf" orderid="@(Model!=null ? Model.id : 0)">ارسال pdf </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+     //save pdf file
+    $(orderexporttopdf).click(function () {
+        var orderid = $(ordernumber).val()
+        if (orderid.length == 0) {
+            $(messagenotokbody).html('حواله هنوز ثبت نشده است')
+            $(messagenotok).modal()
+            return;
+        }
+        var msg = '';
+        msg += '<p class="msgtext">حواله ' + orderid + '</p>'
+        msg += '<a target="_blank" class="btn btn-success "  href="/admin/DownLoadFile/' + $(this).attr('filenametosend') + '">دانلود فایل</a>'
+
+
+        $.post('/Reports/orderexporttopdf', { orderid: orderid }, function (e) {
+            $(messageokheader).html('ارسال موفق')
+            $(messageokbody).html('حواله مذکور با موفقیت به تالار گفتگو ارسال گردید')
+            $(messageok).modal();
+        })
+    })
+
+
+    $('#orderdateid').click(function () {
+        PersianDatePicker.Show(this, '@today')
+    })
+
+
+
+
+    $(messageokbody).off().on('click', '#btn_additemmodalid', function (e) {
+    var j=1
+    $('.ptrclass').each(function (x, p) {
+        var rownumber = $(this).attr('row')
+
+        if (rownumber >= j) {
+            j = parseInt(rownumber)+ 1
+            }
+    })
+
+        var newitemhtml = '';
+        newitemhtml += '<tr class="ptrclass" pnumber="' + $(itemnumberinmodalid).val() + '" productid="' + $(productnameinmodalid_id).val() +'" row="'+j +'" >'
+        newitemhtml += '<td class="prow">' + j +'</td>'
+        newitemhtml += '<td class="pname" pnumber="' + $(itemnumberinmodalid).val() +'" productid="' + $(productnameinmodalid_id).val() +'">' + $(productnameinmodalid).val() +'</td>'
+        newitemhtml += '<td class="pnumber">' + $(itemnumberinmodalid).val() +'</td>'
+        newitemhtml += '<td class="pprice">' + $(itemdescriptioninmodal).val() + '</td>'
+        newitemhtml += '<td class="ptotalprice">' + $(itemdescriptioninmodal).val() + '</td>'
+        newitemhtml += '</tr>'
+        $(tabletbody).append(newitemhtml)
+        var totalnumber = parseInt($(totalpnumber).html())
+        totalnumber += parseInt($(itemnumberinmodalid).val())
+        $(totalpnumber).html(totalnumber)
+        newitemhtml=''
+        $(messageok).modal('hide');
+    })
+    $(this).keypress(function (event) {
+        switch (event.keyCode) {
+
+            case 45:
+                $(additem).click()
+                break;
+            case 39:
+                document.body.innerHTML = 'right arrow';
+                break;
+
+        }
+    });
+
+
+
+   
+
+    // select row to edit or delete
+    $(tabletbody).on('click', '.ptrclass', function () {
+        var thisrow = $(this).attr('row')
+        if ($(this).hasClass('rowselected') == true) {
+            $(this).removeClass('rowselected')
+            $(edititem).attr('rowtoedit', '')
+
+            $(deleteitem).attr('rowtodelete', '')
+        } else {
+            $('*').removeClass('rowselected')
+            $(this).addClass('rowselected')
+            $(edititem).attr('rowtoedit', thisrow)
+
+            $(deleteitem).attr('rowtodelete', thisrow)
+        }
+    })
+
+    // Delete selected row
+    $(deleteitem).click(function () {
+        var selectedrow = $(this).attr('rowtodelete')
+        var totalnumbere = parseInt($('#totalpnumber').html())
+        totalnumbere = totalnumbere - parseInt($('.ptrclass[row="' + selectedrow + '"]').attr('pnumber'));
+        $('.ptrclass[row="' + selectedrow + '"]').remove();
+        $('#totalpnumber').html(totalnumbere)
+    })
+
+    // Edit selected row
+    $(edititem).click(function () {
+        var selectedrow = $(this).attr('rowtoedit')
+        var seletecttr = $('.ptrclass[row="' + selectedrow + '"]')
+        var itemproductid = seletecttr.attr('productid')
+        var productname = seletecttr.attr('productname')
+        var pnumber = seletecttr.attr('pnumber')
+        var pprice = seletecttr.attr('pprice')
+
+        var datarowtoedit = { "itemproductid": itemproductid, "itemnumber": pnumber, "pprice": pprice, "row": selectedrow, "productname": productname }
+        //var datatosend = JSON.stringify(datarowtoedit)
+        //alert(datatosend)
+        $.post('/admin/toshowpartialeditpriceincart', datarowtoedit, function (data) {
+            //alert(data)
+            $(messageokbody).html(data)
+            $(messageokheader).html('فرم ویرایش')
+            $(btn_edititemmodalid).attr('selectedrow', selectedrow)
+            $(messageok).modal("show");
+        })
+    })
+
+
+    $(messageok).off().on('click', '#btn_edititemmodalid', function () {
+        var selectedrow = $(this).attr('selectedrow')
+        var totalnumbere = parseInt($('#totalpnumber').html())
+        totalnumbere = totalnumbere - parseInt($('.ptrclass[row="' + selectedrow + '"]').attr('pnumber'));
+        //newitemhtml += '<tr class="ptrclass" pdesc="' + $(itemdescriptioninmodal).val() + '" pnumber="' + $(itemnumberinmodalid).val() + '" productid="' + $(productnameinmodalid_id).val() + '" row="' + i + '" >'
+        var newitemhtml = '';
+        newitemhtml += '<td class="prow">' + $(this).attr('selectedrow') + '</td>'
+        newitemhtml += '<td class="pname"  productid="' + $(productnameinmodalid_id).val() + '">' + $(productnameinmodalid).val() + '</td>'
+        newitemhtml += '<td class="pnumber">' + $(itemnumberinmodalid).val() + '</td>'
+        newitemhtml += '<td class="pprice">' + $(ppriceidinmodel).val() + '</td>'
+        newitemhtml += '<td class="ptotalprice" purevalue="' + $(ptotalpriceidinmodal).attr('purevalue') + '" >' + $(ptotalpriceidinmodal).val() + '</td>'
+
+        //newitemhtml += '</tr>'
+        $('.ptrclass[row="' + selectedrow + '"]').html(newitemhtml);
+        
+        $('.ptrclass[row="' + selectedrow + '"]').attr('pnumber', $(itemnumberinmodalid).val())
+        $('.ptrclass[row="' + selectedrow + '"]').attr('productid', $(productnameinmodalid_id).val())
+        $('.ptrclass[row="' + selectedrow + '"]').attr('pprice', $(ppriceidinmodel).attr('purevalue'))
+        $('.ptrclass[row="' + selectedrow + '"]').attr('ptotalprice', $(ptotalpriceidinmodal).attr('purevalue'))
+        $('.ptrclass[row="' + selectedrow + '"]').attr('productname', $(productnameinmodalid).val())
+
+        $('.ptrclass[row="' + selectedrow + '"]').attr('row', selectedrow)
+        totalnumbere = totalnumbere + parseInt($(itemnumberinmodalid).val())
+        $(totalpnumber).html(totalnumbere)
+        var totalprice = 0
+        $('td.ptotalprice').each(function () {
+            totalprice += parseInt($(this).attr('purevalue'))
+
+
+
+
+        })
+        $('.totalptotalprice').html(totalprice)
+        
+        $('.totalptotalprice').html(function (index, value) {
+
+            return value
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                ;
+        });
+
+
+        //$('#totalpnumber').html()
+        $(messageok).modal("hide");
+    })
+
+
+    $('#btn_savecart').click(function () {
+        $("*").removeClass("validationrequired")
+        var cartid=$('#cartid').val()
+
+        // save cellphone
+  
+        var itemproductidlist = []
+        $('tr.ptrclass').each(function () {
+            var productid = $(this).attr('productid')
+            var itemnumber = $(this).attr('pnumber')
+            var price = $(this).attr('pprice')
+            var totalprice = $(this).attr('ptotalprice')
+
+
+            itemproductidlist.push({ productid: productid, itemnumber: itemnumber, price: price, totalprice: totalprice })
+        });
+       
+        var data01 = { cartid: cartid, itemlist: itemproductidlist }
+        var data = JSON.stringify(data01)
+      
+        // to detemine add or edit mode
+       
+            // edit mode
+            if (confirm('آیا می خواهید حواله اصلاح گردد؟')) {
+                $.ajax({
+                    url: '/admin/editpriceofcart',
+                    type: 'POST',
+                    data: data,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    success: function (data, textStatus, jqXHR) {
+                       
+                        $(messageokbody).html(data.message)
+                        $(messageok).modal("show");
+                    }
+                });
+            }
+            return;
+
+    })
+
+
+</script>

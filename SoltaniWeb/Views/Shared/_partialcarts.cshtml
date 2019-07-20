@@ -14,20 +14,20 @@
 
 
 
-<div class="row">
+<div class="row" style="min-height: -webkit-fill-available">
     @foreach (var item in Model.Skip(skip).Take(take))
     {
 
-        <div class="col-12 col-lg-4">
+        <div class="col-12 col-lg-4 mb-3">
             <div class="card">
-                <div class="card-header" style="background-color:#808080; color:#ffffff; font-size:12px; cursor:pointer;">
+                <div class="card-header">
                     @( "سبد : " + item.id)
 
-                    <span style="float:left;font-size:12px;">@(item.ispaid == true ? shamsi.ToShamsi(item.purchasedateend.Value).ToString("yyyy/MM/dd  HH:mm") : "")</span>
+                    <span class="date" style="float:left;">@(item.ispaid == true ? shamsi.ToShamsi(item.purchasedateend.Value).ToString("yyyy/MM/dd  HH:mm") : "")</span>
 
                 </div>
-                <div class="card-body" style="background-color:#dbcdcd; color:#000000;font-weight:800;" hidden>
-                    <table class="table table-responsive table-bordered" style="font-size:12px;display:table">
+                <div class="card-body" style="background-color:#f8eec9; color:#000;font-weight:800;display:none">
+                    <table class="table table-responsive table-bordered">
                         <tr>
                             <td>نام کاربری :</td>
                             <td> @(item.user.username + "  [" + item.userid + "]") </td>
@@ -57,20 +57,21 @@
 
                     <hr />
 
-                    <button class="btn btn-primary details" value="@item.id">اقلام سبد</button>
+                    <button class="btn btn-sm my-1 btn-primary details" value="@item.id">اقلام سبد</button>
                     @if (item.tbl_transportationcost.Count() != 0)
                     {
 
-                    <button class="btn btn-success transportaiondetails" value="@item.id">محل حمل  </button>
-                    <button class="btn btn-danger transportaioncost" value="@item.id">کرایه   </button>
+                        <button class="btn btn-sm my-1 btn-success transportaiondetails" value="@item.id">محل حمل  </button>
+                        <button class="btn btn-sm my-1 btn-danger transportaioncost" value="@item.id">کرایه   </button>
                     }
 
-                    @if (access!=null)
-                 {
+                    @if (access != null)
+                    {
 
-                    <button class="btn btn-warning vertificationofdeliver" value="@item.id"> تحویل   </button>
-                 }
-
+                        <button class="btn btn-sm my-1 btn-warning vertificationofdeliver" value="@item.id"> تحویل   </button>
+                    }
+                    <button class="btn btn-sm my-1 btn-danger sendprice" cartid="@item.id" userid="@item.userid">ارسال قیمت</button>
+                    <button class="btn btn-sm my-1 btn-warning editprice" cartid="@item.id" userid="@item.userid">ویرایش</button>
 
                     <div id="@("p"+item.id)" style="display:none;">
                         @Html.Partial("_pcartdetails", item)
@@ -85,18 +86,18 @@
                         @Html.Partial("_transportationcost", item)
                     </div>
                 </div>
-                <div class="card-footer" style="background-color:#d7d2d2;color:#ffffff; height:70px;">
+                <div class="card-footer">
                     @if (item.isdeleverd == true)
                     {
 
-                    <div style="position:absolute; top:50px; left:30px;">
-                        <img src="~/Content/img/icon/isdeliverd_s.png" style="width:40px; height:40px;" />
+                    <div class="imgStatus">
+                        <img src="~/Content/img/icon/isdeliverd_s.png" />
                     </div>
                     }
                     else
-                    {
-                    <div style="position:absolute; TOP:50px; left:30px;">
-                        <img src="~/Content/img/icon/no-icon.png" style="width:40px; height:40px;" />
+                    { 
+                    <div class="imgStatus">
+                        <img src="~/Content/img/icon/no-icon.png" />
                     </div>
                     }
 
@@ -119,7 +120,7 @@
                 </li>
                 @for (int i = 1; i < ViewBag.totalpages + 1; i++)
                 {
-                    <li class="page-item"><a class="paging page-link" id="@(ViewBag.pagesize*(i-1))" href="#" style="background-color:@(ViewBag.pagenumber==i?"red":"");">@i</a></li>
+                    <li class="page-item"><a class="paging page-link" id="@(ViewBag.pagesize*(i-1))" href="#" style="background-color:@(ViewBag.pagenumber==i?"#b7c9e1":"");">@i</a></li>
                 }
 
                 <li class="page-item">
@@ -204,3 +205,6 @@
 
 
     </script>
+
+
+

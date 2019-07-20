@@ -2,6 +2,8 @@
 @using SoltaniWeb.Models.Services.Interfaces
 @inject IProductsServices _ProductsService
 
+
+
 @{
     _4820_soltaniwebContext db = new _4820_soltaniwebContext();
     var sectionshasstatus = db.tbl_section.Where(a => a.status.HasValue == true);
@@ -9,6 +11,8 @@
     var sectionsnumber = sections.Count();
     var catg = db.tbl_category.ToList();
     var lastnews = db.tbl_news.LastOrDefault();
+    var thiscontroller = ViewContext.RouteData.Values["controller"];
+    var thisaction = ViewContext.RouteData.Values["action"].ToString();
 
 
 }
@@ -16,7 +20,7 @@
 <div class="navbar navbar-expand-lg navbar-dark part2">
     <div class="collapse navbar-collapse d-lg-flex d-block justify-content-between align-items-center" id="menu">
         <ul class="navbar-nav">
-            <li class="nav-item subnavbtn">
+            <li class="nav-item subnavbtn active">
                 <a href="/" class="atag nav-link"><i class="fas fa-home mx-1"></i>خانه</a>
             </li>
             <li class="nav-item subnavbtn" id="1">
@@ -25,50 +29,45 @@
                 </a>
             </li>
             <li class="nav-item subnavbtn dropdown productDropdown" id="2">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="">
-                        <span number="@sectionsnumber"><i class="fas fa-clipboard-list mx-1"></i>محصولات<i class="fas fa-angle-down mx-2"></i></span>
-                    </a>
-                <div id="soltaniproductmenu" class="dropdown-menu row">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="">
+                    <span number="@sectionsnumber"><i class="fas fa-clipboard-list mx-1"></i>محصولات<i class="fas fa-angle-down mr-2"></i></span>
+                </a>
+                <div id="soltaniproductmenu" class="dropdown-menu">
+                    <div class="row">
+                        <div class="col-12 col-lg-9">
+                            <div class="row" id="accordian">
 
-                    <div class="col-lg-9">
-                        <div class="row" id="accordian">
-
-
-                            @foreach (var item in sections)
+                                @foreach (var item in sections)
                             {
 
-                                <div class="col-lg-4">
-                                    @*<h6 class="" data-target=@("#collapse"+item.id) sectionId=@("collapse"+item.id) data-toggle="collapse"><i id="icon1" class="fas fa-angle-left mx-1"></i>@item.name</h6>*@
-
-                                    <h6><i id="icon1" class="fas fa-angle-left mx-1"></i>@item.name</h6>
-                                    <div class="sectionclass hidden">
-                                        <ul class="list-unstyled">
-                                            @foreach (var item2 in item.tbl_category)
+                                    <div class="col-lg-4">
+                                        <h6><i id="icon1" class="fas fa-angle-left mx-1"></i>@item.name</h6>
+                                        <div class="sectionclass hidden">
+                                            <ul class="list-unstyled">
+                                                @foreach (var item2 in item.tbl_category)
                                             {
                                                 if (_ProductsService.GetStatuseOFCategory(item2.id))
                                                 {
-                                                 <li><a href="/GetProducts/@item2.id?key=@item2.keywords">@item2.categoryname</a></li>
-                                                   
+                                                        <li><a href="/GetProducts/@item2.id?key=@item2.keywords">@item2.categoryname</a></li>
                                                 }
                                             }
-                                        </ul>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
-
                             }
+                            </div>
 
                         </div>
-                      
+                        <div class="col-lg-3 d-none d-lg-block mt-auto">
+                            <img class="w-100" src="~/soltanistatic/pictures/SWP_new1.png" />
+                        </div>
                     </div>
-                    @*<div class="col-lg-3 mt-auto">
-                        <img class="w-100" src="~/soltanistatic/pictures/SWP_new1.png" />
-                    </div>*@
                 </div>
             </li>
             <li class="nav-item subnavbtn dropdown" id="3">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="">
-                        <span><i class="fas fa-images mx-1"></i>گالری تصاویر<i class="fas fa-angle-down mx-2"></i></span>
-                    </a>
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="">
+                    <span><i class="fas fa-images mx-1"></i>گالری تصاویر<i class="fas fa-angle-down mr-2"></i></span>
+                </a>
                 <div class="dropdown-menu">
                     <ul class="list-unstyled customList">
                         <li class="dropdown-item"><a href="~/samples/samples_catg?key=نمونه-کار-ها-به-تفکیک-نوع-دکور"><i id="icon1" class="fas fa-angle-left mx-1"></i>براساس نوع کار</a></li>
@@ -83,9 +82,9 @@
                 <a class="nav-link" href="/home/contactus"><span><i class="fas fa-phone mx-1"></i>تماس با ما</span></a>
             </li>
             <li class="nav-item subnavbtn dropdown" id="4">
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="">
-                        <span><i class="fas fa-handshake mx-1"></i>همکاری با ما<i class="fas fa-angle-down mx-2"></i></span>
-                    </a>
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="">
+                    <span><i class="fas fa-handshake mx-1"></i>همکاری با ما<i class="fas fa-angle-down mr-2"></i></span>
+                </a>
                 <div class="dropdown-menu">
                     <ul class="list-unstyled customList">
                         <li class="dropdown-item"><a href="/home/registerforjob"><i id="icon1" class="fas fa-angle-left mx-1"></i>ثبت نام متقاضی کار</a></li>

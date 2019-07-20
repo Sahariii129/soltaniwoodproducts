@@ -18,9 +18,16 @@ namespace SoltaniWeb.Controllers
         // GET: purchasecart
         _4820_soltaniwebContext db = new _4820_soltaniwebContext();
         private IUserServices _userServices;
-        public purchasecartController(IUserServices userServices)
+
+        private IPurchaseCart _purchaseCart;
+
+
+
+
+        public purchasecartController(IUserServices userServices, IPurchaseCart p)
         {
             _userServices = userServices;
+            _purchaseCart = p;
         }
         public ActionResult Index()
         {
@@ -38,7 +45,7 @@ namespace SoltaniWeb.Controllers
                 int user = _userServices.GetUseridByUsername(User.Identity.Name);
                 var product = db.tbl_products.Where(a => a.idproduct == product_id).SingleOrDefault();
                 int numberexist;
-                var listkala = db.tbl_listkala.Where(a => a.productid == product_id);
+                var listkala = db.tbl_listkala97.Where(a => a.productid == product_id);
                 if (listkala.Count() != 0)
                 {
                     numberexist = listkala.Sum(a => a.kalanumberm);
@@ -56,19 +63,22 @@ namespace SoltaniWeb.Controllers
                 }
 
                 int number = 0;
+                cartindropdown cartabs = new cartindropdown();
+                tbl_purchasekartitemlist item = new tbl_purchasekartitemlist();
                 if (db.tbl_purchasekart.Where(a => a.userid == user && a.ispaid == false).Count() == 0)
                 {
                     tbl_purchasekart pcart = new tbl_purchasekart();
                     pcart.userid = user;
                     pcart.purchasedatestart = DateTime.Now;
                     pcart.ispaid = false;
+                    pcart.status = 0;
                     db.tbl_purchasekart.Add(pcart);
                     db.SaveChanges();
-                    tbl_purchasekartitemlist item = new tbl_purchasekartitemlist();
-                   
+                    
+
                     item.product_id = product_id;
                     item.number = 1;
-                    item.price = product.lastcellcost.HasValue ? product.lastcellcost.Value : 0;
+                    item.price = 0;
                     item.perchasekart_id = pcart.id;
                     item.purchase_datetime = DateTime.Now;
                     item.totalprice = item.number * item.price;
@@ -82,16 +92,16 @@ namespace SoltaniWeb.Controllers
                 else
                 {
                     var pcartopen = db.tbl_purchasekart.Where(a => a.userid == user && a.ispaid == false).SingleOrDefault();
+                    pcartopen.status = 0;
                     int kartidopen = pcartopen.id;
-                    if (pcartopen.tbl_purchasekartitemlist.Where(a=>a.product_id== product_id).Count()!=0)
+                    if (pcartopen.tbl_purchasekartitemlist.Where(a => a.product_id == product_id).Count() != 0)
                     {
                         return Json(new { preselected = "1" });
                     }
 
-                    tbl_purchasekartitemlist item = new tbl_purchasekartitemlist();
                     item.product_id = product_id;
                     item.number = 1;
-                    item.price = product.lastcellcost.HasValue ? product.lastcellcost.Value : 0;
+                    item.price = 0;
                     item.perchasekart_id = kartidopen;
                     item.purchase_datetime = DateTime.Now;
                     item.totalprice = item.number * item.price;
@@ -100,114 +110,107 @@ namespace SoltaniWeb.Controllers
 
                     number = db.tbl_purchasekartitemlist.Where(a => a.perchasekart_id == pcartopen.id).Count();
                 }
-                cartabstract cartabs = new cartabstract();
 
-                cartabs.number = number;
+
+
+
+
+
+                cartabs.catgname = item.product_.category.categoryname;
+                cartabs.numberincart = item.number;
+                cartabs.pcode = item.product_.codename;
+                cartabs.pname = item.product_.name;
+                cartabs.productid = item.product_id;
+                cartabs.purchasecartid = item.id;
+                cartabs.pimage = item.product_.thumbnail_image != null ? item.product_.thumbnail_image : new byte[0];
                 cartabs.userid = user;
-                cartabs.numberitemexist = numberexist;
+                //cartabs.totalitemnumberincart = _purchaseCart.itemnumberincart(user);
+                return PartialView("~/Views/Shared/PartialSearchProducts/_PartialItemCart.cshtml", cartabs);
 
-                return Json(cartabs);
             }
 
 
         }
 
 
-        public ActionResult showcart(int userid = 0)
+        public ActionResult showcart()
         {
-            //if (!User.Identity.IsAuthenticated)
-            //{
+            if (!User.Identity.IsAuthenticated)
+            {
 
-            //    return RedirectToAction("login", "home");
-            //}
+                return RedirectToAction("signin", "account");
+            }
+            int userid = _userServices.GetUseridByUsername(User.Identity.Name);
 
-                string discountcode;
-            int user = int.Parse(HttpContext.User.Claims.FirstOrDefault().Value);
-
-                if (user != userid)
-                {
-                    return RedirectToAction("login", "home");
-
-                }
-                else
-                {
-
-                    var cartlist = db.tbl_purchasekartitemlist.Where(a => a.perchasekart_.ispaid == false && a.perchasekart_.userid == userid).ToList();
-                    //
-                    decimal totalprice = 0, totalweight = 0, totalcosttransportation = 0, discount = 0;
-                    string totalpricestr, totalweightstr, totalcosttransportationstr, discountstr;
-
-                    foreach (var item in cartlist)
-                    {
-                        totalprice = totalprice + (decimal)(item.number * (item.product_.lastcellcost.HasValue == true ? item.product_.lastcellcost.Value : 0));
-                        totalweight = totalweight + (decimal)(item.number * (item.product_.weight.HasValue == true ? item.product_.weight.Value : 0));
-                    }
+            var cartlist = db.tbl_purchasekartitemlist.Where(a => a.perchasekart_.ispaid == false && a.perchasekart_.userid == userid).ToList();
+            if (cartlist!=null)
+            {
+                var cart = cartlist.FirstOrDefault().perchasekart_;
+                if (!_purchaseCart.ISPriceValid(cart.id))
+            {
+                    cart.status = (int)purchasestatus.PurchaseIsStart;
+                    db.SaveChanges();
+            }
 
 
-
-                    totalpricestr = string.Format("{0:#,##0.##}", totalprice) + " ریال";
-
-                    if (cartlist.Count() > 0)
-                    {
-                        if (cartlist.FirstOrDefault().perchasekart_.discount_id != null)
-                        {
-                            discount = Math.Floor(cartlist.FirstOrDefault().perchasekart_.discount_.percentage.Value * totalprice / 100);
-                            discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
-                            discountcode = cartlist.FirstOrDefault().perchasekart_.discount_.discountcode;
-                        }
-                        else
-                        {
-                            discount = 0;
-                            discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
-                            discountcode = "";
-                        }
-                        int carid = cartlist.FirstOrDefault().perchasekart_id;
-                        if (db.tbl_transportationcost.Where(a => a.cart_id == carid).Count() > 0)
-                        {
-
-                            totalcosttransportation = db.tbl_transportationcost.Where(a => a.cart_id == carid).Sum(a => a.totaltcost.Value);
-                            totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
-                        }
-                        else
-                        {
-                            totalcosttransportation = 0;
-                            totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
-                        }
-                        decimal payableprice = 0;
-                        string payablepricestr = "";
-
-                        payableprice = totalprice + totalcosttransportation - discount;
-                        payablepricestr = string.Format("{0:#,##0.##}", payableprice) + " ریال";
+            }
 
 
-                        //
-                        ViewBag.totalcosttransportation = totalcosttransportation;
-                        ViewBag.totalprice = totalprice;
-                        ViewBag.totalnumber = cartlist.Sum(a => a.number);
-                        ViewBag.discount = discount;
-                        ViewBag.totalweigth = totalweight;
-                        ViewBag.payableprice = payableprice;
-                        ViewBag.discountcode = discountcode;
-                        return View(cartlist);
-                    }
-                    else
-                    {
-                        ViewBag.totalcosttransportation = 0;
-                        ViewBag.totalprice = 0;
-                        ViewBag.totalnumber = 0;
-                        ViewBag.discount = 0;
-                        ViewBag.totalweigth = 0;
-                        ViewBag.payableprice = 0;
-                        ViewBag.discountcode = "";
-                        TempData["message"] = "سبد کالای شما خالی است";
-                        return RedirectToAction("index", "home");
-                    }
-
-                    
-                }
-
-            
+           
+            return View(cartlist);
+           
         }
+
+        public IActionResult toshowcardinabstractview()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                int userid = _userServices.GetUseridByUsername(User.Identity.Name);
+                var cartlist = db.tbl_purchasekartitemlist.Where(a => a.perchasekart_.ispaid == false && a.perchasekart_.userid == userid).ToList().Select(p => new cartindropdown()
+                {
+                    purchasecartid=p.id,
+                    productid = p.product_id,
+                    catgname = p.product_.category.categoryname,
+                    pname = p.product_.name,
+                    pcode = p.product_.codename,
+                    pimage = p.product_.thumbnail_image,
+                    numberincart = p.number,
+                    userid = userid,
+
+                }
+                );
+                return PartialView("~/Views/Shared/PartialSearchProducts/_PartialCart.cshtml", cartlist);
+
+
+                //return Json(User.Identity.Name);
+            }
+            else
+            {
+                return Json(false);
+            }
+
+        }
+        // to remove item from cart in dropdown list
+        public IActionResult removecartitem(int cartid)
+        {
+            try
+            {
+            var cartitem = db.tbl_purchasekartitemlist.Find(cartid);
+            db.tbl_purchasekartitemlist.Remove(cartitem);
+            db.SaveChanges();
+             int numberincart=   _purchaseCart.itemnumberincart(_userServices.GetUseridByUsername(User.Identity.Name));
+                return Json(numberincart);
+            }
+            catch (Exception)
+            {
+
+                return Json("false");
+            }
+          
+            
+
+        }
+
 
         public editnumberiteminpurchasecart updatepurchasecart(int itemnumber = 0, int purchasecartitemid = 0, int purchasecartid = 0)
         {
@@ -236,45 +239,45 @@ namespace SoltaniWeb.Controllers
 
             }
 
-            if (cartlist.Count()>0)
-            {
-                
-            if (cartlist.FirstOrDefault().perchasekart_.discount_id != null)
-            {
-                discount = Math.Floor(cartlist.FirstOrDefault().perchasekart_.discount_.percentage.Value * totalprice / 100);
-
-                discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
-            }
-            else
-            {
-                discount = 0;
-                discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
-            }
-
-            //int carid = cartlist.FirstOrDefault().perchasekart_id;
-            if (db.tbl_transportationcost.Where(a => a.cart_id == purchasecartid).Count() > 0)
+            if (cartlist.Count() > 0)
             {
 
-                totalcosttransportation = db.tbl_transportationcost.Where(a => a.cart_id == purchasecartid).Sum(a => a.totaltcost.Value);
-                totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
-            }
-            else
-            {
-                totalcosttransportation = 0;
-                totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
-            }
-            payableprice = totalprice + totalcosttransportation - discount;
-            editnumberiteminpurchasecart editcart = new editnumberiteminpurchasecart();
+                if (cartlist.FirstOrDefault().perchasekart_.discount_id != null)
+                {
+                    discount = Math.Floor(cartlist.FirstOrDefault().perchasekart_.discount_.percentage.Value * totalprice / 100);
 
-            editcart.newprice = string.Format("{0:#,##0.##}", newprice) + " ریال";
-            editcart.totalpriceitem = string.Format("{0:#,##0.##}", totalpriceitem) + " ریال";
-            editcart.totalprice = string.Format("{0:#,##0.##}", totalprice) + " ریال";
-            editcart.totalweight = string.Format("{0:#,##0.##}", totalweight) + " kg";
-            editcart.totalnumber = totalnumber.ToString();
-            editcart.totalcosttransportation = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
-            editcart.discount = string.Format("{0:#,##0.##}", discount) + " ریال";
-            editcart.payableprice = string.Format("{0:#,##0.##}", payableprice) + " ریال";
-            return editcart;
+                    discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
+                }
+                else
+                {
+                    discount = 0;
+                    discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
+                }
+
+                //int carid = cartlist.FirstOrDefault().perchasekart_id;
+                if (db.tbl_transportationcost.Where(a => a.cart_id == purchasecartid).Count() > 0)
+                {
+
+                    totalcosttransportation = db.tbl_transportationcost.Where(a => a.cart_id == purchasecartid).Sum(a => a.totaltcost.Value);
+                    totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
+                }
+                else
+                {
+                    totalcosttransportation = 0;
+                    totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
+                }
+                payableprice = totalprice + totalcosttransportation - discount;
+                editnumberiteminpurchasecart editcart = new editnumberiteminpurchasecart();
+
+                editcart.newprice = string.Format("{0:#,##0.##}", newprice) + " ریال";
+                editcart.totalpriceitem = string.Format("{0:#,##0.##}", totalpriceitem) + " ریال";
+                editcart.totalprice = string.Format("{0:#,##0.##}", totalprice) + " ریال";
+                editcart.totalweight = string.Format("{0:#,##0.##}", totalweight) + " kg";
+                editcart.totalnumber = totalnumber.ToString();
+                editcart.totalcosttransportation = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
+                editcart.discount = string.Format("{0:#,##0.##}", discount) + " ریال";
+                editcart.payableprice = string.Format("{0:#,##0.##}", payableprice) + " ریال";
+                return editcart;
             }
             else
             {
@@ -298,24 +301,24 @@ namespace SoltaniWeb.Controllers
             int purchasecartid = itemselected.perchasekart_id;
             entityproducutsreposit entityrep = new entityproducutsreposit();
             int max = entityrep.getentityitem(itemselected.product_id);
-            if (itemnumber>max)
+            if (itemnumber > max)
             {
                 string product = itemselected.product_.category.categoryname + " | " + itemselected.product_.name + "  کد " + itemselected.product_.codename;
-                return Json(new {status="false" , productname = product, maxcount = max });
+                return Json(new { status = "false", productname = product, maxcount = max });
             }
             else
             {
 
-            itemselected.number = itemnumber;
+                itemselected.number = itemnumber;
 
 
-            db.SaveChanges();
-            editnumberiteminpurchasecart updateoutput = new editnumberiteminpurchasecart();
-            updateoutput = updatepurchasecart(itemnumber, id, purchasecartid);
+                db.SaveChanges();
+                editnumberiteminpurchasecart updateoutput = new editnumberiteminpurchasecart();
+                updateoutput = updatepurchasecart(itemnumber, id, purchasecartid);
 
 
 
-            return Json(updateoutput);
+                return Json(updateoutput);
             }
 
         }
@@ -329,9 +332,10 @@ namespace SoltaniWeb.Controllers
             db.tbl_purchasekartitemlist.Remove(itemselected);
             db.SaveChanges();
 
-            editnumberiteminpurchasecart updateoutput = new editnumberiteminpurchasecart();
-            updateoutput = updatepurchasecart(0, id, purchasecartid);
-            return Json(updateoutput);
+            cartabstractinfo cartinfo = new cartabstractinfo();
+            cartinfo = _purchaseCart.GetCartAbstractinfo(itemselected.perchasekart_id);
+            
+            return Json(cartinfo);
 
 
         }
@@ -724,39 +728,39 @@ namespace SoltaniWeb.Controllers
             }
 
             totalpricestr = string.Format("{0:#,##0.##}", totalprice) + " ریال";
-            if (cartlist.Count()>0)
-            {
-                
-            if (cartlist.FirstOrDefault().perchasekart_.discount_id != null)
-            {
-                discount = Math.Floor(cartlist.FirstOrDefault().perchasekart_.discount_.percentage.Value * totalprice / 100);
-                discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
-                discountcode = cartlist.FirstOrDefault().perchasekart_.discount_.discountcode;
-            }
-            else
-            {
-                discount = 0;
-                discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
-                discountcode = "";
-            }
-            if (db.tbl_transportationcost.Where(a => a.cart_id == cartid).Count() > 0)
+            if (cartlist.Count() > 0)
             {
 
-                totalcosttransportation = db.tbl_transportationcost.Where(a => a.cart_id == cartid).Sum(a => a.totaltcost.Value);
-                totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
-            }
-            else
-            {
-                totalcosttransportation = 0;
-                totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
-            }
-            decimal payableprice = 0;
-            string payablepricestr = "";
+                if (cartlist.FirstOrDefault().perchasekart_.discount_id != null)
+                {
+                    discount = Math.Floor(cartlist.FirstOrDefault().perchasekart_.discount_.percentage.Value * totalprice / 100);
+                    discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
+                    discountcode = cartlist.FirstOrDefault().perchasekart_.discount_.discountcode;
+                }
+                else
+                {
+                    discount = 0;
+                    discountstr = string.Format("{0:#,##0.##}", discount) + " ریال";
+                    discountcode = "";
+                }
+                if (db.tbl_transportationcost.Where(a => a.cart_id == cartid).Count() > 0)
+                {
 
-            payableprice = totalprice + totalcosttransportation - discount;
-            payablepricestr = string.Format("{0:#,##0.##}", payableprice) + " ریال";
+                    totalcosttransportation = db.tbl_transportationcost.Where(a => a.cart_id == cartid).Sum(a => a.totaltcost.Value);
+                    totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
+                }
+                else
+                {
+                    totalcosttransportation = 0;
+                    totalcosttransportationstr = string.Format("{0:#,##0.##}", totalcosttransportation) + " ریال";
+                }
+                decimal payableprice = 0;
+                string payablepricestr = "";
 
-            return Json(new { status = true, totalprice = totalpricestr, discount = discountstr, totalcosttransportation = totalcosttransportationstr, payableprice = payablepricestr, discountcode = discountcode });
+                payableprice = totalprice + totalcosttransportation - discount;
+                payablepricestr = string.Format("{0:#,##0.##}", payableprice) + " ریال";
+
+                return Json(new { status = true, totalprice = totalpricestr, discount = discountstr, totalcosttransportation = totalcosttransportationstr, payableprice = payablepricestr, discountcode = discountcode });
 
             }
             else
@@ -828,9 +832,10 @@ namespace SoltaniWeb.Controllers
 
                     return Json(new { status = true, totalprice = totalpricestr, discount = discountstr, totalcosttransportation = totalcosttransportationstr, payableprice = payablepricestr, discountcode = discountcode });
                 }
-                else {
+                else
+                {
                     return Json(new { status = true, totalprice = "0", discount = "0", totalcosttransportation = "0", payableprice = "0", discountcode = "" });
-                    
+
                 }
             }
             else
@@ -878,6 +883,17 @@ namespace SoltaniWeb.Controllers
 
 
         }
+
+        public IActionResult updatenumberitemsincart()
+        {
+            cartabstractinfo r = new cartabstractinfo();
+            int cartid = _purchaseCart.opencartid(_userServices.GetUseridByUsername(User.Identity.Name));
+            r = _purchaseCart.GetCartAbstractinfo(cartid);
+            return Json(r);
+        }
+
+
+
 
     }
 }

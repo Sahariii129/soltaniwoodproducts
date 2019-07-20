@@ -458,7 +458,6 @@
     cursor: pointer;
     font-weight: bolder;
 }
-
 @media screen and (max-width: 1200px) {
     .psearch {
         position: absolute;
