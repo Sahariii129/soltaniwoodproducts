@@ -1,15 +1,8 @@
 ﻿
 @model SoltaniWeb.Models.structs.CompanyVM.CompanyViewModel
 
-@{
-    ViewData["Title"] = "Edit";
-     Layout = "~/Views/shared/_layoutbootstarp.cshtml";
-}
-
-
 <script src="~/js/jquery.bootstrap-modal-ajax-form.js"></script>
 <script src="~/js/jquery-ajax-unobtrusive/dist/jquery.unobtrusive-ajax.min.js"></script>
-
 
 <div class="container-fluid col-md-12" style="padding: 20px;">
     <div class="card">
@@ -125,6 +118,9 @@
                 var alertbody = "<div class='alert alert-success'>" +
                     "<a href='#' class='close' data-dismiss='alert'></a>" +
                     "<h4>" + data.ResultStatus.Message + "</h4></div>";
+                $("#divlstCompany").load('@Url.Action("Companies", "Company")');
+                $("#lstCompanyDrop").load('@Url.Action("ListCompany", "Company")');
+                $("#lstCompanyDropSection").load('@Url.Action("ListCompanyForSection", "Company")');
                 $("#creatCompany").html(alertbody);
                 if ($("#Id").val() === "0") {
                     $("#Phone").val('');

@@ -7,6 +7,9 @@ namespace SoltaniWeb.Models.structs.PersonVM
 {
     public class PersonViewModel
     {
+        public int CompanyId { get; set; }
+        public string CompanyName { get; set; }
+        public List<string> Companys { get; set; }
         public int GroupId { get; set; }
         public int Id { get; set; }
         public string GroupName { get; set; }

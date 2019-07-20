@@ -1,0 +1,100 @@
+﻿<div class="k-rtl">
+    @(Html.Kendo().Grid<PersonViewModel>()
+          .Name("grid_SentMessag")
+          .Columns(columns =>
+          {
+              columns.Bound(c => c.CompanyId)
+                  .ClientTemplate("<div style='text-align:center;width:70%;'><button class='btn btn-danger' onclick='delPersonGroup(\"#=Id#\")'  type='button'>حذف</button></div>")
+                  .Title("مورد")
+                  .Width(120)
+                  .Filterable(false)
+                  .Sortable(false)
+                  .Groupable(false);
+             
+              columns.Bound(p => p.CompanyName).Filterable(filter =>
+              {
+                  filter.Operators(op =>
+                  {
+                      op.ForString(str =>
+                      {
+                          str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                      });
+
+
+                  });
+              }).Width(130).Title("نام شرکت");
+             columns.Bound(p => p.FullNamePerson).Filterable(filter =>
+              {
+                  filter.Operators(op =>
+                  {
+                      op.ForString(str =>
+                      {
+                          str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                      });
+
+
+                  });
+              }).Width(130).Title("مشتری");
+              columns.Bound(p => p.Cell).Filterable(filter =>
+              {
+                  filter.Operators(op =>
+                  {
+                      op.ForString(str =>
+                      {
+                          str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                      });
+
+
+                  });
+              }).Width(130).Title("موبایل");
+              columns.Bound(p => p.CodeMeli).Filterable(filter =>
+              {
+                  filter.Operators(op =>
+                  {
+                      op.ForString(str =>
+                      {
+                          str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                      });
+
+
+                  });
+              }).Width(130).Title("کدملی");
+              columns.Bound(p => p.Tell).Filterable(filter =>
+              {
+                  filter.Operators(op =>
+                  {
+                      op.ForString(str =>
+                      {
+                          str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                      });
+
+
+                  });
+              }).Width(130).Title("تلفن");
+              columns.Bound(p => p.Address).Width(400).Title("آدرس");
+
+          })
+          .Pageable(pageable => pageable
+              .Refresh(true)
+              .PageSizes(new int[] { 10, 20, 50, 100 })
+              .ButtonCount(10))
+          .Sortable()
+          .Groupable()
+          .Scrollable()
+          .Filterable()
+          .Resizable(resizable => resizable.Columns(true))
+          .DataSource(dataSource => dataSource
+                      .Ajax()
+              .ServerOperation(false)
+                      // .Group(groups => groups.Add(p => p.SentMessagId))
+                      .PageSize(10)
+                      .Read(read => read.Action("CompanyPerson_Read", "Company"))
+
+          ))
+</div>
+

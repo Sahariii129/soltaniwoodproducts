@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using SoltaniWeb.Models.Extensions;
 
 namespace SoltaniWeb.Models.structs.CompanyVM
 {
@@ -16,10 +17,13 @@ namespace SoltaniWeb.Models.structs.CompanyVM
         public string Name { get; set; }
 
         [Display(Name = "نوع شرکت")]
-        [Required(ErrorMessage = "{0} اجباری می باشد")]
+        //[Required(ErrorMessage = "{0} اجباری می باشد")]
         [MaxLength(500, ErrorMessage = "حداکثر طول فیلد {0}، {1} کاراکتر می باشد")]
         public string CompanyType { get; set; }
 
+        [UIHint("_ClientCompanyTypes")]
+        public CompanyTypeClass CompanyTypes{get;set;}
+       
 
         [Display(Name = "شماره تماس")]
         [MaxLength(11, ErrorMessage = "حداکثر طول فیلد {0}، {1} کاراکتر می باشد")]
@@ -40,6 +44,12 @@ namespace SoltaniWeb.Models.structs.CompanyVM
         [Display(Name = "شماره ثبت شرکت")]
         [MaxLength(50, ErrorMessage = "حداکثر طول فیلد {0}، {1} کاراکتر می باشد")]
         public string CompanyRegistrationNumber { get; set; }
+    }
+
+    public class CompanyTypeClass
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
 }

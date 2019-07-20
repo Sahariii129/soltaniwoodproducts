@@ -1,0 +1,155 @@
+﻿
+@{
+    var companyType = new List<CompanyTypeClass>
+    {
+        new CompanyTypeClass{Id=1,Name="sfd"},
+        new CompanyTypeClass{Id=2,Name="asdf"},
+    };
+    var enumds=Enum.GetNames(typeof(CompanyType)).ToList();
+}
+<div class="k-rtl">
+   
+    @(Html.Kendo().Grid<CompanyViewModel>()
+          .Name("grid_company")
+          .Columns(columns =>
+          {
+
+              //  columns.Select().Width(50);
+              columns.Bound(p => p.Name).Width(100).Filterable(true).
+                  Filterable(filter =>
+                  {
+                      filter.Operators(op =>
+                      {
+                          op.ForString(str =>
+                          {
+                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                          });
+
+
+                      });
+                  }).Title("نام شرکت");
+              columns.Bound(p => p.CompanyTypes).Width(100).Filterable(true).
+                  Filterable(filter =>
+                  {
+                      filter.Operators(op =>
+                      {
+                          op.ForString(str =>
+                          {
+                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                          });
+
+
+                      });
+                  }).ClientTemplate(" <span>#=CompanyTypes.Name#</span>").Title("نام شرکت");
+              columns.Bound(p => p.Address).Filterable(filter =>
+              {
+                  filter.Operators(op =>
+                  {
+                      op.ForString(str =>
+                      {
+                          str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                      });
+
+
+                  });
+              }).Width(130).Title("آدرس");
+              columns.Bound(p => p.Phone).Width(100).Filterable(true).
+                  Filterable(filter =>
+                  {
+                      filter.Operators(op =>
+                      {
+                          op.ForString(str =>
+                          {
+                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                          });
+
+
+                      });
+                  }).Title("تلفن");
+              columns.Bound(p => p.Phone2).Width(100).Filterable(true).
+                  Filterable(filter =>
+                  {
+                      filter.Operators(op =>
+                      {
+                          op.ForString(str =>
+                          {
+                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                          });
+
+
+                      });
+                  }).Title("تلفن");
+              columns.Bound(p => p.Phone3).Width(100).Filterable(true).
+                  Filterable(filter =>
+                  {
+                      filter.Operators(op =>
+                      {
+                          op.ForString(str =>
+                          {
+                              str.Clear().Contains("شامل").IsEqualTo("مساوی با");
+
+                          });
+
+
+                      });
+                  }).Title("تلفن");
+            //  columns.Command(command => { command.Edit(); }).Width(172);
+              //    columns.Bound(p => p.Id).Width(120).Title("ویرایش کاربر").ClientTemplate("<a  class='btn btn-success' href='company/Create/#=Id#'>ویرایش</a>");
+              //columns.Bound(p => p.Id).Width(120).Title("ویرایش کاربر").ClientTemplate("<a  class='btn btn-success' href='company/Peron/#=Id#'>اضافه مشتری</a>");
+          })
+          .ToolBar(toolBar =>
+          {
+              toolBar.Save();
+          })
+          .Pageable(pageable => pageable
+              .Refresh(true)
+              .PageSizes(new int[] {10, 20, 50, 100})
+              .ButtonCount(10))
+          .Sortable()
+          // .Events(ev => ev.Change("onChange"))
+          .PersistSelection()
+          .Editable(editable => editable.Mode(GridEditMode.InCell))
+          .Scrollable()
+          .Resizable(resizable => resizable.Columns(true))
+          .Filterable()
+          .DataSource(dataSource => dataSource
+              .Ajax()
+              .Batch(true)
+              .ServerOperation(false)
+              .PageSize(10)
+              .ServerOperation(false)
+              .Model(model =>
+              {
+                  model.Id(p => p.Id);
+                  model.Field(p => p.Id).Editable(false);
+                //  model.Field(p => p.CompanyTypes).DefaultValue(new CompanyTypeClass { Id = 1, Name = "sfd" });
+                  model.Field(p => p.CompanyTypes).DefaultValue(
+                      ViewData["defaultCategory"] as CompanyTypeClass);
+              })
+              .ServerOperation(false)
+              .Events(events => events.Error("error_handler"))
+              .Update(update => update.Action("EditingInline_Update", "Company"))
+              .Read(read => read.Action("Company_Read", "Company"))
+          ))
+</div>
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function() {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>
+
