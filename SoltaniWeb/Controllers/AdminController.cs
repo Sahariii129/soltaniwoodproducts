@@ -6202,7 +6202,8 @@ namespace SoltaniWeb.Controllers
                 accesscaption = d.accesscaption,
                 username = username,
                 fullname = fullname,
-                image = image
+                image = image,
+                controllername=d.controllername
             });
 
 

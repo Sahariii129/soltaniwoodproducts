@@ -18,6 +18,7 @@ namespace SoltaniWeb.Models.Domain
         public int? actiontype { get; set; }
         public int? ordernumber { get; set; }
         public bool? status { get; set; }
+        public string controllername { get; set; }
 
         public virtual tbl_actionaccesstype actiontypeNavigation { get; set; }
         public virtual ICollection<tbl_accesslevels> tbl_accesslevels { get; set; }

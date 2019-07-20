@@ -77,6 +77,7 @@ namespace SoltaniWeb.Models.structs
         public string  accesscaption { get; set; }
         public string fullname { get; set; }
         public byte[] image { get; set; }
+        public string controllername { get; set; }
     }
 
 
