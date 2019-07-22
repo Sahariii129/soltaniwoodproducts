@@ -7,12 +7,20 @@ using SoltaniWeb.Models.Domain;
 using SoltaniWeb.Models.Extensions;
 using SoltaniWeb.Models.Authorize_swp;
 using SoltaniWeb.Models.structs;
+using SoltaniWeb.Models.Services.Interfaces;
 
 namespace SoltaniWeb.Hubs
 {
     public class ChatHub : Hub
     {
         _4820_soltaniwebContext db = new _4820_soltaniwebContext();
+       private IPurchaseCart _cart;
+
+        public ChatHub(IPurchaseCart cart)
+        {
+            _cart = cart;
+
+        }
         public async Task SendMessage2(string user, string message)
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
@@ -151,8 +159,8 @@ namespace SoltaniWeb.Hubs
           
 
         }
-
-        public async Task sendpricebyclient(int userid, int cartid, string connectionid)
+        //public async Task sendpricebyclient(int userid, int cartid, string connectionid, String transportationRequired, string cartDesc,transportationdetailsMV t )
+        public async Task sendpricebyclient(int userid, int cartid, string connectionid, String transportationRequired, string cartDesc,string location_name, string person_peygiri, string tell, string location_address)
         {
 
             var user = db.tbl_signalrUsers.Where(a => a.userid == userid).SingleOrDefault();
@@ -161,6 +169,29 @@ namespace SoltaniWeb.Hubs
             if (cartid != 0)
             {
                 p.status = (int)purchasestatus.DemandPrice;
+                if (transportationRequired=="true")
+                {
+                    tbl_transportaiondetails t = new tbl_transportaiondetails()
+                    {
+                    cartid = cartid,
+                    location_name=location_name,
+                    person_peygiri = person_peygiri,
+                    tell =tell,
+                    location_address = location_address,
+
+                    };
+
+                    _cart.settransportaiondetails(cartid, t);
+                    p.transportationisneeded = true;
+                }
+                else
+                {
+                p.transportationisneeded = false;
+
+                }
+
+
+                p.pcartDesc = cartDesc;
                 db.SaveChanges();
             }
 

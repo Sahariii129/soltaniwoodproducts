@@ -1,0 +1,69 @@
+﻿@model SoltaniWeb.Models.structs.RegisterViewModel
+
+@{
+    ViewData["Title"] = "signup";
+
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+}
+
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+
+<!-- Modal content -->
+
+
+<div class="container-fluid signup">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 contactTitle">ثبت نام در سایت</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-10 col-lg-4">
+            <div class="card">
+                <div class="card-header text-center" style="background-color:#332b3a;color:#fff">
+                    فرم ثبت نام
+                </div>
+                <div class="card-body myfont">
+                    <form asp-controller="Account" asp-action="signup" method="post" style="border:none !important;">
+                        <div id="alertregister" class="alert alert-danger  displayNone">
+
+                        </div>
+                        <div class="form-group">
+                            <input id="username" name="username" asp-for="username" class="form-control mb-2" type="text" placeholder="نام کاربری به انگلیسی وارد شود" />
+                            <span asp-validation-for="username"></span>
+                            <input id="password" name="password" asp-for="password" class="form-control mb-2" type="password" placeholder="رمز عبور خود را وارد نمایید" />
+                            <span asp-validation-for="password"></span>
+                            <input id="confirmpass" name="confirmpass" asp-for="confirmpass" class="form-control mb-2" type="password" placeholder="رمز عبور خود را تکرار نمایید" />
+                            <span asp-validation-for="confirmpass"></span>
+                            <input id="email" name="email" class="form-control mb-2" asp-for="email" type="text" placeholder="ایمیل خود را وارد نمایید" />
+                            <span asp-validation-for="email"></span>
+
+                            <input id="cellphone" name="cellphone" class="form-control mb-2" asp-for="cellphone" type="text" placeholder="شماره همراه خود را وارد نمایید" />
+                            <span asp-validation-for="cellphone"></span>
+
+                        </div>
+                        
+                        <div class="text-center">
+                            <input type="submit" value="ثبت نام" class="btn btn-register" />
+                           
+                        </div>
+                        <br />
+                        @if (TempData["message"] != null)
+                        {
+                            <div class="alert alert-danger">@TempData["message"]</div>
+                        }
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

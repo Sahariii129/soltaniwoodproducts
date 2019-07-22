@@ -1,0 +1,60 @@
+﻿@using SoltaniWeb.Models.Domain
+@model tbl_transportaiondetails
+@{ 
+    var q = Model;
+}
+
+ 
+        <form id="transform"  class="form-horizontal">
+
+
+            <div class="form-horizontal">
+                <div class="form-group row">
+
+                    <input type="hidden" name="cartid" id="cartid" value="@(Model!=null ? Model.id : 0)" />
+
+
+                    <label class="control-label col-md-2">نام مکان</label>
+                    <div class="col-md-2">
+                        <input asp-for="location_name" class="form-control" placeholder="خدمات برشی حضرتی" value="@(Model!=null ? Model.location_name : "")" />
+                        <span asp-validation-for="location_name"></span>
+
+                    </div>
+                    <label class="control-label col-md-2"> نام و نام خانوادگی:  </label>
+
+                    <div class="col-md-2">
+                        <input asp-for="person_peygiri" class="form-control" placeholder="علیرضا حضرتی" value="@(Model!=null ? Model.person_peygiri : "")" />
+                        <span asp-validation-for="person_peygiri"></span>
+                       
+                    </div>
+                    <label class="control-label col-md-2">شماره همراه: </label>
+
+                    <div class="col-md-2">
+                        <input asp-for="tell" class="form-control" placeholder="09393154139" value="@(Model!=null ? Model.tell : "")" />
+                        <span asp-validation-for="tell"></span>
+                   
+
+                    </div>
+
+                </div>
+                <div class="form-group row">
+
+                    <label class="control-label col-md-2">آدرس کامل: </label>
+
+                    <div class="col-md-10">
+                        <input asp-for="location_address" class="form-control" placeholder="شیراز - میدان بسیج - خیابان شهید حراف - کوچه 10" value="@(Model!=null ? Model.location_address : "")" />
+                        <span asp-validation-for="location_address"></span>
+                     </div>
+
+
+                </div>
+                @*<div class="col-md-offset-2">
+
+                    <input type="submit" id="savetransdetails" name="name" value="ثبت مشخصات حمل کالا" class="btn btn-info" style="margin:5px" />
+                </div>*@
+
+            </div>
+        </form>
+
+
+

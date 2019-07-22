@@ -141,11 +141,8 @@ namespace SoltaniWeb.Controllers
                 return RedirectToAction("signin", "account");
             }
             int userid = _userServices.GetUseridByUsername(User.Identity.Name);
+          var cart =  _purchaseCart.findcartbyid(_purchaseCart.opencartid(userid));
 
-            var cartlist = db.tbl_purchasekartitemlist.Where(a => a.perchasekart_.ispaid == false && a.perchasekart_.userid == userid).ToList();
-            if (cartlist!=null)
-            {
-                var cart = cartlist.FirstOrDefault().perchasekart_;
                 if (!_purchaseCart.ISPriceValid(cart.id))
             {
                     cart.status = (int)purchasestatus.PurchaseIsStart;
@@ -153,14 +150,26 @@ namespace SoltaniWeb.Controllers
             }
 
 
-            }
-
 
            
-            return View(cartlist);
+            return View(cart);
            
         }
 
+
+
+        public bool isVipMember()
+        {
+            var user = db.tbl_user.Where(a => a.username == User.Identity.Name).SingleOrDefault();
+            if (user.vipmember.HasValue && user.vipmember.Value==true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public IActionResult toshowcardinabstractview()
         {
             if (User.Identity.IsAuthenticated)

@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewData["Title"] = "signin";
+
+    Layout = "~/Views/shared/_layoutbootstarp.cshtml";
+    var msg = ViewBag.error;
+   
+    
+}
+
+
+@*@using SoltaniWeb.Models.structs*@
+@model loginstruct
+
+
+
+
+<div class="container-fluid signin">
+    <div class="row my-4">
+        <div class="col-12">
+            <div style="position:relative">
+                <h5 class="my-5 contactTitle">ورود به سایت</h5>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-10 col-lg-4">
+            <div class="card">
+                <div class="card-header text-center" style="background-color:#332b3a;color:#fff">
+                    فرم ورود
+                </div>
+                <div class="card-body myfont">
+                    <form asp-controller="Account" asp-action="signin" method="post" style="border:none !important;" asp-route-returnurl="@ViewData["ReturnUrl"]">
+                        <div id="alertlogin" class="alert alert-danger alertmessage displayNone">
+
+                        </div>
+                        <div class="tab-pane fade active show" id="login">
+                            <div class="form-group">
+                                <input class="form-control mb-2" id="username" asp-for="username" type="text" placeholder="نام کاربری خود را وارد نمایید" />
+                                <span class="my-2" asp-validation-for="username" style="color:#db2727"></span>
+
+                                <input class="form-control mb-2" id="password" asp-for="password" type="password" placeholder="رمز عبور خود را وارد نمایید" />
+                                <span class="my-2" asp-validation-for="password" style="color:#db2727"></span>
+                            </div>
+                            <label for="RememberMe" >
+                                من را به خاطر بسپار!
+                                <input type="checkbox" id="RememberMe" asp-for="RememberMe" name="RememberMe">
+                                @*<span class="checkmark"></span>*@
+                            </label>
+                            <div class="text-center">
+                                <input type="submit" value="ورود" class="btn btn-register" />
+                                @*<button id="signin" type="submit" class="btn btn-register">ورود</button>*@
+                                @*<div class="text-center"><a href="/Account/recoveryaccount" class="btn btn-remember">رمز عبور خود را فراموش کرده ام!</a></div>*@
+                            </div>
+                        </div>
+                        <br />
+                        @if (TempData["message"] != null)
+	                    {
+		                    <div class="alert alert-danger">@TempData["message"]</div>
+	                    }
+
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*@if (TempData["message"] != null)
+{
+    <script>
+        alert('1')
+        //$(function () {
+        //    $(message).modal();
+        //})
+
+    </script>
+}*@
+

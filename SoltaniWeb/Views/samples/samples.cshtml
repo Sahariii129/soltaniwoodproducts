@@ -36,7 +36,7 @@
         </div>
 
 
-        <div class="productBox mb-4">
+        <div class="productBox mb-4" productid="@idproduct">
             <div class="row">
                 <div class="col-lg-4">
                     @if (Model.FirstOrDefault().products.image != null)
@@ -54,7 +54,7 @@
                     <h6>وضعیت: <span>@entityrep.getexistproducts(idproduct)</span></h6>
                     <h6>ابعاد: <span>@product.dimension</span></h6>
                 </div>
-                <div class="col-lg-4 text-center">
+                <div class="col-lg-4 text-center" >
                     <div><a href="" class="gray">اشتراک گذاری<i class="fas fa-share-alt fa-lg mx-2"></i></a></div>
                     @if (catg.showprice == true)
                     {
@@ -120,7 +120,7 @@
                 </div>
             </div>
         </div>
-        <div class="productBox mb-4">
+        <div class="productBox mb-4" productid="@idproduct">
             <div class="row">
                 <div class="col-lg-4">
                     @if (product.image != null)

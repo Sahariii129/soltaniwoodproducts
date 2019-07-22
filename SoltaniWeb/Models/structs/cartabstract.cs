@@ -182,6 +182,17 @@ namespace SoltaniWeb.Models.structs
 
     }
 
+
+    public class transportationdetailsMV
+    {
+        public int cartid { get; set; }
+        public string location_name { get; set; }
+        public string person_peygiri { get; set; }
+        public string tell { get; set; }
+        public string location_address { get; set; }
+    }
+
+
     public   enum purchasestatus 
     {
         Null,

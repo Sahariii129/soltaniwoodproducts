@@ -1,5 +1,5 @@
 ﻿@model tbl_purchasekart
-
+@inject IUserServices _user
 @{ 
 
     SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
@@ -7,11 +7,11 @@
     //_4820_soltaniwebContext db = new _4820_soltaniwebContext();
     int i = 0;
     decimal totalpriceofthiscart = Model.tbl_purchasekartitemlist.Sum(a => a.totalprice);
-
+    var userid = _user.GetUseridByUsername(User.Identity.Name);
 
 }
 <div class="table-responsive">
-    <table class="table table-bordered sortable purchasecart" id="@cartid" cartid="@cartid">
+    <table class="table table-bordered sortable purchasecart" id="@cartid" cartid="@cartid" userid="@userid">
         <thead>
             <tr>
                 <td>ردیف </td>
@@ -39,9 +39,9 @@
                         <input class="form-control itemnumber" type="number" id="@item.id" value="@item.number" min="0" max="@entityrep.getentityitem(item.product_id)" />
                     </td>
                     <td>
-                        <div style="color:#eaa01b ; "><span class="unitprice"> @string.Format("{0:#,##0.##}", item.price)</span> </div>
+                        <div style="color:#eaa01b ; "><span class="unitprice">@(Model.status==0? "درخواست قیمت نمایید ..." : string.Format("{0:#,##0.##}", item.price))     </span> </div>
                     </td>
-                    <td id="@("totalpriceitem" + item.id)">@string.Format("{0:#,##0.##}", item.totalprice) </td>
+                    <td id="@("totalpriceitem" + item.id)">@(Model.status==0 ? "0.0  ریال": string.Format("{0:#,##0.##}", item.totalprice) ) </td>
                     <td><a href="#" class="deleteitem" id="@item.id"><img src="~/Content/img/icon/delete.png" class="img-responsive" alt="Alternate Text" /></a></td>
                 </tr>
             }
@@ -52,7 +52,7 @@
                 <td></td>
                 <td><span id="totalnumber" class="form-control totalnumber" style="width:50%;margin:auto;color:red">@Model.tbl_purchasekartitemlist.Sum(a=>a.number)</span></td>
                 <td></td>
-                <td>@string.Format("{0:#,##0.##}", totalpriceofthiscart)</td>
+                <td>      @(Model.status==0?"0,0 ریال": string.Format("{0:#,##0.##}", totalpriceofthiscart) )</td>
                 <td></td>
             </tr>
         </tbody>

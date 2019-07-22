@@ -1,7 +1,7 @@
 ﻿@using SoltaniWeb.Models.Domain
 @using SoltaniWeb.Models.repository
 @inject IUserServices _user;
-@model IEnumerable<tbl_purchasekartitemlist>
+@model tbl_purchasekart
 @{
     ViewBag.Title = "showcart";
     Layout = "~/Views/shared/_layoutbootstarp.cshtml";
@@ -9,17 +9,25 @@
     SoltaniWeb.Models.repository.entityproducutsreposit entityrep = new SoltaniWeb.Models.repository.entityproducutsreposit();
     var cartid = 0;
 
-    cartid = Model.FirstOrDefault().perchasekart_id;
+    cartid = Model.id;
 
     TempData["cartid"] = cartid;
-    var transportationrecord = Model.FirstOrDefault().perchasekart_.tbl_transportationcost.FirstOrDefault();
+    var transportationrecord = Model.tbl_transportationcost.FirstOrDefault();
     _4820_soltaniwebContext db = new _4820_soltaniwebContext();
     var vehicletypes = db.tbl_vehicletype.ToList();
     var translocationinfo = db.tbl_transportaiondetails.Where(a => a.cartid == cartid);
     var qtranscost = db.tbl_transportationcost.Where(a => a.cart_id == cartid);
-    var userid = _user.GetUseridByUsername(User.Identity.Name);
-    var status = Model.FirstOrDefault().perchasekart_.status.Value;
+
+    var status = Model.status.Value;
     string resultclass = "width" + status;
+
+
+    tbl_transportaiondetails t = new tbl_transportaiondetails() { };
+    if (Model.tbl_transportaiondetails.Count()>0)
+    {
+        t = Model.tbl_transportaiondetails.FirstOrDefault();
+    }
+
 
 }
 
@@ -33,7 +41,7 @@
             </div>
         </div>
         <div class="col-12 myfont">
-            @if (Model.Count()>0)
+            @if (Model!=null)
             {
             <div class="card">
                 <div class="card-header text-center py-0" style=" background-color: #332b3a;color:#fff">
@@ -61,71 +69,44 @@
                     <p class="blue bold mb-4 mt-3">افزودن کالاها به سبد خرید به معنی رزرو کالا برای شما نیست. برای ثبت سفارش باید مراحل بعدی خرید را تکمیل نمایید.</p>
                     <div class="tab-content">
                         <div class="tab-pane @(status==0?"active":"")" purchasestatus=0 id="step1" role="tabpanel">
-                            <div class="table-responsive">
-                                <table class="table table-bordered sortable purchasecart" id="@cartid" cartid="@cartid" userid="@userid">
-                                    <thead>
-                                        <tr>
-                                            <td>ردیف </td>
-                                            <td>تصویر </td>
-                                            <td> شرح محصول </td>
-                                            <td> تعداد </td>
-                                            <td>قیمت واحد</td>
-                                            <td>قیمت کل</td>
-                                            <td>حذف محصول</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                            <partial name="~/Views/Shared/PartialCarts/_partialcartforclient.cshtml" model="@Model" />
+                            <div id="myform" class="card">
+                                <div class="card-header" style="background-color:#0094ff;">
+                                   
+                                   
 
-                                        @foreach (var item in Model)
-                                        {
-                                            i++;
-                                            <tr id="@("item" + @item.id)">
-                                                <td>@i</td>
-                                                <td><img class="imgProduct img-fluid" src="@(item.product_.thumbnail_image==null ? "~/Content/img/icon/img-na.png" : (string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(item.product_.thumbnail_image))))" alt="تصویر محصول" /></td>
-                                                <td>
-                                                    <div> @(item.product_.category.categoryname + " " + item.product_.name + " " + item.product_.codename)</div>
-                                                    @*<div style="float:left; font-size:12px; color:#b200ff; ">وزن واحد: @string.Format("{0:#,##0.##}", item.product_.weight) Kg </div>*@
-                                                </td>
-                                                <td>
-                                                    <input class="form-control itemnumber" type="number" id="@item.id" value="@item.number" min="0" max="@entityrep.getentityitem(item.product_id)" />
-                                                </td>
-                                                <td>
-                                                    <div style="color:#eaa01b ; "><span class="unitprice">منتظر باشید ... </span> </div>
-                                                </td>
-                                                <td id="@("totalpriceitem" + item.id)">0.0 ریال </td>
-                                                <td><a href="#" class="deleteitem" id="@item.id"><img src="~/Content/img/icon/delete.png" class="img-responsive" alt="Alternate Text" /></a></td>
-                                            </tr>
-                                        }
+                                    <input id="transportationRequired" type="checkbox" data-toggle="collapse" data-target="#transportform" checked="@(Model.transportationisneeded.HasValue==true && Model.transportationisneeded.Value==true)" />
+                                    <label>حمل بار توسط فروشگاه انجام پذیرد.</label>
 
-                                        <tr style="background-color: rgb(248, 238, 201);color:red">
-                                            <td>جمع کل</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td><span id="totalnumber" class="form-control totalnumber" style="width:50%;margin:auto;color:red">@Model.Sum(a => a.number)</span></td>
-                                            <td></td>
-                                            <td>0.0 ریال </td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                </div>
+                                <div id="transportform" class="card-body collapse @((Model.transportationisneeded.HasValue==true && Model.transportationisneeded.Value==true) ?"show":"" ) " style="background-color:#eee9e9;">
+                                    
+                                    <partial name="~/Views/Shared/PartialCarts/_partialcarttransportationform.cshtml" model="@t" />
+
+                                </div>
+
                             </div>
-                            <button id="saveandsentorder" class="btn mt-5">ثبت و ارسال گزارش</button>
+
+                            <textarea class="form-control cartDesc" value="@Model.pcartDesc" rows="5" placeholder="توضیحات بیشتر  ...">@Model.pcartDesc</textarea>
+
+
+                            <button id="sendpricerequest" class="btn mt-5">ثبت درخواست قیمت</button>
                         </div>
-                        <div class="tab-pane @(status==1?"active":"")" purchasestatus=1 id="step2" role="tabpanel">
-                            <div class="pt-5 d-flex justify-content-between align-items-center">
-                                <div class="blue"><h5>لطفا جهت دریافت قیمت از سوی کارشناسان ما منتظر بمانید...</h5></div>
-                                <div class=""><div class="your-clock"></div></div>
+                                <div class="tab-pane @(status==1?"active":"")" purchasestatus=1 id="step2" role="tabpanel">
+                                    <div class="pt-5 d-flex justify-content-between align-items-center">
+                                        <div class="blue"><h5>لطفا جهت دریافت قیمت از سوی کارشناسان ما منتظر بمانید...</h5></div>
+                                        <div class=""><div class="your-clock"></div></div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane @(status==2?"active":"")" purchasestatus=2 id="step3" role="tabpanel">
+
+                                    <partial name="~/Views/Shared/PartialCarts/_partialcartforclient.cshtml" model="@Model" />
+
+                                </div>
+                                <div class="tab-pane @(status==3?"active":"")" purchasestatus=3 id="step4" role="tabpanel">تایید سبد خرید</div>
+                                <div class="tab-pane @(status==4?"active":"")" purchasestatus=4 id="step5" role="tabpanel">پرداخت و تحویل</div>
                             </div>
                         </div>
-                        <div class="tab-pane @(status==2?"active":"")" purchasestatus=2 id="step3" role="tabpanel">
-
-                            <partial name="~/Views/Shared/PartialCarts/_partialcartforclient.cshtml" model="@Model.FirstOrDefault().perchasekart_" />
-
-                        </div>
-                        <div class="tab-pane @(status==3?"active":"")" purchasestatus=3 id="step4" role="tabpanel">تایید سبد خرید</div>
-                        <div class="tab-pane @(status==4?"active":"")" purchasestatus=4 id="step5" role="tabpanel">پرداخت و تحویل</div>
-                    </div>
-                </div>
             </div>
             }
             else
@@ -150,20 +131,67 @@
             var userid = $('.purchasecart').attr('userid')
             var cartid = $('.purchasecart').attr('cartid')
             var connectionid = ""
+            var transportationRequired = 'false'
+            var location_name =''
+            var person_peygiri = ''
+            var tel = ''
+            var location_address =''
+            function isVipMember() {
+                
+                jQuery.post('/purchasecart/isVipMember',{}, function (result) {
+                    alert(result)
+                    if (result!=ture) {
+                        alert('این قابلیت تنها برای مشتریان VIP سایت مهیا است. ')
+                        return;
+                    }
+
+
+                })
+
+
+            }
+
             var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
             connection.start().catch(err => console.error(err.toString())).then(function () {
                 connection.invoke('getConnectionId')
                     .then(function (connectionId) {
                         // Send the connectionId to controller
+                       
                         connectionid = connectionId;
                         connection.invoke("registerindb", userid, cartid, connectionid)
                     })
-            })
+            }) 
 
-            $(saveandsentorder).click(function () {
-                $('#myTab').toggleClass('width1')
-                connection.invoke("sendpricebyclient", userid, cartid, connectionid)
-                $(this).attr("disabled", true);
+            $(sendpricerequest).click(function () {
+                
+                jQuery.post('/purchasecart/isVipMember', {}, function (result) {
+                    //alert(result)
+                    if (result != true) {
+                        alert('این قابلیت تنها برای مشتریان VIP سایت مهیا است. ')
+                        return;
+                    }
+                    $('#myTab').toggleClass('width1')
+                    if ($('#transportationRequired').prop('checked') == true) {
+                        transportationRequired = 'true'
+                    }
+                    location_name = $('#location_name').val()
+                    person_peygiri = $('#person_peygiri').val()
+                    tell = $('#tell').val()
+                    location_address = $('#location_address').val()
+                    var from = $('#transform')
+                    if (from.isValid) {
+                        alert('hi')
+                    }
+                    var cartDesc = $('.cartDesc').val()
+
+
+
+                    connection.invoke("sendpricebyclient", userid, cartid, connectionid, transportationRequired, cartDesc, location_name, person_peygiri, tell, location_address)
+                    $(this).attr("disabled", true);
+
+                })
+               
+               
             })
 
             connection.on("setDemandPriceStepInClient", function (pstatus) {

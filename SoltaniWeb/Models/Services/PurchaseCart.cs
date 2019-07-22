@@ -12,6 +12,11 @@ namespace SoltaniWeb.Models.Services
     {
         _4820_soltaniwebContext db = new _4820_soltaniwebContext();
 
+        public tbl_purchasekart findcartbyid(int cartid)
+        {
+            return db.tbl_purchasekart.Find(cartid);
+        }
+
         public cartabstractinfo GetCartAbstractinfo(int userid = 0)
         {
             var cart = db.tbl_purchasekart.Find(opencartid(userid));
@@ -76,6 +81,29 @@ namespace SoltaniWeb.Models.Services
 
             return cartid;
 
+        }
+
+        public void settransportaiondetails(int cartid, tbl_transportaiondetails tcartdetails)
+        {
+            var cart = findcartbyid(cartid);
+            if (cart.tbl_transportaiondetails.Count()==0)
+            {
+                //add
+                db.tbl_transportaiondetails.Add(tcartdetails);
+
+
+            }
+            else
+            {
+                //Edit
+                var tdetails = cart.tbl_transportaiondetails.FirstOrDefault();
+                tdetails.location_address = tcartdetails.location_address;
+                tdetails.location_address = tcartdetails.location_name;
+                tdetails.person_peygiri = tcartdetails.person_peygiri;
+                tdetails.tell = tcartdetails.tell;
+               
+            }
+            db.SaveChanges();
         }
     }
 }

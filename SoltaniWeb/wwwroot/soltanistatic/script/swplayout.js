@@ -257,7 +257,7 @@ $('body').on('click', '.btn-addToCart', function (e) {
 
     e.preventDefault();
     var p_id = $(this).parents('[productid]').attr('productid')
-
+    
     jQuery.post('/purchasecart/addnewitem', { product_id: p_id }, function (result) {
         if (result.preselected == '1') {
             $('#modalwarning .modal-body').html(' این کالا در سبد خرید شما قبلاً اضافه شده است. ')

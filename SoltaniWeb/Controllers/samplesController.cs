@@ -32,26 +32,26 @@ namespace SoltaniWeb.Controllers
 {
     //[HandleError(View = "Error")]
     //[getstatisticController]
-    [ResponseCache(Duration =600)]
+    //[ResponseCache(Duration =600)]
     public class samplesController : Controller
     {
         // GET: samples
         //[HandleError(View = "Error")]
         _4820_soltaniwebContext db = new _4820_soltaniwebContext();
-        public ActionResult samples(int id01 = 0, string key = "")
+        public async Task<ActionResult> samples(int id01 = 0, string key = "")
         {
 
             
 
 
 
-            var q = db.tbl_samples.Where(a => a.productsid == id01);
-            var qproduct = db.tbl_products.Where(a => a.idproduct == id01).SingleOrDefault();
+            var q =  db.tbl_samples.Where(a => a.productsid == id01);
+            var qproduct = await db.tbl_products.Where(a => a.idproduct == id01).SingleOrDefaultAsync();
+
+            int c = await q.CountAsync();
 
 
-
-
-            if (q.Count() <=0)
+            if (c <=0)
             {
                 ViewBag.idproduct = id01;
                 ViewBag.message = "نمونه کاری وجود ندارد";

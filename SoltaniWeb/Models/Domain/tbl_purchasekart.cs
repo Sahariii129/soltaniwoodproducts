@@ -32,6 +32,7 @@ namespace SoltaniWeb.Models.Domain
         public int? personelid { get; set; }
         public int? discountamount { get; set; }
         public int? transportationcost { get; set; }
+        public bool? transportationisneeded { get; set; }
 
 
         public virtual tbl_discount discount_ { get; set; }
