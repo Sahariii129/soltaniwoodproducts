@@ -105,6 +105,9 @@ h1{
 #sendingfilemodal {
     margin: 90px auto !important;
 }
+.keyword{
+    flex-flow: wrap
+}
 .keyword .btn {
     font-size: 12px;
     border-radius: 20px;
