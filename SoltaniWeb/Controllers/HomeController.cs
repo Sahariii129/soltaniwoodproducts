@@ -34,7 +34,6 @@ namespace SoltaniWeb.Controllers
 
         }
 
-        
         public IActionResult Index()
         {
             try

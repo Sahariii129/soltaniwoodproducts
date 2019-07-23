@@ -53,7 +53,7 @@
     <div class="row my-4">
         <div class="col-12">
             <div style="position:relative">
-                <h5 class="my-5 productsTitle">آذران چوب کیمیا<span style="color:#132666"> Azaran Choob Kimiya</span></h5>
+                <h1 class="my-5 productsTitle">آذران چوب کیمیا<span style="color:#132666"> Azaran Choob Kimiya</span></h1>
             </div>
             @if (Model.FirstOrDefault().category.fulldescription != null)
             {
@@ -63,43 +63,27 @@
             }
         </div>
     </div>
-    @*<div class="d-block d-lg-flex align-items-center justify-content-between filter">
-        <div class="d-block d-lg-flex justify-content-between">
-            <div class="dropdown">
-                <button class="btn btn-filter dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    چیدمان بر اساس
-                </button>
-                <div class="dropdown-menu" aria-labelledby="sortDropdown">
-                    <a class="dropdown-item" href="#"><i class="fas fa-sort-alpha-down mx-1"></i>حروف الفبا</a>
-                    <a class="dropdown-item" href="#"><i class="fas fa-sort-numeric-down mx-1"></i>شماره کد</a>
-                </div>
-            </div>
-            <div class="dropdown mx-0 mx-lg-2 my-3 my-lg-0">
-                <button class="btn btn-filter dropdown-toggle" type="button" id="classDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     فیلتر براساس
-                </button>
-                <div class="dropdown-menu" aria-labelledby="classDropdown">
-                    <a class="dropdown-item" href="#">A: طرح ساده</a>
-                    <a class="dropdown-item" href="#">B: طرح فانتزی</a>
-                    <a class="dropdown-item" href="#">C: طرح چوب</a>
-                    <a class="dropdown-item" href="#">C: طرح دکور</a>
-                </div>
-            </div>
-        </div>
-        <div>
-            <form>
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="نام یا کد محصول را وارد نمایید...">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary"><i class="fas fa-search fa-lg"></i></button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>*@
     <div id="imagegallerydetaile" class="row myfont">
         @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
     </div>
+    @if (!string.IsNullOrEmpty(Model.FirstOrDefault().category.keywords))
+    {
+
+        <div class="keyword d-flex mt-4">
+            <p class="bold ml-4 px-4">کلمات کلیدی</p>
+            <div>
+                @foreach (var item in Model.FirstOrDefault().category.keywords.Split('-'))
+                {
+                    <a href="/products/Searchproducts?filter=@item" class="btn">@item</a>
+                }
+            </div>
+        </div>
+
+    }
+</div>
+
+<div class="fixBrand">
+    <img src="@(Model.FirstOrDefault().category.image== null ?  "~/soltanistatic/pictures/SWP_new10.png" :    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.FirstOrDefault().category.image)))" />
 </div>
 
 

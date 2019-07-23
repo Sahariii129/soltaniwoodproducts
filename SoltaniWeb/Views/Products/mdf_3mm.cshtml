@@ -10,86 +10,8 @@
     string username = Context.Session.GetString("username");
     var qusersq = db.tbl_user.Where(a => a.username == username && (a.Access == 0 || a.Access == 1)).SingleOrDefault();
 }
-<script src="~/Scripts/jquery-2.2.1.min.js"></script>
+
 <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-
-
-@*<div class="container-fluid">
-
-    <div class="col-xs-12  ">
-        <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12  " style="margin-left:5px; background-color:#ffffff;  border-radius:5px; min-height :470px; margin-bottom:5px;">
-
-            <div class="row">
-                <div class="col-lg-9 col-xs-12">
-                    <h1 style="font-size:22px;"><span style="color:#11cf1c;">ام دی اف سفید و رنگی سه میل کاغذی (لترون)  </span></h1>
-                </div>
-                <div class="col-lg-3 col-xs-12">
-                    <br />
-
-                </div>
-            </div>
-            <div class="row">
-
-
-                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>روکش کاغذی یا لترون ، يا فویل کاغذی (Paper Foil) که به اصطلاح تجاري لترون (Letron) می نامند. لترون نام يكي از توليد كنندگان مشهور اين نوع روكش است كه امروزه اغلب با نام اين شركت خوانده ميشود لترون در سال 1963 میلادی توسط یک شرکت آلمانی اختراع شد). در ایران، به نئوپان روکش شده با لترون، به اصطلاح لترون میگویند. در اكثر مواقع روکش کاغذی داراي نقوش، طرحها و رنگهاي تزئيني هستند كه بعنوان روكش تزئيني نهايي (دكور) استفاده ميشوند. اما در رنگ كاريهاي دقيق و ظريف براي پوشش سطح MDF و زيرسازي رنگ، از انواع بدون رنگ و طرح آن استفاده ميكنند. در اين صورت، اين روكش ميتواند صاف بوده يا دارای طرحهای برجسته مثل نقش رگههاي چوب ،تار و پود باشد و بعد از اتمام کار، رنگآمیزی شود.</p>
-                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>اين نوع روكش از ارزانترين انواع روكش مي‌باشد كه در مبلمان و لوازم ارزان قيمت مورد استفاده قرار مي‌گيرد.</p>
-                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>روكش کاغذی، در برابر سايش، خش و دیگر عوامل مكانيكي مقاومت ندارد و مقاومتش در برابر حرارت و رطوبت نيز كمتر از روكش‌هاي ملامينه و لامينت‌ها است.</p>
-                <p style="text-align: justify;line-height: 2; padding :5px;"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left:20px;"></span>هم اکنون سه میل لترون (کاغذی) 183 در 244 (cm) در انواع رنگ زیر در کالای چوب سلطانی قابل عرضه می باشد.</p>
-
-
-                <center><img src="http://www.soltaniwoodproducts.com/Content/img/newsimages/news20167160885345488.jpg" class=" img-thumbnail" style=" width:60%; height :170px;" /></center>
-
-
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="input-group">
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    چیدمان بر اساس  <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a style="cursor:pointer;" onclick="sortingbyalpha(@Model.FirstOrDefault().categoryid)"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px;"> </span>حروف الفبا  <span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" style="position:absolute; left:5px; top:12px;"></span></a></li>
-                                    <li><a style="cursor:pointer;" onclick="sortingdefault(@Model.FirstOrDefault().categoryid)"><span class="glyphicon glyphicon-hand-left" aria-hidden="true" style=" margin-left :5px;"> </span> شماره کد <span class="glyphicon glyphicon-sort-by-order" aria-hidden="true" style="position:absolute; left:5px; top:37px;"></span></a></li>
-
-                                </ul>
-                            </div><!-- /btn-group -->
-                            <input id="searchp" type="text" class="form-control" name="textp" placeholder="نام یا کد محصول را وارد نمایید...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button" onclick="serachforproducts(@Model.FirstOrDefault().categoryid)">جستجو!</button>
-                            </span>
-                        </div><!-- /input-group -->
-                    </div><!-- /.col-lg-6 -->
-
-                </div><!-- /.row -->
-
-
-
-
-            </div>
-            <div id="topiccolor" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top:5px;">
-
-                <p id="imagegallery" class="bg-success" style=" text-align :center ;">.:: کالیته ام دی اف 3 میل کاغذی (لترون)  ::.-  <span id="baseon">چیدمان بر اساس شماره کد</span></p>
-
-            </div>
-
-        </div>
-
-        <div id="imagegallerydetaile" class="row myfont">
-            @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
-        </div>
-    </div>
-
-</div>*@
-
-
-<br />
-
 <script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
 
 
@@ -98,7 +20,7 @@
     <div class="row my-4">
         <div class="col-12">
             <div style="position:relative">
-                <h5 class="my-5 productsTitle">ام دی اف 3 میل<span style="color:#132666"></span></h5>
+                <h1 class="my-5 productsTitle">ام دی اف 3 میل<span style="color:#132666"></span></h1>
             </div>
             @if (Model.FirstOrDefault().category.fulldescription != null)
             {
@@ -111,6 +33,24 @@
     <div id="imagegallerydetaile" class="row myfont">
         @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
     </div>
+    @if (!string.IsNullOrEmpty(Model.FirstOrDefault().category.keywords))
+    {
+
+        <div class="keyword d-flex mt-4">
+            <p class="bold ml-4 px-4">کلمات کلیدی</p>
+            <div>
+                @foreach (var item in Model.FirstOrDefault().category.keywords.Split('-'))
+                {
+                    <a href="/products/Searchproducts?filter=@item" class="btn">@item</a>
+                }
+            </div>
+        </div>
+
+    }
+</div>
+
+<div class="fixBrand">
+    <img src="@(Model.FirstOrDefault().category.image== null ?  "~/soltanistatic/pictures/SWP_new10.png" :    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.FirstOrDefault().category.image)))" />
 </div>
 
 <script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
@@ -120,7 +60,6 @@
 
 <script>
     function sortingdefault() {
-//alert("hi")
         location.reload();
 
     }

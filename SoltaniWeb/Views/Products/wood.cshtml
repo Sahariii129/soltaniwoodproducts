@@ -18,7 +18,7 @@
     <div class="row my-4">
         <div class="col-12">
             <div style="position:relative">
-                <h5 class="my-5 productsTitle">تخته روسی <span style="color:#132666">Russian Lumber</span></h5>
+                <h1 class="my-5 productsTitle">تخته روسی <span style="color:#132666">Russian Lumber</span></h1>
             </div>
             @if (Model.FirstOrDefault().category.fulldescription != null)
             {
@@ -31,6 +31,24 @@
     <div id="imagegallerydetaile" class="row myfont">
         @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model);
     </div>
+    @if (!string.IsNullOrEmpty(Model.FirstOrDefault().category.keywords))
+    {
+
+        <div class="keyword d-flex mt-4">
+            <p class="bold ml-4 px-4">کلمات کلیدی</p>
+            <div>
+                @foreach (var item in Model.FirstOrDefault().category.keywords.Split('-'))
+                {
+                    <a href="/products/Searchproducts?filter=@item" class="btn">@item</a>
+                }
+            </div>
+        </div>
+
+    }
+</div>
+
+<div class="fixBrand">
+    <img src="@(Model.FirstOrDefault().category.image== null ?  "~/soltanistatic/pictures/SWP_new10.png" :    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.FirstOrDefault().category.image)))" />
 </div>
 
 

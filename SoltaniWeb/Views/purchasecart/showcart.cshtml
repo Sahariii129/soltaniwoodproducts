@@ -27,8 +27,6 @@
     {
         t = Model.tbl_transportaiondetails.FirstOrDefault();
     }
-
-
 }
 
 <link href="~/soltanistatic/style/flipclock.css" rel="stylesheet" />
@@ -70,26 +68,18 @@
                     <div class="tab-content">
                         <div class="tab-pane @(status==0?"active":"")" purchasestatus=0 id="step1" role="tabpanel">
                             <partial name="~/Views/Shared/PartialCarts/_partialcartforclient.cshtml" model="@Model" />
-                            <div id="myform" class="card">
-                                <div class="card-header" style="background-color:#0094ff;">
-                                   
-                                   
-
+                            <div id="myform" class="card address">
+                                <div class="card-header">
                                     <input id="transportationRequired" type="checkbox" data-toggle="collapse" data-target="#transportform" checked="@(Model.transportationisneeded.HasValue==true && Model.transportationisneeded.Value==true)" />
-                                    <label>حمل بار توسط فروشگاه انجام پذیرد.</label>
-
+                                    <label class="mb-0">حمل بار توسط فروشگاه انجام پذیرد.</label>
                                 </div>
-                                <div id="transportform" class="card-body collapse @((Model.transportationisneeded.HasValue==true && Model.transportationisneeded.Value==true) ?"show":"" ) " style="background-color:#eee9e9;">
+                                <div id="transportform" class="card-body collapse @((Model.transportationisneeded.HasValue==true && Model.transportationisneeded.Value==true) ?"show":"" ) ">
                                     
                                     <partial name="~/Views/Shared/PartialCarts/_partialcarttransportationform.cshtml" model="@t" />
 
                                 </div>
-
                             </div>
-
                             <textarea class="form-control cartDesc" value="@Model.pcartDesc" rows="5" placeholder="توضیحات بیشتر  ...">@Model.pcartDesc</textarea>
-
-
                             <button id="sendpricerequest" class="btn mt-5">ثبت درخواست قیمت</button>
                         </div>
                                 <div class="tab-pane @(status==1?"active":"")" purchasestatus=1 id="step2" role="tabpanel">
