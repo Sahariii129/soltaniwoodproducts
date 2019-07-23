@@ -28,7 +28,7 @@ namespace SoltaniWeb.Controllers
     //[getstatisticController]
     //[Authorize]
     //[HandleError(View = "Error")]
-    [ResponseCache(Duration = 600)]
+    
     public class ProductsController : Controller
     {
         _4820_soltaniwebContext db3 = new _4820_soltaniwebContext();

@@ -34,7 +34,7 @@ namespace SoltaniWeb.Controllers
 
         }
 
-        [ResponseCache(Duration =900)]
+        
         public IActionResult Index()
         {
             try
