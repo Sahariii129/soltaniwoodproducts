@@ -330,12 +330,11 @@ header .part2 .productDropdown h6 {
     transition: all .3s ease;
     cursor: pointer;
 }
-
-        header .part2 .productDropdown .dropdown-menu {
-            width: 1100px !important;
-            padding: 10px 20px 20px;
-            right: 0 !important;
-        }
+header .part2 .productDropdown .dropdown-menu {
+    width: 1100px !important;
+    padding: 10px 20px 20px;
+    right: 0 !important;
+}
 
             header .part2 .productDropdown .dropdown-menu img {
                 width: 140px !important;
@@ -343,41 +342,37 @@ header .part2 .productDropdown h6 {
             }
 
         header .part2 .productDropdown ul {
+            background-color:#e2e1e1;
             padding: 10px;
             position:relative;
             box-shadow:inset 5px 0px 9px #28202f;
+            transition:all .3s linear;
+            border-right:3px dashed #000;
         }
-            header .part2 .productDropdown ul:before {
-                position: absolute;
-                top:0;
-                bottom:0;
-                height: 100%;
-                width: 4px;
-                content: " ";
-                background-color: #fdf4d4;
-            }
         header .part2 .productDropdown .dropdown-menu li {
             padding: 7px 15px;
-            line-height: 15px;
-            font-size: 12px;
+            line-height: 20px;
+            font-size: 13px;
         }
 header .part2 .dropdown-menu .customList li:hover {
     background-color: #332b3a;
 }
         header .part2 .productDropdown .dropdown-menu a {
-            color: #fdf4d4 !important;
+            color: #332b3a !important;
             font-weight: lighter;
         }
 
             header .part2 .productDropdown .dropdown-menu a:hover {
-                color: #fae8af !important;
+                color: #ffca01 !important;
             }
 
         header .part2 .productDropdown .dropdown-menu img {
             width: 40px;
             height: 25px;
         }
-
+header .part2 .productDropdown #icon1.rotateIcon {
+    transform: rotateZ(-90deg);
+}
 .modal-backdrop.show {
     z-index: 1029 !important;
 }

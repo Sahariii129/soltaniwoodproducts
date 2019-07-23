@@ -15,35 +15,16 @@
 
 
 <head>
-    <title></title>
-
-
     <script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
     <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/soltanistatic/style/products.css" />
 </head>
 
-@*@if (Model.FirstOrDefault().category.fulldescription != null)
-    {
-        <div id="desc" class="panel">
-            <div class="panel-heading myfont " style="background-color:#4cff00; text-align:right; font-weight:700">
-                <h1 style="font-size:16px;">
-                    @Model.FirstOrDefault().category.categoryname
-                </h1>
-            </div>
-            <div class="panel-body myfont " style=" text-align:justify; font-weight:400">
-                @Html.Raw(Model.FirstOrDefault().category.fulldescription)
-            </div>
-        </div>
-
-    }*@
-
-
 <div class="container-fluid products" data-aos="fade-up">
     <div class="row my-4">
         <div class="col-12">
             <div style="position:relative">
-                <h5 class="my-5 productsTitle">کالیته هایگلاس اشک <span style="color:#132666"></span></h5>
+                <h1 class="my-5 productsTitle">کالیته هایگلاس اشک <span style="color:#132666"></span></h1>
             </div>
             @if (Model.FirstOrDefault().category.fulldescription != null)
             {
@@ -57,26 +38,28 @@
     <div class="row" id="imagegallerydetaile">
         @Html.Partial("~/Views/shared/_Partialproductslist.cshtml", Model)
     </div>
-    @*<div class="keyword d-flex mt-4">
+    @if (!string.IsNullOrEmpty(Model.FirstOrDefault().keywords))
+    {
+
+        <div class="keyword d-flex mt-4">
             <p class="bold ml-4 px-4">کلمات کلیدی</p>
             <div>
-                @foreach (var item in keywords.Split('-'))
+                @foreach (var item in Model.FirstOrDefault().keywords.Split('-'))
                 {
                     <a href="/products/Searchproducts?filter=@item" class="btn">@item</a>
                 }
             </div>
-        </div>*@
+        </div>
+
+    }
+</div>
+
+<div class="fixBrand">
+    <img src="@(Model.FirstOrDefault().category.image== null ?  "~/soltanistatic/pictures/SWP_new10.png" :    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.FirstOrDefault().category.image)))" />
 </div>
 
 
-<br />
-
-
-
 <script src="~/Scripts/lightbox/js/lightbox-2.6.min.js"></script>
-
-
-
 
 <script>
         $(function(){

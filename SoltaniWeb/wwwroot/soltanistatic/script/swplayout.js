@@ -216,7 +216,9 @@ $('header .part2 .dropdown-menu').on('click', function (e) {
     e.stopPropagation();
     var objClicked = e.target.tagName.toLowerCase()
     if (objClicked === 'h6') {
+        $('i#icon1').toggleClass('rotateIcon')
         var thisObj = e.target.parentElement
+        alert(thisObj)
         if (thisObj.querySelector('.sectionclass').classList.contains('hidden') == false) {
             $('.sectionclass').addClass('hidden')
         } else {
