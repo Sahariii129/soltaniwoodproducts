@@ -14,38 +14,9 @@
 }
 <script src="~/Scripts/lightbox/js/modernizr.custom.js"></script>
 <link href="~/Scripts/lightbox/css/lightbox.css" rel="stylesheet" />
-<link rel="stylesheet" href="~/soltanistatic/style/products.css" />
-<style>
-    .loading-image {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 10;
-    }
-
-    .loader {
-        display: none;
-        width: 200px;
-        height: 200px;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        text-align: center;
-        margin-left: -50px;
-        margin-top: -100px;
-        z-index: 2;
-        overflow: auto;
-    }
-</style>
-<div class=" loader">
-    <center>
-        <img class="loading-image" src="~/Content/img/icon/39.gif" alt="loading..">
-    </center>
-</div>
 
 
-
-<div class="container-fluid products" data-aos="fade-up">
+<section class="container-fluid products" data-aos="fade-up">
     <div class="row my-4">
         <div class="col-12">
             <div style="position:relative">
@@ -77,7 +48,7 @@
         </div>
 
     }
-</div>
+</section>
 
 <div class="fixBrand">
     <img src="@(Model.FirstOrDefault().category.image== null ?  "~/soltanistatic/pictures/SWP_new10.png" :    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.FirstOrDefault().category.image)))" />

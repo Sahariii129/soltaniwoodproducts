@@ -16,7 +16,7 @@
 
 
 
-<div class="container-fluid products" data-aos="fade-up">
+<section class="container-fluid products" data-aos="fade-up">
     <div class="row my-4">
         <div class="col-12">
             <div style="position:relative">
@@ -47,7 +47,7 @@
         </div>
 
     }
-</div>
+</section>
 
 <div class="fixBrand">
     <img src="@(Model.FirstOrDefault().category.image== null ?  "~/soltanistatic/pictures/SWP_new10.png" :    string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(Model.FirstOrDefault().category.image)))" />
